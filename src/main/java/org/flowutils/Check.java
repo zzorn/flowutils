@@ -385,7 +385,26 @@ public final class Check {
             (parameter == null && requiredValue != null)) {
             fail(parameterName,
                  parameter,
-                 "be equal to " + otherName + " which is " + requiredValue);
+                 "be equal to " + otherName + " which is '" + requiredValue + "'");
+        }
+    }
+
+    /**
+     * Checks that the parameter equals the specified value.
+     * Uses reference equality ( == ).
+     *
+     * @param parameter     the parameter value to check
+     * @param parameterName the name of the parameter (used in error messages)
+     * @throws IllegalArgumentException if the check fails.
+     */
+    public static void equalRef(final Object parameter,
+                                String parameterName,
+                                Object requiredValue,
+                                String otherName) {
+        if (parameter != requiredValue) {
+            fail(parameterName,
+                 parameter,
+                 "be equal to " + otherName + " which is '" + requiredValue + "'");
         }
     }
 
