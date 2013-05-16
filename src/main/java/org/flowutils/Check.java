@@ -404,7 +404,7 @@ public final class Check {
         if (parameter != requiredValue) {
             fail(parameterName,
                  parameter,
-                 "be equal to " + otherName + " which is '" + requiredValue + "'");
+                 "be the same object as " + otherName + " which is '" + requiredValue + "'");
         }
     }
 
