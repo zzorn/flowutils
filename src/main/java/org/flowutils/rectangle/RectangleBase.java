@@ -118,4 +118,14 @@ public abstract class RectangleBase implements Rectangle {
         empty = false;
     }
 
+
+    @Override public String toString() {
+        return "Rectangle{ " +
+               "minX=" + minX +
+               ", minY=" + minY +
+               ", maxX=" + maxX +
+               ", maxY=" + maxY +
+               ", empty=" + empty +
+               '}';
+    }
 }
