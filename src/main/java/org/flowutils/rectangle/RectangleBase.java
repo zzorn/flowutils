@@ -120,7 +120,7 @@ public abstract class RectangleBase implements Rectangle {
 
 
     @Override public String toString() {
-        return "Rectangle{ " +
+        return "Rectangle{" +
                "minX=" + minX +
                ", minY=" + minY +
                ", maxX=" + maxX +
