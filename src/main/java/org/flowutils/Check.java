@@ -298,9 +298,9 @@ public final class Check {
      */
     public static void under(final int parameter,
                              String parameterName,
-                             int maximumValueInclusive) {
-        if (parameter >= maximumValueInclusive) {
-            fail(parameterName, parameter, "be smaller than " + maximumValueInclusive);
+                             int maximumValueExclusive) {
+        if (parameter >= maximumValueExclusive) {
+            fail(parameterName, parameter, "be smaller than " + maximumValueExclusive);
         }
     }
 
@@ -328,9 +328,9 @@ public final class Check {
      */
     public static void over(final int parameter,
                               String parameterName,
-                              int minimumValueInclusive) {
-        if (parameter <= minimumValueInclusive) {
-            fail(parameterName, parameter, "be larger than " + minimumValueInclusive);
+                              int minimumValueExclusive) {
+        if (parameter <= minimumValueExclusive) {
+            fail(parameterName, parameter, "be larger than " + minimumValueExclusive);
         }
     }
 
