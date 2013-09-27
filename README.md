@@ -7,4 +7,7 @@ Contents
 --------
 
 * Check    - A parameter checker utility.
-* MathFlow - Various math related functions, e.g. interpolation.
+* Maths    - Various math related functions, e.g. interpolation.
+* Strings  - String related functions.
+* ColorGradient - Color gradient class.
+* Stopwatch  - Timer class for simple benchmarks.
