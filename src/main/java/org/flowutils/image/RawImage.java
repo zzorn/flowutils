@@ -1,0 +1,168 @@
+package org.flowutils.image;
+
+import org.flowutils.Check;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DirectColorModel;
+import java.awt.image.MemoryImageSource;
+import java.util.Arrays;
+
+
+/**
+ * Fast, low level image, backed by a raw array of color data.
+ */
+public final class RawImage {
+
+    private final int width;
+    private final int height;
+
+    private Image image = null;
+    private int[] imageData = null;
+
+    /**
+     * Creates a new empty black RawImage with the specified size in pixels.
+     */
+    public RawImage(int width, int height) {
+        Check.positiveInt(width, "width");
+        Check.positiveInt(height, "height");
+
+        this.width = width;
+        this.height = height;
+
+        initialize();
+    }
+
+    /**
+     * @return width of the image.
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * @return height of the image.
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * @return the raw data of the image, ordered by row, where each element is a 32 bit color value with
+     * 8 bit components, in the same order as used by Color.
+     * Can be edited.
+     */
+    public int[] getBuffer() {
+        return imageData;
+    }
+
+    /**
+     * @return the color RGBA value at the specified pixel.  Throws exception if out of range.
+     */
+    public int getPixel(int x, int y) {
+        if (x < 0 || x >= width ||
+            y < 0 || y >= height) throw new IllegalArgumentException("The coordinate ("+x+", "+y+") is out of bounds, the image width is "+width+", and height is "+height+".");
+
+        return imageData[x + y*width];
+    }
+
+    /**
+     * Sets the color RGBA value at the specified pixel.  Throws exception if coordinates are out of range.
+     */
+    public void setPixel(int x, int y, int colorCode) {
+        if (x < 0 || x >= width ||
+            y < 0 || y >= height) throw new IllegalArgumentException("The coordinate ("+x+", "+y+") is out of bounds, the image width is "+width+", and height is "+height+".");
+
+        imageData[x + y*width] = colorCode;
+    }
+
+    /**
+     * Ensures the latest changes to the image data buffer are updated into the image.
+     */
+    public void flush() {
+        getImage().flush();
+    }
+
+    /**
+     * Clears the whole image to solid black.
+     */
+    public void clear() {
+        clearToColor(Color.BLACK);
+    }
+
+    /**
+     * Clears the whole image to the specified color.
+     */
+    public void clearToColor(Color color) {
+        Check.notNull(color, "color");
+
+        clearToColor(color.getRGB());
+    }
+
+    /**
+     * Clears the whole image to the specified color, indicated by a 32 color code with a component for each color channel.
+     */
+    public void clearToColor(int colorCode) {
+        Arrays.fill(imageData, colorCode);
+    }
+
+    /**
+     * @return image representing the underlying raw data.
+     * Use flush if needed to ensure the image represents the last version of the buffered raw data.
+     */
+    public Image getImage() {
+        return image;
+    }
+
+    /**
+     * Renders the image to a graphics context, in the upper left corner.
+     * Use flush if needed to ensure the image represents the last version of the buffered raw data.
+     * @param context context to render the image to.
+     */
+    public void renderToGraphics(Graphics context) {
+        renderToGraphics(context, 0, 0);
+    }
+
+    /**
+     * Renders the image to a graphics context.
+     * Use flush if needed to ensure the image represents the last version of the buffered raw data.
+     * @param context context to render the image to.
+     * @param x position to render the image to
+     * @param y position to render the image to
+     */
+    public void renderToGraphics(Graphics context, int x, int y) {
+        context.drawImage(image, x, y, null);
+    }
+
+    /**
+     * @return a new buffered image containing the raw data of this image.
+     */
+    public BufferedImage createBufferedImage() {
+        BufferedImage buf = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        // TODO: Draw alpha pixels correctly
+
+        flush();
+
+        buf.getGraphics().drawImage(image, 0, 0, null);
+
+        return buf;
+    }
+
+    private void initialize() {
+
+        // Don't include alpha for normal on-screen rendering, as it takes longer due to masking.
+        // For reference, a color model with an alpha channel would be created with
+        // new DirectColorModel(32, 0xff0000, 0x00ff00, 0x0000ff, 0xff000000);
+        DirectColorModel rgbColorModel = new DirectColorModel(24, 0xff0000, 0x00ff00, 0x0000ff);
+
+        imageData = new int[width * height];
+        MemoryImageSource imageSource = new MemoryImageSource(width, height, rgbColorModel, imageData, 0, width);
+        imageSource.setAnimated(true);
+
+        image = Toolkit.getDefaultToolkit().createImage(imageSource);
+
+        clear();
+    }
+}
+

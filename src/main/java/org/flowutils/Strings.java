@@ -74,4 +74,6 @@ public class Strings {
     }
 
 
+    private Strings() {
+    }
 }

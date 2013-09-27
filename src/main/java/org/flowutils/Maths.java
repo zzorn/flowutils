@@ -319,4 +319,6 @@ public final class Maths {
         return value < 0.0 ? (int)(value - 1) : (int) value;
     }
 
+    private Maths() {
+    }
 }
