@@ -3,7 +3,7 @@ package org.flowutils;
 /**
  * Utility functions related to math.
  */
-public final class MathFlow {
+public final class Maths {
 
     /**
      * Tau is 2 Pi, see http://www.tauday.com
