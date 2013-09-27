@@ -1,4 +1,4 @@
-package org.flowutils.image;
+package org.flowutils.rawimage;
 
 /**
  * Abstract base class that loops through the pixels and renders each.
@@ -22,6 +22,8 @@ public abstract class RawImageRendererBase implements RawImageRenderer {
         }
 
         finishRendering(target, w, h);
+
+        target.flush();
     }
 
     /**

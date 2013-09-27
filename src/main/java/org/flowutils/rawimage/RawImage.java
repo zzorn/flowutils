@@ -1,6 +1,7 @@
-package org.flowutils.image;
+package org.flowutils.rawimage;
 
 import org.flowutils.Check;
+import org.flowutils.Maths;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,7 +11,7 @@ import java.util.Arrays;
 
 
 /**
- * Fast, low level image, backed by a raw array of color data.
+ * Fast, low-level image, backed by a raw array of color data.
  */
 public final class RawImage {
 
@@ -147,6 +148,28 @@ public final class RawImage {
         buf.getGraphics().drawImage(image, 0, 0, null);
 
         return buf;
+    }
+
+    /**
+     * Renders a filled rectangle on the raw image.
+     */
+    public void fillRect(int x, int y, int w, int h, int color) {
+        if (x + w >= 0 && x < width &&
+            y + h >= 0 && y < height) {
+
+            int x1 = Maths.clamp(x,     0, width-1);
+            int x2 = Maths.clamp(x + w, 0, width-1);
+            int y1 = Maths.clamp(y,     0, height-1);
+            int y2 = Maths.clamp(y + h, 0, height-1);
+
+            int i;
+            for (int yp = y1; yp < y2; yp++) {
+                i = yp * width + x1;
+                for (int xp = x1; xp < x2; xp++) {
+                    imageData[i++] = color;
+                }
+            }
+        }
     }
 
     private void initialize() {

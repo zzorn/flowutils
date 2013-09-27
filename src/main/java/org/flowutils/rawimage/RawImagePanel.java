@@ -1,4 +1,4 @@
-package org.flowutils.image;
+package org.flowutils.rawimage;
 
 
 import javax.swing.*;

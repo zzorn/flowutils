@@ -1,4 +1,4 @@
-package org.flowutils.color;
+package org.flowutils.gradient;
 
 /**
  * Utility class with some common color gradients.

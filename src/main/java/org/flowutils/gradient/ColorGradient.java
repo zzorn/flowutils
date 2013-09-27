@@ -1,4 +1,4 @@
-package org.flowutils.color;
+package org.flowutils.gradient;
 
 import java.awt.*;
 import java.util.Map;
