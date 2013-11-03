@@ -139,9 +139,149 @@ public final class Maths {
     }
 
     /**
+     * Wraps a value to the range zero (inclusive) to one (exclusive).
+     * @return the fractional part of a value.
+     */
+    public static float wrap0To1(float value) {
+        if (value >= 0 && value < 1) return value;
+        else {
+            value = value % 1f;
+            if (value < 0) value += 1f;
+            return value;
+        }
+    }
+
+    /**
+     * Wraps a value to the range zero (inclusive) to one (exclusive).
+     * @return the fractional part of a value.
+     */
+    public static double wrap0To1(double value) {
+        if (value >= 0 && value < 1) return value;
+        else {
+            value = value % 1.0;
+            if (value < 0) value += 1.0;
+            return value;
+        }
+    }
+
+    /**
+     * Wraps a value to be larger or equal to zero and smaller than the specified maximum value.
+     * @throws IllegalArgumentException if maximum is smaller than minimum.
+     */
+    public static int wrap(int value, int max) {
+        if (max < 0) throw new IllegalArgumentException("The specified maximum value ("+max+") was smaller than the minimum value (0) when trying to wrap the value ("+value+")");
+
+        if (value >= 0 && value < max) return value;
+        else {
+            if (max <= 0) return 0;
+
+            value = value % max;
+            if (value < 0) value += max;
+            return value;
+        }
+    }
+
+    /**
+     * Wraps a value to be larger or equal to zero and smaller than the specified maximum value.
+     * @throws IllegalArgumentException if maximum is smaller than minimum.
+     */
+    public static float wrap(float value, float max) {
+        if (max < 0) throw new IllegalArgumentException("The specified maximum value ("+max+") was smaller than the minimum value (0) when trying to wrap the value ("+value+")");
+
+        if (value >= 0 && value < max) return value;
+        else {
+            if (max <= 0) return 0;
+
+            value = value % max;
+            if (value < 0) value += max;
+            return value;
+        }
+    }
+
+    /**
+     * Wraps a value to be larger or equal to zero and smaller than the specified maximum value.
+     * @throws IllegalArgumentException if maximum is smaller than minimum.
+     */
+    public static double wrap(double value, double max) {
+        if (max < 0) throw new IllegalArgumentException("The specified maximum value ("+max+") was smaller than the minimum value (0) when trying to wrap the value ("+value+")");
+
+        if (value >= 0 && value < max) return value;
+        else {
+            if (max <= 0) return 0;
+
+            value = value % max;
+            if (value < 0) value += max;
+            return value;
+        }
+    }
+
+    /**
+     * Wraps a value to be larger or equal than the specified minimum value and smaller than the specified maximum value.
+     * @throws IllegalArgumentException if maximum is smaller than minimum.
+     */
+    public static int wrap(int value, int min, int max) {
+        if (max < min) throw new IllegalArgumentException("The specified maximum value ("+max+") was smaller than the minimum value ("+min+") when trying to wrap the value ("+value+")");
+
+        if (value >= min && value < max) return value;
+        else {
+            int t = value - min;
+            int s = max - min;
+
+            if (s <= 0) return min;
+
+            t = t % s;
+            if (t < 0) t += s;
+            return min + t;
+        }
+    }
+
+    /**
+     * Wraps a value to be larger or equal to the specified minimum value and smaller than the specified maximum value.
+     * @throws IllegalArgumentException if maximum is smaller than minimum.
+     */
+    public static float wrap(float value, float min, float max) {
+        if (max < min) throw new IllegalArgumentException("The specified maximum value ("+max+") was smaller than the minimum value ("+min+") when trying to wrap the value ("+value+")");
+
+        if (value >= min && value < max) return value;
+        else {
+            float t = value - min;
+            float s = max - min;
+
+            if (s <= 0) return min;
+
+            t = t % s;
+            if (t < 0) t += s;
+            return min + t;
+        }
+    }
+
+    /**
+     * Wraps a value to be larger or equal to the specified minimum value and smaller than the specified maximum value.
+     * @throws IllegalArgumentException if maximum is smaller than minimum.
+     */
+    public static double wrap(double value, double min, double max) {
+        if (max < min) throw new IllegalArgumentException("The specified maximum value ("+max+") was smaller than the minimum value ("+min+") when trying to wrap the value ("+value+")");
+
+        if (value >= min && value < max) return value;
+        else {
+            double t = value - min;
+            double s = max - min;
+
+            if (s <= 0) return min;
+
+            t = t % s;
+            if (t < 0) t += s;
+            return min + t;
+        }
+    }
+
+    /**
      * Clamps a value to be larger than the specified minimum value and smaller than the specified maximum value.
+     * @throws IllegalArgumentException if maximum is smaller than minimum.
      */
     public static int clamp(int value, int min, int max) {
+        if (max < min) throw new IllegalArgumentException("The specified maximum value ("+max+") was smaller than the minimum value ("+min+") when trying to clamp the value ("+value+")");
+
         if (value < min) return min;
         if (value > max) return max;
         return value;
@@ -149,8 +289,11 @@ public final class Maths {
 
     /**
      * Clamps a value to be larger than the specified minimum value and smaller than the specified maximum value.
+     * @throws IllegalArgumentException if maximum is smaller than minimum.
      */
     public static float clamp(float value, float min, float max) {
+        if (max < min) throw new IllegalArgumentException("The specified maximum value ("+max+") was smaller than the minimum value ("+min+") when trying to clamp the value ("+value+")");
+
         if (value < min) return min;
         if (value > max) return max;
         return value;
@@ -158,8 +301,11 @@ public final class Maths {
 
     /**
      * Clamps a value to be larger than the specified minimum value and smaller than the specified maximum value.
+     * @throws IllegalArgumentException if maximum is smaller than minimum.
      */
     public static double clamp(double value, double min, double max) {
+        if (max < min) throw new IllegalArgumentException("The specified maximum value ("+max+") was smaller than the minimum value ("+min+") when trying to clamp the value ("+value+")");
+
         if (value < min) return min;
         if (value > max) return max;
         return value;
@@ -217,20 +363,6 @@ public final class Maths {
         if (value < min) return min;
         if (value > max) return max;
         return value;
-    }
-
-    /**
-     * @return the fractional part of a value.
-     */
-    public static float roll0To1(float value) {
-        return (float)(value - fastFloor(value));
-    }
-
-    /**
-     * @return the fractional part of a value.
-     */
-    public static double roll0To1(double value) {
-        return value - fastFloor(value);
     }
 
     /**
