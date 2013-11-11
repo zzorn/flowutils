@@ -196,6 +196,15 @@ public final class FloatRaster  {
         return mix(cy, yr0, yr1);
     }
 
+    /**
+     * Set the value at the specified location on the raster to the specified value.
+     * If the coordinate is outside the raster bounds, the location may be wrapped, clamped, or an error may be thrown,
+     * depending on the edge types specified for the raster.
+     *
+     * @param x x coordinate of the location.  zero is left edge.
+     * @param y y coordinate of the location.  zero is upper edge.
+     * @param v value to set to the specified location.
+     */
     public void set(int x, int y, float v) {
         // Handle wrapping, clamping, ignoring, or error throwing if the specified coordinates are outside the raster edges
 
@@ -236,20 +245,141 @@ public final class FloatRaster  {
         return height;
     }
 
-    public void copyFrom(FloatRaster other) {
-        System.arraycopy(other.data, 0, data, 0, data.length);
+    /**
+     * Replaces the contents of this raster with the other raster.
+     * The rasters must have the same size, if not, an exception is thrown.
+     *
+     * @param source raster to copy content from.
+     */
+    public void copyFrom(FloatRaster source) {
+        checkSizeMatches(source);
+
+        System.arraycopy(source.data, 0, data, 0, data.length);
     }
 
-    public void add(FloatRaster source, float scale, float offset) {
+    /**
+     * Multiplies all the values of this raster with the specified scale.
+     */
+    public void multiply(float scale) {
+        for (int i = 0; i < data.length; i++) {
+            data[i] *= scale;
+        }
+    }
+
+    /**
+     * Adds the specified value to all cells of this raster.
+     */
+    public void add(float offset) {
+        for (int i = 0; i < data.length; i++) {
+            data[i] += offset;
+        }
+    }
+
+    /**
+     * Multiplies all the values of this raster with the specified scale, and adds the offset.
+     */
+    public void multiplyAdd(float scale, float offset) {
+        for (int i = 0; i < data.length; i++) {
+            data[i] = data[i] * scale + offset;
+        }
+    }
+
+    /**
+     * Adds the source raster to this raster.
+     * The rasters must be of the same size, or an exception is thrown.
+     *
+     * @param source raster to add to this raster.
+     */
+    public void add(FloatRaster source) {
+        add(source, 1, 1, 0);
+    }
+
+    /**
+     * Adds the source raster to this raster.
+     * The rasters must be of the same size, or an exception is thrown.
+     *
+     * @param source raster to add to this raster.
+     * @param sourceScale value to scale the source raster with.
+     * @param offset value to add to the result at each cell.
+     */
+    public void add(FloatRaster source, float sourceScale, float offset) {
+        add(source, 1, sourceScale, offset);
+    }
+
+    /**
+     * Adds the source raster to this raster.
+     * The rasters must be of the same size, or an exception is thrown.
+     *
+     * @param source raster to add to this raster.
+     * @param originalScale value to scale this raster with.
+     * @param sourceScale value to scale the source raster with.
+     * @param offset value to add to the result at each cell.
+     */
+    public void add(FloatRaster source, float originalScale, float sourceScale, float offset) {
         checkSizeMatches(source);
 
         for (int i = 0; i < data.length; i++) {
-            data[i] += source.data[i] * scale + offset;
+            data[i] = data[i] * originalScale + source.data[i] * sourceScale + offset;
+        }
+    }
+
+    /**
+     * Multiplies this raster with the specified source raster.
+     *
+     * The rasters must be of the same size, or an exception is thrown.
+     *
+     * @param source raster to multiply with this raster.
+     */
+    public void multiply(FloatRaster source) {
+        checkSizeMatches(source);
+
+        for (int i = 0; i < data.length; i++) {
+            data[i] *= source.data[i];
+        }
+    }
+
+    /**
+     * Multiplies this raster with the specified source raster.
+     *
+     * The rasters must be of the same size, or an exception is thrown.
+     *
+     * @param source raster to multiply with this raster.
+     * @param originalScale value to scale this raster with before multiplying.
+     * @param sourceScale value to scale the source raster with before multiplying.
+     * @param offset value to add to the result after multiplying
+     */
+    public void multiply(FloatRaster source, float originalScale, float sourceScale, float offset) {
+        checkSizeMatches(source);
+
+        for (int i = 0; i < data.length; i++) {
+            data[i] = (data[i] * originalScale) * (source.data[i] * sourceScale) + offset;
+        }
+    }
+
+    /**
+     * Multiplies this raster with the specified source raster.
+     *
+     * Each cell value is calculated as:  cellValue = (cellValue * originalScale + originalOffset) + (sourceCellValue * sourceScale + sourceOffset) + offset.
+     *
+     * The rasters must be of the same size, or an exception is thrown.
+     *
+     * @param source raster to multiply with this raster.
+     * @param originalScale value to scale this raster with before multiplying.
+     * @param sourceScale value to scale the source raster with before multiplying.
+     * @param originalOffset value to add to this raster after scaling and before multiplying.
+     * @param sourceOffset value to add to the source raster after scaling and before multiplying.
+     * @param offset value to add to the result after multiplying
+     */
+    public void multiply(FloatRaster source, float originalScale, float sourceScale, float originalOffset, float sourceOffset, float offset) {
+        checkSizeMatches(source);
+
+        for (int i = 0; i < data.length; i++) {
+            data[i] = (data[i] * originalScale + originalOffset) * (source.data[i] * sourceScale + sourceOffset) + offset;
         }
     }
 
 
-
+/*
 
     public void diffuse(FloatRaster source, float diffusion, float deltaTime, float cellSizeMeter, int b) {
         checkSizeMatches(source);
@@ -345,12 +475,12 @@ public final class FloatRaster  {
 
     }
 
+*/
 
 
     private void checkSizeMatches(FloatRaster source) {
         Check.equal(source.width, "source width", width, "target width");
         Check.equal(source.height, "source height", height, "target height");
     }
-
 
 }
