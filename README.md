@@ -11,3 +11,4 @@ Contents
 * Strings  - String related functions.
 * ColorGradient - Color gradient class.
 * Stopwatch  - Timer class for simple benchmarks.
+* FloatRaster- Two dimensional floating point raster class with various manipulation methods.

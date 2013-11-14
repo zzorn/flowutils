@@ -4,38 +4,47 @@ package org.flowutils.raster;
  * Describes the type of an edge a raster has, when trying to read or write outside it.
  */
 public enum EdgeType {
+
     /**
-     * Will return 0 for reads outside the edge, ignores writes.
+     * Will return 0 for reads outside the edge, ignores writes outside the edge.
      */
     ZERO(false, false),
+
     /**
-     * Will return -1 for reads outside the edge, ignores writes.
+     * Will return -1 for reads outside the edge, ignores writes outside the edge.
      */
     MINUS_ONE(false, false),
+
     /**
-     * Will return 1 for reads outside the edge, ignores writes.
+     * Will return 1 for reads outside the edge, ignores writes outside the edge.
      */
     ONE(false, false),
+
     /**
-     * Will return the specified default value for reads outside the edge, ignores writes.
+     * Will return the specified default value for reads outside the edge, ignores writes outside the edge.
      */
     CONSTANT(false, false),
+
     /**
-     * Will return the value at the edge closest to the position for reads, ignores writes.
+     * Will return the value at the edge closest to the position for reads, ignores writes outside the edge.
      */
     CLAMP(false, true),
+
     /**
      * Will return the value at the edge closest to the position for reads, writes go to the closest pixel on the edge.
      */
     CLAMP_WRITABLE(true, true),
+
     /**
-     * Will wrap around to the other side of the raster for reads, ignores writes.
+     * Will wrap around to the other side of the raster for reads, ignores writes outside the edge.
      */
     WRAP(false, true),
+
     /**
      * Will wrap around to the other side of the raster for reads, wraps writes as well.
      */
     WRAP_WRITABLE(true, true),
+
     /**
      * Will throw an error for any attempted writes or reads outside the raster bounds.
      */

@@ -9,8 +9,10 @@ import static org.flowutils.raster.EdgeType.*;
  * Two dimensional float array with utility functions.
  */
 public final class FloatRaster  {
+
     private static final String X_AXIS_NAME = "x";
     private static final String Y_AXIS_NAME = "y";
+
     private final int width;
     private final int height;
     private final float defaultValue;
@@ -19,7 +21,6 @@ public final class FloatRaster  {
     private EdgeType rightEdge  = WRAP_WRITABLE;
     private EdgeType topEdge    = WRAP_WRITABLE;
     private EdgeType bottomEdge = WRAP_WRITABLE;
-
 
     private final float[] data ;
 
@@ -101,38 +102,67 @@ public final class FloatRaster  {
         data = new float[width * height];
     }
 
+    /**
+     * @return behaviour used when trying to read or write data outside the left edge of the raster.
+     */
     public EdgeType getLeftEdge() {
         return leftEdge;
     }
 
+    /**
+     * Specify the behaviour when trying to read or write data outside the left edge of the raster.
+     */
     public void setLeftEdge(EdgeType leftEdge) {
         this.leftEdge = leftEdge;
     }
 
+    /**
+     * @return behaviour used when trying to read or write data outside the right edge of the raster.
+     */
     public EdgeType getRightEdge() {
         return rightEdge;
     }
 
+    /**
+     * Specify the behaviour when trying to read or write data outside the right edge of the raster.
+     */
     public void setRightEdge(EdgeType rightEdge) {
         this.rightEdge = rightEdge;
     }
 
+    /**
+     * @return behaviour used when trying to read or write data outside the top edge of the raster.
+     */
     public EdgeType getTopEdge() {
         return topEdge;
     }
 
+    /**
+     * Specify the behaviour when trying to read or write data outside the top edge of the raster.
+     */
     public void setTopEdge(EdgeType topEdge) {
         this.topEdge = topEdge;
     }
 
+    /**
+     * @return behaviour used when trying to read or write data outside the bottom edge of the raster.
+     */
     public EdgeType getBottomEdge() {
         return bottomEdge;
     }
 
+    /**
+     * Specify the behaviour when trying to read or write data outside the bottom edge of the raster.
+     */
     public void setBottomEdge(EdgeType bottomEdge) {
         this.bottomEdge = bottomEdge;
     }
 
+    /**
+     * Specify the behaviour when trying to read or write data outside the edges of the raster.
+     *
+     * @param edgeType EdgeType to use for all edges of the raster.
+     */
     public void setEdgeTypes(EdgeType edgeType) {
         leftEdge   = edgeType;
         rightEdge  = edgeType;
@@ -140,6 +170,12 @@ public final class FloatRaster  {
         bottomEdge = edgeType;
     }
 
+    /**
+     * Specify the behaviour when trying to read or write data outside the edges of the raster.
+     *
+     * @param xEdgeType EdgeType to use for the left and right edges.
+     * @param yEdgeType EdgeType to use for the top and bottom edges.
+     */
     public void setEdgeTypes(EdgeType xEdgeType, EdgeType yEdgeType) {
         leftEdge   = xEdgeType;
         rightEdge  = xEdgeType;
@@ -147,6 +183,14 @@ public final class FloatRaster  {
         bottomEdge = yEdgeType;
     }
 
+    /**
+     * Specify the behaviour when trying to read or write data outside the edges of the raster.
+     *
+     * @param leftEdgeType EdgeType to use when trying to read or write beyond the left edge.
+     * @param rightEdgeType EdgeType to use when trying to read or write beyond the right edge.
+     * @param topEdgeType EdgeType to use when trying to read or write beyond the top edge.
+     * @param bottomEdgeType EdgeType to use when trying to read or write beyond the bottom edge.
+     */
     public void setEdgeTypes(EdgeType leftEdgeType, EdgeType rightEdgeType, EdgeType topEdgeType, EdgeType bottomEdgeType) {
         leftEdge   = leftEdgeType;
         rightEdge  = rightEdgeType;
@@ -158,7 +202,7 @@ public final class FloatRaster  {
      * @return value of raster at the specified coordinates (possibly wrapped, if the raster wraps).
      */
     public float get(int x, int y) {
-        // Handle wrapping, clamping, or default values if the specified coordinates are outside the raster edges
+        // Handle wrapping, clamping, or default values if the specified coordinates are outside the raster edges:
 
         if (x < 0) {
             if (leftEdge.isRedirecting()) x = leftEdge.wrap(x, width, X_AXIS_NAME);
@@ -206,7 +250,7 @@ public final class FloatRaster  {
      * @param v value to set to the specified location.
      */
     public void set(int x, int y, float v) {
-        // Handle wrapping, clamping, ignoring, or error throwing if the specified coordinates are outside the raster edges
+        // Handle wrapping, clamping, ignoring, or error throwing if the specified coordinates are outside the raster edges:
 
         if (x < 0) {
             if (!leftEdge.checkWriteable(x, y, width, height, v)) return;
@@ -229,18 +273,32 @@ public final class FloatRaster  {
         data[x + y * width] = v;
     }
 
-    public void fillRect(int x, int y, int w, int h, float v) {
-        for (int yp = y; yp < y+h; yp++) {
-            for (int xp = x; xp < x+w; xp++) {
-                set(xp, yp, v);
+    /**
+     * Fills the specified area of the raster with the specified value.
+     * @param x left coordinate to start from (inclusive)
+     * @param y top coordinate to start from (inclusive)
+     * @param width width of the rectangular area to fill in number of cells.  If zero or negative, nothing is done.
+     * @param height height of the rectangular area to fill in number of cells.  If zero or negative, nothing is done.
+     * @param value value to set to all cells inside the rectangle.
+     */
+    public void fillRect(int x, int y, int width, int height, float value) {
+        for (int yp = y; yp < y + height; yp++) {
+            for (int xp = x; xp < x + width; xp++) {
+                set(xp, yp, value);
             }
         }
     }
 
+    /**
+     * @return width of the raster in cells.
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * @return height of the raster in cells.
+     */
     public int getHeight() {
         return height;
     }
@@ -379,7 +437,7 @@ public final class FloatRaster  {
     }
 
 
-/*
+/* These are unfinished methods for supporting simple fluid dynamics simulation.
 
     public void diffuse(FloatRaster source, float diffusion, float deltaTime, float cellSizeMeter, int b) {
         checkSizeMatches(source);
@@ -478,6 +536,9 @@ public final class FloatRaster  {
 */
 
 
+    /**
+     * Make sure this raster has the same size as the source raster, if not, throw an IllegalArgumentException.
+     */
     private void checkSizeMatches(FloatRaster source) {
         Check.equal(source.width, "source width", width, "target width");
         Check.equal(source.height, "source height", height, "target height");
