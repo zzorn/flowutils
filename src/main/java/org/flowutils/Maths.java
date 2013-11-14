@@ -1,5 +1,7 @@
 package org.flowutils;
 
+import static java.lang.Math.*;
+
 /**
  * Utility functions related to math.
  */
@@ -8,7 +10,7 @@ public final class Maths {
     /**
      * Tau is 2 Pi, see http://www.tauday.com
      */
-    public static final double Tau = Math.PI * 2;
+    public static final double Tau = PI * 2;
 
     /**
      * Floating point version of Tau.
@@ -31,6 +33,36 @@ public final class Maths {
      */
     public static double mix(double t, double start, double end) {
         return start + t * (end - start);
+    }
+
+    /**
+     * Smoothly interpolate between the start and end values, using cosine interpolation.
+     * @param t 0 corresponds to start, 1 to end.
+     *          Values smaller than zero return the start value, and values greater than one return the end value.
+     * @return smoothly interpolated value
+     */
+    public static float mixSmooth(float t, float start, float end) {
+        if (t <= 0) return start;
+        else if (t >= 1) return end;
+        else {
+            float projectedT = (float) (0.5 - cos(t * PI) * 0.5);
+            return start + projectedT * (end - start);
+        }
+    }
+
+    /**
+     * Smoothly interpolate between the start and end values, using cosine interpolation.
+     * @param t 0 corresponds to start, 1 to end.
+     *          Values smaller than zero return the start value, and values greater than one return the end value.
+     * @return smoothly interpolated value
+     */
+    public static double mixSmooth(double t, double start, double end) {
+        if (t <= 0) return start;
+        else if (t >= 1) return end;
+        else {
+            double projectedT = (0.5 - cos(t * PI) * 0.5);
+            return start + projectedT * (end - start);
+        }
     }
 
     /**
@@ -89,6 +121,24 @@ public final class Maths {
     public static double map(double t, double sourceStart, double sourceEnd, double targetStart, double targetEnd) {
         double r = relPos(t, sourceStart, sourceEnd);
         return mix(r, targetStart, targetEnd);
+    }
+
+    /**
+     * Smoothly maps a value within a source range to the corresponding position in a target range.
+     * Uses cosine interpolation.  If t is smaller than 0, targetStart is returned.  If t is larger than one, targetEnd is returned.
+     */
+    public static float mapSmooth(float t, float sourceStart, float sourceEnd, float targetStart, float targetEnd) {
+        float r = relPos(t, sourceStart, sourceEnd);
+        return mixSmooth(r, targetStart, targetEnd);
+    }
+
+    /**
+     * Smoothly maps a value within a source range to the corresponding position in a target range.
+     * Uses cosine interpolation.  If t is smaller than 0, targetStart is returned.  If t is larger than one, targetEnd is returned.
+     */
+    public static double mapSmooth(double t, double sourceStart, double sourceEnd, double targetStart, double targetEnd) {
+        double r = relPos(t, sourceStart, sourceEnd);
+        return mixSmooth(r, targetStart, targetEnd);
     }
 
     /**
@@ -407,7 +457,7 @@ public final class Maths {
     public static float distance(float x1, float y1, float x2, float y2) {
         float x = x2 - x1;
         float y = y2 - y1;
-        return (float) Math.sqrt(x * x + y * y);
+        return (float) sqrt(x * x + y * y);
     }
 
     /**
@@ -416,7 +466,7 @@ public final class Maths {
     public static double distance(double  x1, double y1, double x2, double y2) {
         double x = x2 - x1;
         double y = y2 - y1;
-        return Math.sqrt(x * x + y * y);
+        return sqrt(x * x + y * y);
     }
 
     /**
