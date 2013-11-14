@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public final class Check {
 
+    private static final String CHECK_CLASS_NAME = Check.class.getName();
 
     /**
      * Checks that the specified condition is fulfilled.
@@ -35,10 +36,10 @@ public final class Check {
      */
     public static void normalNumber(double parameter, String parameterName) {
         if (Double.isInfinite(parameter)) {
-            fail(parameterName, parameter, "be a normal, non-infinite number");
+            fail(parameter, parameterName, "be a normal, non-infinite number");
         }
         if (Double.isNaN(parameter)) {
-            fail(parameterName, parameter, "be a normal number");
+            fail(parameter, parameterName, "be a normal number");
         }
     }
 
@@ -54,7 +55,7 @@ public final class Check {
         normalNumber(parameter, parameterName);
 
         if (parameter < 0) {
-            fail(parameterName, parameter, "be a normal positive number");
+            fail(parameter, parameterName, "be a normal positive number");
         }
     }
 
@@ -70,7 +71,7 @@ public final class Check {
         normalNumber(parameter, parameterName);
 
         if (parameter <= 0) {
-            fail(parameterName, parameter, "be a normal positive non-zero number");
+            fail(parameter, parameterName, "be a normal positive non-zero number");
         }
     }
 
@@ -86,7 +87,7 @@ public final class Check {
         normalNumber(parameter, parameterName);
 
         if (parameter > 0) {
-            fail(parameterName, parameter, "be a normal negative or zero number");
+            fail(parameter, parameterName, "be a normal negative or zero number");
         }
     }
 
@@ -102,7 +103,7 @@ public final class Check {
         normalNumber(parameter, parameterName);
 
         if (parameter >= 0) {
-            fail(parameterName, parameter, "be a normal negative non-zero number");
+            fail(parameter, parameterName, "be a normal negative non-zero number");
         }
     }
 
@@ -119,7 +120,7 @@ public final class Check {
         normalNumber(parameter, parameterName);
 
         if (parameter >= -epsilon && parameter <= epsilon) {
-            fail(parameterName, parameter, "be a normal non-zero number");
+            fail(parameter, parameterName, "be a normal non-zero number");
         }
     }
 
@@ -130,9 +131,9 @@ public final class Check {
      * @param parameterName the name of the parameter (used in error messages)
      * @throws IllegalArgumentException if the check fails.
      */
-    public static void positiveInt(int parameter, String parameterName) {
+    public static void positive(int parameter, String parameterName) {
         if (parameter <= 0) {
-            fail(parameterName, parameter, "be a positive non-zero number");
+            fail(parameter, parameterName, "be a positive non-zero number");
         }
     }
 
@@ -144,9 +145,9 @@ public final class Check {
      * @param parameterName the name of the parameter (used in error messages)
      * @throws IllegalArgumentException if the check fails.
      */
-    public static void positiveOrZeroInt(int parameter, String parameterName) {
+    public static void positiveOrZero(int parameter, String parameterName) {
         if (parameter < 0) {
-            fail(parameterName, parameter, "be a positive or zero number");
+            fail(parameter, parameterName, "be a positive or zero number");
         }
     }
 
@@ -157,9 +158,9 @@ public final class Check {
      * @param parameterName the name of the parameter (used in error messages)
      * @throws IllegalArgumentException if the check fails.
      */
-    public static void negativeInt(int parameter, String parameterName) {
+    public static void negative(int parameter, String parameterName) {
         if (parameter >= 0) {
-            fail(parameterName, parameter, "be a negative non-zero number");
+            fail(parameter, parameterName, "be a negative non-zero number");
         }
     }
 
@@ -171,9 +172,9 @@ public final class Check {
      * @param parameterName the name of the parameter (used in error messages)
      * @throws IllegalArgumentException if the check fails.
      */
-    public static void negativeOrZeroInt(int parameter, String parameterName) {
+    public static void negativeOrZero(int parameter, String parameterName) {
         if (parameter > 0) {
-            fail(parameterName, parameter, "be a negative or zero number");
+            fail(parameter, parameterName, "be a negative or zero number");
         }
     }
 
@@ -184,9 +185,9 @@ public final class Check {
      * @param parameterName the name of the parameter (used in error messages)
      * @throws IllegalArgumentException if the check fails.
      */
-    public static void notZeroInt(int parameter, String parameterName) {
+    public static void notZero(int parameter, String parameterName) {
         if (parameter == 0) {
-            fail(parameterName, parameter, "be a non-zero number");
+            fail(parameter, parameterName, "be a non-zero number");
         }
     }
 
@@ -200,7 +201,7 @@ public final class Check {
      */
     public static void notNull(final Object parameter, final String parameterName) {
         if (parameter == null) {
-            fail(parameterName, parameter, "not be null");
+            fail(parameter, parameterName, "not be null");
         }
     }
 
@@ -214,12 +215,12 @@ public final class Check {
      */
     public static void identifier(final String parameter, final String parameterName) {
         if (parameter == null || !isIdentifier(parameter)) {
-            fail(parameterName, parameter, "be a valid Java style identifier");
+            fail(parameter, parameterName, "be a valid Java style identifier");
         }
     }
 
     /**
-     * Checks that the specified parameter is not an empty string nor null.
+     * Checks that the specified parameter is not an empty string nor null nor a string with just whitespace.
      *
      * @param parameter     the parameter value to check
      * @param parameterName the name of the parameter (used in error messages)
@@ -227,7 +228,7 @@ public final class Check {
      */
     public static void nonEmptyString(final String parameter, final String parameterName) {
         if (parameter == null || parameter.trim().isEmpty()) {
-            fail(parameterName, parameter, "be a non-empty string value");
+            fail(parameter, parameterName, "be a non-empty string value");
         }
     }
 
@@ -242,7 +243,7 @@ public final class Check {
         normalNumber(parameter, parameterName);
 
         if (parameter < 0 || parameter > 1) {
-            fail(parameterName, parameter, "be in the range 0 to 1 inclusive");
+            fail(parameter, parameterName, "be in the range 0 to 1 inclusive");
         }
     }
 
@@ -261,10 +262,29 @@ public final class Check {
         normalNumber(parameter, parameterName);
 
         if (parameter < minimumValueInclusive || parameter >= maximumValueExclusive) {
-            fail(parameterName,
-                 parameter,
+            fail(parameter, parameterName,
                  "be in the range " + minimumValueInclusive + " (inclusive) " +
                  "to " + maximumValueExclusive + " (exclusive)");
+        }
+    }
+
+    /**
+     * Checks that the parameter is in the specified range
+     *
+     * @param parameter     the parameter value to check
+     * @param parameterName the name of the parameter (used in error messages)
+     * @throws IllegalArgumentException if the check fails.
+     */
+    public static void inRangeInclusive(final double parameter,
+                               String parameterName,
+                               double minimumValueInclusive,
+                               double maximumValueInclusive) {
+        normalNumber(parameter, parameterName);
+
+        if (parameter < minimumValueInclusive || parameter > maximumValueInclusive) {
+            fail(parameter, parameterName,
+                 "be in the range " + minimumValueInclusive + " (inclusive) " +
+                 "to " + maximumValueInclusive + " (inclusive)");
         }
     }
 
@@ -276,17 +296,35 @@ public final class Check {
      * @param parameterName the name of the parameter (used in error messages)
      * @throws IllegalArgumentException if the check fails.
      */
-    public static void inRangeInt(final int parameter,
-                                  String parameterName,
-                                  int minimumValueInclusive,
-                                  int maximumValueExclusive) {
+    public static void inRange(final int parameter,
+                               String parameterName,
+                               int minimumValueInclusive,
+                               int maximumValueExclusive) {
         if (parameter < minimumValueInclusive || parameter >= maximumValueExclusive) {
-            fail(parameterName,
-                 parameter,
+            fail(parameter, parameterName,
                  "be in the range " + minimumValueInclusive + " (inclusive) " +
                  "to " + maximumValueExclusive + " (exclusive)");
         }
     }
+
+    /**
+     * Checks that the parameter is in the specified range
+     *
+     * @param parameter     the parameter value to check
+     * @param parameterName the name of the parameter (used in error messages)
+     * @throws IllegalArgumentException if the check fails.
+     */
+    public static void inRangeInclusive(final int parameter,
+                                        String parameterName,
+                                        int minimumValueInclusive,
+                                        int maximumValueInclusive) {
+        if (parameter < minimumValueInclusive || parameter > maximumValueInclusive) {
+            fail(parameter, parameterName,
+                 "be in the range " + minimumValueInclusive + " (inclusive) " +
+                 "to " + maximumValueInclusive + " (inclusive)");
+        }
+    }
+
 
 
     /**
@@ -294,13 +332,16 @@ public final class Check {
      *
      * @param parameter     the parameter value to check
      * @param parameterName the name of the parameter (used in error messages)
+     * @param maximumValueExclusive the value that the parameter must be under
+     * @param valueName description of the maximum value, or null if no description is desired.
      * @throws IllegalArgumentException if the check fails.
      */
-    public static void under(final int parameter,
-                             String parameterName,
-                             int maximumValueExclusive) {
+    public static void less(final int parameter,
+                            String parameterName,
+                            int maximumValueExclusive,
+                            String valueName) {
         if (parameter >= maximumValueExclusive) {
-            fail(parameterName, parameter, "be smaller than " + maximumValueExclusive);
+            fail(parameter, parameterName, "smaller than", maximumValueExclusive, valueName);
         }
     }
 
@@ -309,13 +350,16 @@ public final class Check {
      *
      * @param parameter     the parameter value to check
      * @param parameterName the name of the parameter (used in error messages)
+     * @param maximumValueInclusive the value that the parameter must be under
+     * @param valueName description of the maximum value, or null if no description is desired.
      * @throws IllegalArgumentException if the check fails.
      */
-    public static void underOrEqual(final int parameter,
-                                      String parameterName,
-                                      int maximumValueInclusive) {
+    public static void lessOrEqual(final int parameter,
+                                   String parameterName,
+                                   int maximumValueInclusive,
+                                   String valueName) {
         if (parameter > maximumValueInclusive) {
-            fail(parameterName, parameter, "be smaller or equal to " + maximumValueInclusive);
+            fail(parameter, parameterName, "smaller or equal to", maximumValueInclusive, valueName);
         }
     }
 
@@ -324,13 +368,16 @@ public final class Check {
      *
      * @param parameter     the parameter value to check
      * @param parameterName the name of the parameter (used in error messages)
+     * @param minimumValueExclusive the value that the parameter should be larger than.
+     * @param valueName description of the minimum value, or null if no description is desired.
      * @throws IllegalArgumentException if the check fails.
      */
-    public static void over(final int parameter,
-                              String parameterName,
-                              int minimumValueExclusive) {
+    public static void greater(final int parameter,
+                               String parameterName,
+                               int minimumValueExclusive,
+                               String valueName) {
         if (parameter <= minimumValueExclusive) {
-            fail(parameterName, parameter, "be larger than " + minimumValueExclusive);
+            fail(parameter, parameterName, "larger than", minimumValueExclusive, valueName);
         }
     }
 
@@ -339,13 +386,16 @@ public final class Check {
      *
      * @param parameter     the parameter value to check
      * @param parameterName the name of the parameter (used in error messages)
+     * @param minimumValueInclusive the value that the parameter should be larger than.
+     * @param valueName description of the minimum value, or null if no description is desired.
      * @throws IllegalArgumentException if the check fails.
      */
-    public static void overOrEqual(final int parameter,
-                                     String parameterName,
-                                     int minimumValueInclusive) {
+    public static void greaterOrEqual(final int parameter,
+                                      String parameterName,
+                                      int minimumValueInclusive,
+                                      String valueName) {
         if (parameter < minimumValueInclusive) {
-            fail(parameterName, parameter, "be larger or equal to " + minimumValueInclusive);
+            fail(parameter, parameterName, "larger or equal to", minimumValueInclusive, valueName);
         }
     }
 
@@ -355,16 +405,111 @@ public final class Check {
      *
      * @param parameter     the parameter value to check
      * @param parameterName the name of the parameter (used in error messages)
+     * @param requiredValue the value that the parameter should be equal to
+     * @param valueName description of the value to be equal to, or null if no description is desired.
      * @throws IllegalArgumentException if the check fails.
      */
     public static void equal(final int parameter,
                              String parameterName,
                              int requiredValue,
-                             String otherName) {
+                             String valueName) {
         if (parameter != requiredValue) {
-            fail(parameterName,
-                 parameter,
-                 "be equal to " + otherName + " which is " + requiredValue);
+            fail(parameter, parameterName, "equal to", requiredValue, valueName);
+        }
+    }
+
+    /**
+     * Checks that the parameter is smaller than the specified value.
+     *
+     * @param parameter     the parameter value to check
+     * @param parameterName the name of the parameter (used in error messages)
+     * @param maximumValueExclusive the value that the parameter must be under
+     * @param valueName description of the maximum value, or null if no description is desired.
+     * @throws IllegalArgumentException if the check fails.
+     */
+    public static void less(final double parameter,
+                            String parameterName,
+                            double maximumValueExclusive,
+                            String valueName) {
+        if (parameter >= maximumValueExclusive) {
+            fail(parameter, parameterName, "smaller than", maximumValueExclusive, valueName);
+        }
+    }
+
+    /**
+     * Checks that the parameter is smaller or equal to the specified value.
+     *
+     * @param parameter     the parameter value to check
+     * @param parameterName the name of the parameter (used in error messages)
+     * @param maximumValueInclusive the value that the parameter must be under
+     * @param valueName description of the maximum value, or null if no description is desired.
+     * @throws IllegalArgumentException if the check fails.
+     */
+    public static void lessOrEqual(final double parameter,
+                                   String parameterName,
+                                   double maximumValueInclusive,
+                                   String valueName) {
+        if (parameter > maximumValueInclusive) {
+            fail(parameter, parameterName, "smaller or equal to", maximumValueInclusive, valueName);
+        }
+    }
+
+    /**
+     * Checks that the parameter is greater than the specified value.
+     *
+     * @param parameter     the parameter value to check
+     * @param parameterName the name of the parameter (used in error messages)
+     * @param minimumValueExclusive the value that the parameter should be larger than.
+     * @param valueName description of the minimum value, or null if no description is desired.
+     * @throws IllegalArgumentException if the check fails.
+     */
+    public static void greater(final double parameter,
+                               String parameterName,
+                               double minimumValueExclusive,
+                               String valueName) {
+        if (parameter <= minimumValueExclusive) {
+            fail(parameter, parameterName, "larger than", minimumValueExclusive, valueName);
+        }
+    }
+
+    /**
+     * Checks that the parameter is greater or equal to the specified value.
+     *
+     * @param parameter     the parameter value to check
+     * @param parameterName the name of the parameter (used in error messages)
+     * @param minimumValueInclusive the value that the parameter should be larger than.
+     * @param valueName description of the minimum value, or null if no description is desired.
+     * @throws IllegalArgumentException if the check fails.
+     */
+    public static void greaterOrEqual(final double parameter,
+                                      String parameterName,
+                                      double minimumValueInclusive,
+                                      String valueName) {
+        if (parameter < minimumValueInclusive) {
+            fail(parameter, parameterName, "larger or equal to", minimumValueInclusive, valueName);
+        }
+    }
+
+
+    /**
+     * Checks that the floating point parameter is equal to the specified value.
+     *
+     * @param parameter     the parameter value to check
+     * @param parameterName the name of the parameter (used in error messages)
+     * @param requiredValue the value that the parameter should be equal to
+     * @param valueName description of the value to be equal to, or null if no description is desired.
+     * @param maximumAllowedDifference the epsilon, or maximum allowed difference, between the parameter value and the required value.
+     *                                 Needed for floating point values as they are not precise.
+     * @throws IllegalArgumentException if the check fails.
+     */
+    public static void equal(final double parameter,
+                             String parameterName,
+                             double requiredValue,
+                             String valueName,
+                             double maximumAllowedDifference) {
+        if (parameter < requiredValue - maximumAllowedDifference ||
+            parameter > requiredValue + maximumAllowedDifference) {
+            fail(parameter, parameterName, "equal to (with a max difference of "+maximumAllowedDifference+")", requiredValue, valueName);
         }
     }
 
@@ -383,8 +528,7 @@ public final class Check {
                              String otherName) {
         if ((parameter != null && !parameter.equals(requiredValue)) ||
             (parameter == null && requiredValue != null)) {
-            fail(parameterName,
-                 parameter,
+            fail(parameter, parameterName,
                  "be equal to " + otherName + " which is '" + requiredValue + "'");
         }
     }
@@ -402,8 +546,7 @@ public final class Check {
                                 Object requiredValue,
                                 String otherName) {
         if (parameter != requiredValue) {
-            fail(parameterName,
-                 parameter,
+            fail(parameter, parameterName,
                  "be the same object as " + otherName + " which is '" + requiredValue + "'");
         }
     }
@@ -510,8 +653,7 @@ public final class Check {
         notNull(parameter, parameterName);
 
         if (!expectedParameterType.isInstance(parameter)) {
-            fail(parameterName,
-                 "of type '" + parameter.getClass() + "'",
+            fail("of type '" + parameter.getClass() + "'", parameterName,
                  "be of type '" + expectedParameterType + "'");
         }
     }
@@ -530,8 +672,7 @@ public final class Check {
         notNull(parameter, parameterName);
 
         if (expectedParameterType.isInstance(parameter)) {
-            fail(parameterName,
-                 "of type '" + parameter.getClass() + "'",
+            fail("of type '" + parameter.getClass() + "'", parameterName,
                  "be of type '" + expectedParameterType + "'");
         }
     }
@@ -543,12 +684,34 @@ public final class Check {
      *
      * @throws IllegalArgumentException with message.
      */
-    public static void fail(final String parameterName,
-                             final Object parameter,
-                             final String expectedCondition) {
+    public static void fail(final Object parameter,
+                            final String parameterName,
+                            final String expectedCondition) {
         fail("The parameter '" + parameterName + "' " +
              "should " + expectedCondition + ", " +
-             "but it was '" + parameter + "'.");
+             "but it was '" + parameter + "'");
+    }
+
+    /**
+     * Throws an IllegalArgumentException, using the specified parameters to compose the error message,
+     * and including information on the method that it was thrown from.
+     *
+     * @param parameter parameter value
+     * @param parameterName name of parameter
+     * @param failureType type of failure of the parameter
+     * @param value value that the parameter failed to relate to
+     * @param valueName description of the value that the parameter failed to relate to
+     * @throws IllegalArgumentException with message.
+     */
+    private static void fail(Object parameter,
+                             String parameterName,
+                             String failureType,
+                             Object value,
+                             String valueName) {
+        String valueDesc = valueName == null ? " "+value : " "+ valueName +", which is " + value;
+        fail("The parameter '" + parameterName + "' " +
+             "was '" + parameter + "', " +
+             "but it should be " + failureType + valueDesc);
     }
 
 
@@ -565,6 +728,7 @@ public final class Check {
     //======================================================================
     // Private Methods
 
+    // Constructor disabled
     private Check() {
     }
 
@@ -587,7 +751,7 @@ public final class Check {
         else {
             if (!Character.isJavaIdentifierStart(s.charAt(0))) return false;
             for (int i = 1; i < s.length(); i++) {
-                if (!Character.isJavaIdentifierPart(s.charAt(0))) return false;
+                if (!Character.isJavaIdentifierPart(s.charAt(i))) return false;
             }
             return true;
         }
@@ -602,19 +766,17 @@ public final class Check {
         final StackTraceElement[] trace = Thread.currentThread().getStackTrace();
 
         // Iterate to first method not in Check class (= the originator of the failed check)
-        final String checkName = Check.class.getName();
-        for (int i = trace.length - 1 - 2; i > 0; i--) {
-            // We start 2 steps back, as there is at least two calls inside the Check class before this method.
-
-            if (!trace[i].getClassName().equals(checkName)) {
+        // Skip over the first entry, as it is the getStackTrace method call.
+        for (int i = 1; i < trace.length; i++) {
+            if (!trace[i].getClassName().equals(CHECK_CLASS_NAME)) {
                 String methodName = trace[i].getMethodName();
                 String className = trace[i].getClassName();
-                return " in method " + methodName + " of class " + className;
+                return ", in method " + methodName + " of class " + className;
             }
         }
 
         // Normally we wouldn't get here
-        return "";
+        return ".";
     }
 
 }

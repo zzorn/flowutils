@@ -25,8 +25,8 @@ public final class RawImage {
      * Creates a new empty black RawImage with the specified size in pixels.
      */
     public RawImage(int width, int height) {
-        Check.positiveInt(width, "width");
-        Check.positiveInt(height, "height");
+        Check.positive(width, "width");
+        Check.positive(height, "height");
 
         this.width = width;
         this.height = height;
