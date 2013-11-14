@@ -1,4 +1,4 @@
 #!/bin/bash
 
-mvn3 release:prepare -DdryRun=true
+mvn release:prepare -DdryRun=true
 
