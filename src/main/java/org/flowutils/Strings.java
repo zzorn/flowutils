@@ -3,7 +3,7 @@ package org.flowutils;
 /**
  *
  */
-public class Strings {
+public final class Strings {
 
     /**
      * @return a valid java identifier, generated from the user readable name.
@@ -59,6 +59,55 @@ public class Strings {
         if (sb.length() <= 0) sb.append(fillCharacter);
 
         return sb.toString();
+    }
+
+    /**
+     * @return true if s is a valid Java style identifier (starts with unicode letter or underscore or $,
+     * contains unicode letters, underscores, numbers, or $).
+     */
+    public static boolean isJavaIdentifier(String s) {
+        if (s == null || s.isEmpty()) return false;
+        else {
+            if (!Character.isJavaIdentifierStart(s.charAt(0))) return false;
+            for (int i = 1; i < s.length(); i++) {
+                if (!Character.isJavaIdentifierPart(s.charAt(i))) return false;
+            }
+            return true;
+        }
+    }
+
+    /**
+     * @return true if s is a strict identifier (starts with a-z, A-Z, or _, contains a-z, A-Z, _, or 0-9).
+     */
+    public static boolean isStrictIdentifier(String s) {
+        if (s == null || s.isEmpty()) return false;
+        else {
+            if (!isLetterOrUnderscore(s.charAt(0))) return false;
+            for (int i = 1; i < s.length(); i++) {
+                if (!isLetterOrUnderscoreOrNumber(s.charAt(i))) return false;
+            }
+            return true;
+        }
+    }
+
+    /**
+     * @return true if the character is an ascii letter or underscore.
+     */
+    public static boolean isLetterOrUnderscore(char c) {
+        return (c >= 'a' && c <= 'z') ||
+               (c >= 'A' && c <= 'Z') ||
+               c == '_';
+    }
+
+    /**
+     * @return true if the character is an ascii letter, number, or underscore.
+     */
+    public static boolean isLetterOrUnderscoreOrNumber(char c) {
+        return (c >= 'a' && c <= 'z') ||
+               (c >= 'A' && c <= 'Z') ||
+               (c >= '1' && c <= '9') ||
+               c == '0' ||
+               c == '_';
     }
 
 

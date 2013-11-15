@@ -102,6 +102,17 @@ public class CheckTest {
         identifier("$foo$bar$$$$", "id");
         identifier("Ångström", "id");
 
+        strictIdentifier("x", "id");
+        strictIdentifier("_x", "id");
+        strictIdentifier("xxx3x3", "id");
+        strictIdentifier("___sdf__", "id");
+
+        try {
+            identifier(null, "id");
+            Assert.fail();
+        }
+        catch (IllegalArgumentException e) {}
+
         try {
             identifier("?sdf", "id");
             Assert.fail();
@@ -144,6 +155,32 @@ public class CheckTest {
             Assert.fail();
         }
         catch (IllegalArgumentException e) {}
+
+
+        try {
+            strictIdentifier("sd$f", "id");
+            Assert.fail();
+        }
+        catch (IllegalArgumentException e) {}
+
+        try {
+            strictIdentifier("Ångström", "id");
+            Assert.fail();
+        }
+        catch (IllegalArgumentException e) {}
+
+        try {
+            strictIdentifier("", "id");
+            Assert.fail();
+        }
+        catch (IllegalArgumentException e) {}
+
+        try {
+            strictIdentifier(null, "id");
+            Assert.fail();
+        }
+        catch (IllegalArgumentException e) {}
+
     }
 
     @Test

@@ -206,16 +206,30 @@ public final class Check {
     }
 
     /**
-     * Checks that the specified parameter is a valid Java style identifier (starts with letter or underscore,
-     * contains letters, underscores and numbers).
+     * Checks that the specified parameter is a valid Java style identifier (starts with unicode letter or underscore or $,
+     * contains unicode letters, underscores, numbers, and $).
      *
      * @param parameter     the parameter value to check
      * @param parameterName the name of the parameter (used in error messages)
      * @throws IllegalArgumentException if the check fails.
      */
     public static void identifier(final String parameter, final String parameterName) {
-        if (parameter == null || !isIdentifier(parameter)) {
+        if (parameter == null || !Strings.isJavaIdentifier(parameter)) {
             fail(parameter, parameterName, "be a valid Java style identifier");
+        }
+    }
+
+    /**
+     * Checks that the specified parameter is a strict identifier (starts with a-z, A-Z, or _,
+     * contains a-z, A-Z, _, or 0-9).
+     *
+     * @param parameter     the parameter value to check
+     * @param parameterName the name of the parameter (used in error messages)
+     * @throws IllegalArgumentException if the check fails.
+     */
+    public static void strictIdentifier(final String parameter, final String parameterName) {
+        if (parameter == null || !Strings.isStrictIdentifier(parameter)) {
+            fail(parameter, parameterName, "be a valid identifier");
         }
     }
 
@@ -743,19 +757,6 @@ public final class Check {
         return elementDesc;
     }
 
-    /**
-     * @return true if s is a valid Java style identifier.
-     */
-    private static boolean isIdentifier(String s) {
-        if (s.isEmpty()) return false;
-        else {
-            if (!Character.isJavaIdentifierStart(s.charAt(0))) return false;
-            for (int i = 1; i < s.length(); i++) {
-                if (!Character.isJavaIdentifierPart(s.charAt(i))) return false;
-            }
-            return true;
-        }
-    }
 
 
     /**
