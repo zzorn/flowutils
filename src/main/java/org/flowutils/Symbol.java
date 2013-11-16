@@ -18,6 +18,7 @@ public final class Symbol {
     private static final ConcurrentHashMap<String, Symbol> symbols = new ConcurrentHashMap<String, Symbol>();
 
     private final String name;
+    private final int hash;
 
     /**
      * @param name string to put in the symbol.
@@ -63,11 +64,14 @@ public final class Symbol {
         strictIdentifier(name, "name");
 
         this.name = name;
+
+        // Cache hashcode, saves a function call and a comparison, so a minor optimization really.
+        this.hash = name.hashCode();
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return hash;
     }
 
     @Override public String toString() {
