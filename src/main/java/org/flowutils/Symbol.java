@@ -1,8 +1,9 @@
 package org.flowutils;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.flowutils.Check.*;
+import static org.flowutils.Check.strictIdentifier;
 
 /**
  * A unique string type symbol, where each unique string is guaranteed to exist only once.
@@ -16,9 +17,10 @@ import static org.flowutils.Check.*;
 public final class Symbol {
 
     private static final ConcurrentHashMap<String, Symbol> symbols = new ConcurrentHashMap<String, Symbol>();
+    private static final AtomicInteger nextFreeId = new AtomicInteger(1);
 
-    private final String name;
-    private final int hash;
+    private final String  name;
+    private transient int uniqueId;
 
     /**
      * @param name string to put in the symbol.
@@ -32,8 +34,14 @@ public final class Symbol {
         // Get symbol if found
         Symbol symbol = symbols.get(name);
         if (symbol == null) {
-            // Symbol not found, try to add a new one, but if someone else already added one in between, use that instead.
+            // No existing symbol with the same name found
+
+            // Create new symbol with a new unique id
             final Symbol newSymbol = new Symbol(name);
+            newSymbol.uniqueId = nextFreeId.getAndIncrement();
+
+            // Try to add symbol, but if someone else already added one in between,
+            // use that instead.
             symbol = symbols.putIfAbsent(name, newSymbol);
             if (symbol == null) {
                 symbol = newSymbol;
@@ -64,14 +72,48 @@ public final class Symbol {
         strictIdentifier(name, "name");
 
         this.name = name;
+    }
 
-        // Cache hashcode, saves a function call and a comparison, so a minor optimization really.
-        this.hash = name.hashCode();
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) return true;
+        else if (obj == null || !(obj instanceof Symbol)) return false;
+        else {
+            return getUniqueId() == ((Symbol)obj).getUniqueId();
+        }
     }
 
     @Override
     public int hashCode() {
-        return hash;
+        return getUniqueId();
+    }
+
+    private int getUniqueId() {
+        // Get unique id if we do not have one
+        // We do not have one if this class was deserialized.
+        if (uniqueId == 0) {
+            // Double check that the name is valid (in case serialized data tried to inject an invalid name)
+            strictIdentifier(name, "name");
+
+            // Get existing symbol with same name if found
+            Symbol symbol = symbols.get(name);
+            if (symbol == null) {
+                // No existing symbol found
+
+                // Get next free unique id
+                uniqueId = nextFreeId.getAndIncrement();
+
+                // Try to add ourselves, or get already added symbol, if one was added from another thread.
+                symbol = symbols.putIfAbsent(name, this);
+            }
+
+            if (symbol != null) {
+                // Symbol existed, use unique id of existing symbol with same name
+                uniqueId = symbol.uniqueId;
+            }
+        }
+
+        return uniqueId;
     }
 
     @Override public String toString() {
