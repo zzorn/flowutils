@@ -1,7 +1,7 @@
 package org.flowutils.rawimage;
 
 import org.flowutils.Check;
-import org.flowutils.Maths;
+import org.flowutils.MathUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -157,10 +157,10 @@ public final class RawImage {
         if (x + w >= 0 && x < width &&
             y + h >= 0 && y < height) {
 
-            int x1 = Maths.clamp(x,     0, width-1);
-            int x2 = Maths.clamp(x + w, 0, width-1);
-            int y1 = Maths.clamp(y,     0, height-1);
-            int y2 = Maths.clamp(y + h, 0, height-1);
+            int x1 = MathUtils.clamp(x, 0, width - 1);
+            int x2 = MathUtils.clamp(x + w, 0, width - 1);
+            int y1 = MathUtils.clamp(y, 0, height - 1);
+            int y2 = MathUtils.clamp(y + h, 0, height - 1);
 
             int i;
             for (int yp = y1; yp < y2; yp++) {

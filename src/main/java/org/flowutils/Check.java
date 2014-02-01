@@ -214,7 +214,7 @@ public final class Check {
      * @throws IllegalArgumentException if the check fails.
      */
     public static void identifier(final String parameter, final String parameterName) {
-        if (parameter == null || !Strings.isJavaIdentifier(parameter)) {
+        if (parameter == null || !StringUtils.isJavaIdentifier(parameter)) {
             fail(parameter, parameterName, "be a valid Java style identifier");
         }
     }
@@ -228,7 +228,7 @@ public final class Check {
      * @throws IllegalArgumentException if the check fails.
      */
     public static void strictIdentifier(final String parameter, final String parameterName) {
-        if (parameter == null || !Strings.isStrictIdentifier(parameter)) {
+        if (parameter == null || !StringUtils.isStrictIdentifier(parameter)) {
             fail(parameter, parameterName, "be a valid identifier");
         }
     }

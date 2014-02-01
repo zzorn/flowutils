@@ -5,7 +5,7 @@ import static java.lang.Math.*;
 /**
  * Utility functions related to math.
  */
-public final class Maths {
+public final class MathUtils {
 
     /**
      * Tau is 2 Pi, see http://www.tauday.com
@@ -501,6 +501,6 @@ public final class Maths {
         return value < 0.0 ? (int)(value - 1) : (int) value;
     }
 
-    private Maths() {
+    private MathUtils() {
     }
 }

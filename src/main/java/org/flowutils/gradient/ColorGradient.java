@@ -4,8 +4,8 @@ import java.awt.*;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static org.flowutils.Maths.map;
-import static org.flowutils.Maths.mix;
+import static org.flowutils.MathUtils.map;
+import static org.flowutils.MathUtils.mix;
 
 /**
  * Simple color gradient.

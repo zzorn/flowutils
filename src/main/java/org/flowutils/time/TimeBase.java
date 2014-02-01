@@ -1,7 +1,8 @@
 package org.flowutils.time;
 
 import org.flowutils.Check;
-import org.flowutils.Maths;
+import org.flowutils.MathUtils;
+import org.flowutils.MathUtils;
 
 /**
  * Base class for common functionality of Time implementations.
@@ -76,7 +77,9 @@ public abstract class TimeBase implements Time {
         lastStepDurationSeconds = lastStepDurationMs * MILLISECONDS_TO_SECONDS;
         lastStepTimeStamp = time;
 
-        smoothedStepDurationSeconds = Maths.mix(smoothingFactor, lastStepDurationSeconds, smoothedStepDurationSeconds);
+        smoothedStepDurationSeconds = MathUtils.mix(smoothingFactor,
+                                                    lastStepDurationSeconds,
+                                                    smoothedStepDurationSeconds);
     }
 
     @Override public double getSecondsSinceLastStep() {

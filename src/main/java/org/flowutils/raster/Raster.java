@@ -2,7 +2,7 @@ package org.flowutils.raster;
 
 import org.flowutils.Check;
 
-import static org.flowutils.Maths.*;
+import static org.flowutils.MathUtils.*;
 import static org.flowutils.raster.EdgeType.*;
 
 /**
