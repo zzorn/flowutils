@@ -50,7 +50,7 @@ public interface Raster {
      *
      * @param x x coordinate to get data for
      * @param y y coordinate to get data for
-     * @param dataOut map to write cannel values to.
+     * @param dataOut map to write channel values to.
      */
     void getValues(double x, double y, Map<Symbol, Float> dataOut);
 

@@ -1,12 +1,14 @@
 package org.flowutils.raster;
 
-import org.flowutils.Maths;
+import org.flowutils.MathUtils;
 import org.flowutils.Symbol;
 import org.flowutils.rectangle.Rectangle;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import static org.flowutils.MathUtils.*;
 
 /**
  * Provides implementations of Raster functions using the GridRaster.
@@ -78,7 +80,7 @@ public abstract class GridRasterBase extends RasterBase implements GridRaster {
      */
     public final int mapAreaToGridX(double x) {
         final Rectangle area = getArea();
-        return Maths.fastFloor(Maths.map(x, area.getMinX(), area.getMaxX(), 0, getGridSizeX()));
+        return fastFloor(map(x, area.getMinX(), area.getMaxX(), 0, getGridSizeX()));
     }
 
     /**
@@ -88,7 +90,7 @@ public abstract class GridRasterBase extends RasterBase implements GridRaster {
      */
     public final int mapAreaToGridY(double y) {
         final Rectangle area = getArea();
-        return Maths.fastFloor(Maths.map(y, area.getMinY(), area.getMaxY(), 0, getGridSizeY()));
+        return fastFloor(map(y, area.getMinY(), area.getMaxY(), 0, getGridSizeY()));
     }
 
 }
