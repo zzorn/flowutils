@@ -36,7 +36,7 @@
     <scm>
         <url>https://github.com/zzorn/flowutils</url>
         <connection>scm:git:https://github.com/zzorn/flowutils.git</connection>
-        <developerConnection>scm:git:git@github.com/zzorn/flowutils.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/zzorn/flowutils.git</developerConnection>
     </scm>
 
     <distributionManagement>
