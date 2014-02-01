@@ -503,4 +503,24 @@ public final class MathUtils {
 
     private MathUtils() {
     }
+
+    /**
+     * Rounds to closest integer.
+     */
+    public static int round(float value) {
+        value += 0.5f;
+
+        // Use the fast floor formula
+        return value < 0.0f ? (int)(value - 1) : (int) value;
+    }
+
+    /**
+     * Rounds to closest integer.
+     */
+    public static int round(double value) {
+        value += 0.5;
+
+        // Use the fast floor formula
+        return value < 0.0f ? (int)(value - 1) : (int) value;
+    }
 }

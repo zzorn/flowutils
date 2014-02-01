@@ -1,5 +1,7 @@
 package org.flowutils.rectangle;
 
+import org.flowutils.Maths;
+
 /**
  * Common functionality for Rectangles.
  */
@@ -94,6 +96,30 @@ public abstract class RectangleBase implements Rectangle {
     @Override
     public final double getCenterDistanceTo(double x, double y) {
         return Math.sqrt(getSquaredCenterDistanceTo(x, y));
+    }
+
+    @Override
+    public double getMappedX(final double t) {
+        if (empty) return 0;
+        else return Maths.map(t, 0, 1, minX, maxX);
+    }
+
+    @Override
+    public double getMappedY(final double t) {
+        if (empty) return 0;
+        else return Maths.map(t, 0, 1, minY, maxY);
+    }
+
+    @Override
+    public double getRelativeX(final double x) {
+        if (empty) return 0;
+        else return Maths.map(x, minX, maxX, 0, 1);
+    }
+
+    @Override
+    public double getRelativeY(final double y) {
+        if (empty) return 0;
+        else return Maths.map(y, minY, maxY, 0, 1);
     }
 
     protected final void init(double x1, double y1, double x2, double y2) {

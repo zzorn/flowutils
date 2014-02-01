@@ -1,6 +1,8 @@
 package org.flowutils.raster;
 
 import org.flowutils.Check;
+import org.flowutils.Symbol;
+import org.flowutils.rectangle.Rectangle;
 
 import static org.flowutils.MathUtils.*;
 import static org.flowutils.raster.EdgeType.*;
@@ -8,7 +10,7 @@ import static org.flowutils.raster.EdgeType.*;
 /**
  * Two dimensional float array with utility functions.
  */
-public final class FloatRaster  {
+public final class FloatRaster extends SingleChannelGridRaster {
 
     private static final String X_AXIS_NAME = "x";
     private static final String Y_AXIS_NAME = "y";
@@ -91,6 +93,29 @@ public final class FloatRaster  {
                        EdgeType topEdge,
                        EdgeType bottomEdge,
                        float defaultValue) {
+        this(width, height, leftEdge, rightEdge, topEdge, bottomEdge, defaultValue, Symbol.get("value"));
+    }
+
+    /**
+     * @param width width of the raster
+     * @param height height of the raster
+     * @param leftEdge specifies how to handle accesses or writes of data outside the left edge.
+     * @param rightEdge specifies how to handle accesses or writes of data outside the right edge.
+     * @param topEdge specifies how to handle accesses or writes of data outside the top edge.
+     * @param bottomEdge specifies how to handle accesses or writes of data outside the bottom edge.
+     * @param defaultValue value that should be returned if the raster is accessed outside of its bounds, and the edgeType is EdgeType.CONSTANT.
+     * @param channelName name of the single channel provided by this raster.
+     */
+    public FloatRaster(int width,
+                       int height,
+                       EdgeType leftEdge,
+                       EdgeType rightEdge,
+                       EdgeType topEdge,
+                       EdgeType bottomEdge,
+                       float defaultValue,
+                       Symbol channelName) {
+        super(channelName);
+
         this.width = width;
         this.height = height;
         this.leftEdge = leftEdge;
@@ -437,7 +462,39 @@ public final class FloatRaster  {
     }
 
 
-/* These are unfinished methods for supporting simple fluid dynamics simulation.
+
+
+    @Override
+    public float getGridValue(final int gridX, final int gridY) {
+        return get(gridX, gridY);
+    }
+
+    @Override
+    public void setGridValue(final int gridX, final int gridY, final float value) {
+        set(gridX, gridY, value);
+    }
+
+    @Override
+    public int getGridSizeX() {
+        return width;
+    }
+
+    @Override
+    public int getGridSizeY() {
+        return height;
+    }
+
+    @Override
+    public void setArea(final Rectangle area) {
+        super.setArea(area);
+    }
+
+    @Override
+    public void setChannelId(final Symbol channelId) {
+        super.setChannelId(channelId);
+    }
+
+    /* These are unfinished methods for supporting simple fluid dynamics simulation.
 
     public void diffuse(FloatRaster source, float diffusion, float deltaTime, float cellSizeMeter, int b) {
         checkSizeMatches(source);
@@ -545,3 +602,4 @@ public final class FloatRaster  {
     }
 
 }
+
