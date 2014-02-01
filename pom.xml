@@ -3,7 +3,7 @@
 
     <groupId>org.flowutils</groupId>
     <artifactId>flowutils</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.12-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>flowutils</name>
@@ -35,7 +35,8 @@
 
     <scm>
         <url>https://github.com/zzorn/flowutils</url>
-        <developerConnection>scm:git:git@github.com:zzorn/flowutils.git</developerConnection>
+        <connection>scm:git:https://github.com/zzorn/flowutils.git</connection>
+        <developerConnection>scm:git:git@github.com/zzorn/flowutils.git</developerConnection>
     </scm>
 
     <distributionManagement>
