@@ -103,4 +103,29 @@ public class StringUtilsTest {
         assertFalse(isJavaIdentifier(null));
 
     }
+
+    @Test
+    public void testTextBefore() throws Exception {
+        assertEquals("filename", textBefore('.', "filename.txt.zip"));
+        assertEquals("", textBefore('.', ".txt.zip"));
+        assertEquals("", textBefore('.', "foobar"));
+        assertEquals("a", textBefore('.', "a."));
+        assertEquals("a", textBefore('.', "a.."));
+        assertEquals("abc", textBefore('.', "abc.."));
+        assertEquals("", textBefore('.', ""));
+        assertEquals("", textBefore('.', "."));
+    }
+
+    @Test
+    public void testTextAfter() throws Exception {
+        assertEquals("zip", textAfter('.', "filename.txt.zip"));
+        assertEquals("", textAfter('.', "filename.txt."));
+        assertEquals("", textAfter('.', "foobar"));
+        assertEquals("a", textAfter('.', ".a"));
+        assertEquals("a", textAfter('.', "..a"));
+        assertEquals("abc", textAfter('.', "..abc"));
+        assertEquals("", textAfter('.', ""));
+        assertEquals("", textAfter('.', "."));
+
+    }
 }

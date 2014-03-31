@@ -224,6 +224,36 @@ public final class StringUtils {
         return builder.toString();
     }
 
+    /**
+     * @return the text that comes after the last occurrence of the specified character in the provided text (not including the character),
+     * or an empty string if there is no such character, or if the character is last.
+     * E.g. textAfter('.', "filename.txt.zip") would return "zip".
+     */
+    public static String textAfter(Character c, String text) {
+        final int lastIndex = text.lastIndexOf(c);
+        if (lastIndex < 0 || lastIndex >= text.length() - 1) {
+            return "";
+        }
+        else {
+            return text.substring(lastIndex + 1);
+        }
+    }
+
+    /**
+     * @return the text that comes before the first occurrence of the specified character in the provided text (not including the character),
+     * or an empty string if there is no such character, or if the character is first.
+     * E.g. textBefore('.', "filename.txt.zip") would return "filename".
+     */
+    public static String textBefore(Character c, String text) {
+        final int firstIndex = text.indexOf(c);
+        if (firstIndex <= 0) {
+            return "";
+        }
+        else {
+            return text.substring(0, firstIndex);
+        }
+    }
+
     private StringUtils() {
     }
 }
