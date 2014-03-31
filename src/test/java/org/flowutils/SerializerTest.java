@@ -14,7 +14,6 @@ import static org.junit.Assert.fail;
 
 public class SerializerTest {
 
-
     @Test
     public void testSerializer() throws Exception {
 

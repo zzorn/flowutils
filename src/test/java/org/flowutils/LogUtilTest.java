@@ -9,10 +9,10 @@ public class LogUtilTest {
 
     @Test
     public void testCreateLogger() throws Exception {
-        final Logger logger = LogUtil.getLogger();
+        final Logger logger = LogUtils.getLogger();
 
         logger.info("Testing logging");
 
-        assertEquals("LogUtilTest", logger.getName());
+        assertEquals("org.flowutils.LogUtilTest", logger.getName());
     }
 }
