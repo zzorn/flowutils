@@ -16,6 +16,15 @@ public interface Rectangle {
     double getCenterY();
     double getSizeX();
     double getSizeY();
+
+    /**
+     * @return average of sizeX and sizeY
+     */
+    double getSizeAverage();
+
+    /**
+     * @return area of the rectangle (sizeX * sizeY)
+     */
     double getArea();
 
     /**

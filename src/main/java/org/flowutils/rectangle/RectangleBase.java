@@ -58,6 +58,10 @@ public abstract class RectangleBase implements Rectangle {
         return maxY - minY;
     }
 
+    @Override public double getSizeAverage() {
+        return ((maxX - minX) + (maxY - minY)) * 0.5;
+    }
+
     @Override
     public final double getArea() {
         return (maxX - minX) * (maxY - minY);
