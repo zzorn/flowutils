@@ -1,6 +1,8 @@
-package org.flowutils.raster.raster;
+package org.flowutils.raster.raster.multi;
 
 import org.flowutils.Symbol;
+import org.flowutils.raster.raster.single.Raster;
+import org.flowutils.raster.raster.single.RasterImpl;
 
 import java.util.Collection;
 import java.util.Map;
@@ -11,16 +13,16 @@ import java.util.Map;
  *
  * Adding or removing channels is not thread safe.
  */
-public final class MutableMultiRaster extends MultiRasterBase {
+public final class CompositeMultiRaster extends MultiRasterBase {
 
     /**
      * @param sizeX x size of the raster.  Should not be zero.
      * @param sizeY y size of the raster.  Should not be zero.
      * @param initialChannelIds ids of channels to add initially.
      */
-    public MutableMultiRaster(int sizeX,
-                              int sizeY,
-                              Symbol... initialChannelIds) {
+    public CompositeMultiRaster(int sizeX,
+                                int sizeY,
+                                Symbol... initialChannelIds) {
         super(sizeX, sizeY);
 
         for (Symbol initialChannelId : initialChannelIds) {
@@ -34,9 +36,9 @@ public final class MutableMultiRaster extends MultiRasterBase {
      * @param initialChannelIds collection with ids of channels to add initially,
      *                          or null if no channels should be added in the constructor.
      */
-    public MutableMultiRaster(int sizeX,
-                              int sizeY,
-                              Collection<Symbol> initialChannelIds) {
+    public CompositeMultiRaster(int sizeX,
+                                int sizeY,
+                                Collection<Symbol> initialChannelIds) {
         super(sizeX, sizeY);
 
         for (Symbol initialChannelId : initialChannelIds) {
@@ -50,9 +52,9 @@ public final class MutableMultiRaster extends MultiRasterBase {
      * @param initialChannels map from channel id to channel raster with the channels to add initially,
      *                        or null if no channels should be added in the constructor.
      */
-    public MutableMultiRaster(int sizeX,
-                              int sizeY,
-                              Map<Symbol, Raster> initialChannels) {
+    public CompositeMultiRaster(int sizeX,
+                                int sizeY,
+                                Map<Symbol, Raster> initialChannels) {
         super(sizeX, sizeY, initialChannels);
     }
 

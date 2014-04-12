@@ -1,7 +1,10 @@
-package org.flowutils.raster.raster;
+package org.flowutils.raster.raster.multi;
 
 import org.flowutils.Check;
 import org.flowutils.Symbol;
+import org.flowutils.raster.raster.single.Raster;
+import org.flowutils.rectangle.intrectangle.ImmutableIntRectangle;
+import org.flowutils.rectangle.intrectangle.IntRectangle;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -18,6 +21,7 @@ public abstract class MultiRasterBase implements MultiRaster {
 
     private final int sizeX;
     private final int sizeY;
+    private transient IntRectangle extent = null;
     private final Map<Symbol, Raster> channels = new LinkedHashMap<Symbol, Raster>();
 
     /**
@@ -58,6 +62,11 @@ public abstract class MultiRasterBase implements MultiRaster {
 
     @Override public final int getSizeY() {
         return sizeY;
+    }
+
+    @Override public IntRectangle getExtent() {
+        if (extent == null) extent = new ImmutableIntRectangle(sizeX, sizeY);
+        return extent;
     }
 
     @Override public final Collection<Symbol> getChannelIds() {

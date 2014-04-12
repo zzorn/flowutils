@@ -1,8 +1,8 @@
-package org.flowutils.raster.raster;
+package org.flowutils.raster.raster.multi;
 
 import org.flowutils.Symbol;
-import org.flowutils.raster.field.MultiField;
-import org.flowutils.rectangle.Rectangle;
+import org.flowutils.raster.raster.single.Raster;
+import org.flowutils.rectangle.intrectangle.IntRectangle;
 
 import java.util.Collection;
 import java.util.Map;
@@ -10,7 +10,6 @@ import java.util.Map;
 /**
  * A two dimensional data raster with float values, composed of one or more channels.
  */
-// TODO: Make this interleaved by default?  Or create separate InterleavedRaster maybe
 public interface MultiRaster {
 
     /**
@@ -22,6 +21,11 @@ public interface MultiRaster {
      * @return height of the raster in grid cells.
      */
     int getSizeY();
+
+    /**
+     * @return extent of the raster as a rectangle from 0,0 to sizeX-1, sizeY-1 (inclusive).
+     */
+    IntRectangle getExtent();
 
     /**
      * @return the identifiers of the channels available in this raster.

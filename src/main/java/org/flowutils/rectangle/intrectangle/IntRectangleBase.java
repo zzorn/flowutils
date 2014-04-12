@@ -1,36 +1,36 @@
-package org.flowutils.rectangle;
+package org.flowutils.rectangle.intrectangle;
 
-import static org.flowutils.MathUtils.*;
+import static org.flowutils.MathUtils.map;
 
 /**
- * Common functionality for Rectangles.
+ * Common functionality for integer based Rectangles.
  */
-public abstract class RectangleBase implements Rectangle {
+public abstract class IntRectangleBase implements IntRectangle {
 
-    protected double minX;
-    protected double minY;
-    protected double maxX;
-    protected double maxY;
+    protected int minX;
+    protected int minY;
+    protected int maxX;
+    protected int maxY;
 
     protected boolean empty = true;
 
     @Override
-    public final double getMinX() {
+    public final int getMinX() {
         return minX;
     }
 
     @Override
-    public final double getMinY() {
+    public final int getMinY() {
         return minY;
     }
 
     @Override
-    public final double getMaxX() {
+    public final int getMaxX() {
         return maxX;
     }
 
     @Override
-    public final double getMaxY() {
+    public final int getMaxY() {
         return maxY;
     }
 
@@ -39,35 +39,21 @@ public abstract class RectangleBase implements Rectangle {
     }
 
     @Override
-    public final double getCenterX() {
-        return (minX + maxX) * 0.5;
+    public final int getSizeX() {
+        return maxX - minX + 1;
     }
 
     @Override
-    public final double getCenterY() {
-        return (minY + maxY) * 0.5;
+    public final int getSizeY() {
+        return maxY - minY + 1;
     }
 
     @Override
-    public final double getSizeX() {
-        return maxX - minX;
+    public final int getArea() {
+        return getSizeX() * getSizeY();
     }
 
-    @Override
-    public final double getSizeY() {
-        return maxY - minY;
-    }
-
-    @Override public double getSizeAverage() {
-        return ((maxX - minX) + (maxY - minY)) * 0.5;
-    }
-
-    @Override
-    public final double getArea() {
-        return (maxX - minX) * (maxY - minY);
-    }
-
-    @Override public boolean contains(double x, double y) {
+    @Override public boolean contains(int x, int y) {
         if (empty) return false;
         else return x >= minX &&
                     y >= minY &&
@@ -76,7 +62,7 @@ public abstract class RectangleBase implements Rectangle {
     }
 
     @Override
-    public final boolean contains(Rectangle rectangle) {
+    public final boolean contains(IntRectangle rectangle) {
         if (empty || rectangle.isEmpty()) return false;
         else return rectangle.getMinX() >= minX &&
                     rectangle.getMinY() >= minY &&
@@ -85,29 +71,12 @@ public abstract class RectangleBase implements Rectangle {
     }
 
     @Override
-    public final boolean intersects(Rectangle rectangle) {
+    public final boolean intersects(IntRectangle rectangle) {
         if (empty || rectangle.isEmpty()) return false;
         else return rectangle.getMinX() <= maxX &&
                     rectangle.getMaxX() >= minX &&
                     rectangle.getMinY() <= maxY &&
                     rectangle.getMaxY() >= minY;
-    }
-
-    @Override
-    public final double getCircumference() {
-        return getSizeX() * 2 + getSizeY() * 2;
-    }
-
-    @Override
-    public final double getSquaredCenterDistanceTo(double x, double y) {
-        double dx = getCenterX() - x;
-        double dy = getCenterY() - y;
-        return dx * dx + dy * dy;
-    }
-
-    @Override
-    public final double getCenterDistanceTo(double x, double y) {
-        return Math.sqrt(getSquaredCenterDistanceTo(x, y));
     }
 
     @Override
@@ -134,7 +103,7 @@ public abstract class RectangleBase implements Rectangle {
         else return map(y, minY, maxY, 0, 1);
     }
 
-    protected final void init(double x1, double y1, double x2, double y2) {
+    protected final void init(int x1, int y1, int x2, int y2) {
         if (x1 <= x2) {
             minX = x1;
             maxX = x2;
@@ -158,7 +127,7 @@ public abstract class RectangleBase implements Rectangle {
 
 
     @Override public String toString() {
-        return "Rectangle{" +
+        return "IntRectangle{" +
                "minX=" + minX +
                ", minY=" + minY +
                ", maxX=" + maxX +
@@ -166,4 +135,5 @@ public abstract class RectangleBase implements Rectangle {
                ", empty=" + empty +
                '}';
     }
+
 }

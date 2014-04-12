@@ -1,12 +1,12 @@
-package org.flowutils.raster.raster;
+package org.flowutils.raster.raster.multi;
 
-import org.flowutils.Check;
 import org.flowutils.Symbol;
+import org.flowutils.raster.raster.single.Raster;
+import org.flowutils.raster.raster.single.RasterImpl;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.flowutils.Check.*;
 import static org.flowutils.Check.notNull;
 
 /**

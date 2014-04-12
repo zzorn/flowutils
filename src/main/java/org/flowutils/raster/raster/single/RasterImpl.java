@@ -1,6 +1,8 @@
-package org.flowutils.raster.raster;
+package org.flowutils.raster.raster.single;
 
 import org.flowutils.Check;
+import org.flowutils.rectangle.intrectangle.ImmutableIntRectangle;
+import org.flowutils.rectangle.intrectangle.IntRectangle;
 
 import static org.flowutils.MathUtils.fastFloor;
 import static org.flowutils.MathUtils.mix;
@@ -17,6 +19,7 @@ public final class RasterImpl implements Raster {
     private final int dataYSkip;
     private final int dataRowSize;
     private final float[] data;
+    private transient IntRectangle extent = null;
 
     /**
      * Creates a new RasterChannel with the specified size.
@@ -47,7 +50,7 @@ public final class RasterImpl implements Raster {
      * @param sizeY y size of the raster
      * @param data the data array to use.
      * @param dataOffset offset to the start of the values for this raster in the data array.
-     * @param dataXStep total elements to step when moving from one value on a row to the next in the data array.  Should not be zero.
+     * @param dataXStep total elements to step when moving from one value on a row to the next in the data array.  Must be at least one.
      * @param dataYSkip extra elements to skip between each row in the data array.
      */
     public RasterImpl(int sizeX, int sizeY, float[] data, int dataOffset, int dataXStep, int dataYSkip) {
@@ -56,6 +59,7 @@ public final class RasterImpl implements Raster {
         Check.notNull(data, "data");
         Check.positiveOrZero(dataOffset, "dataOffset");
         Check.notZero(dataXStep, "dataXStep");
+        Check.positiveOrZero(dataYSkip, "dataYSkip");
 
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -79,11 +83,17 @@ public final class RasterImpl implements Raster {
         return sizeY;
     }
 
+    @Override public IntRectangle getExtent() {
+        if (extent == null) extent = new ImmutableIntRectangle(sizeX, sizeY);
+
+        return extent;
+    }
+
     @Override public float[] getData() {
         return data;
     }
 
-    public int getDataOffset() {
+    @Override public int getDataOffset() {
         return dataOffset;
     }
 
@@ -91,8 +101,12 @@ public final class RasterImpl implements Raster {
         return dataXStep;
     }
 
-    public int getDataYSkip() {
+    @Override public int getDataYSkip() {
         return dataYSkip;
+    }
+
+    @Override public int getDataRowStep() {
+        return dataRowSize;
     }
 
     @Override public float getValue(int x, int y) {
@@ -109,7 +123,13 @@ public final class RasterImpl implements Raster {
         data[getIndex(x, y)] = value;
     }
 
-    @Override public float getInterpolatedValue(float x, float y) {
+    @Override public float sampleValue(double x, double y) {
+        return sampleValue(x, y, 0);
+    }
+
+    @Override public float sampleValue(double x, double y, double sampleSize) {
+        // NOTE: If we implement some kind of cached mipmapped versions of the raster, we could support sampleSize as well.  That could be done in a subclass maybe.
+
         if (x < 0 || x > sizeX - 1 ||
             y < 0 || y > sizeY - 1) throw new IllegalArgumentException("The coordinate ("+x+","+y+") is outside the raster (which has a size of "+sizeX+","+sizeY+").");
 
@@ -117,8 +137,8 @@ public final class RasterImpl implements Raster {
         int y0 = fastFloor(y);
         int x1 = x0 + 1;
         int y1 = y0 + 1;
-        float cx = x - x0;
-        float cy = y - y0;
+        float cx = (float) (x - x0);
+        float cy = (float) (y - y0);
         final float yr0 = mix(cx, data[getIndex(x0, y0)], data[getIndex(x1, y0)]);
         final float yr1 = mix(cx, data[getIndex(x0, y1)], data[getIndex(x1, y1)]);
         return mix(cy, yr0, yr1);

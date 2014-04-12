@@ -1,23 +1,27 @@
-package org.flowutils.raster.field;
+package org.flowutils.raster.field.single;
 
-import org.flowutils.raster.raster.Raster;
+import org.flowutils.raster.field.RenderListener;
+import org.flowutils.raster.raster.single.Raster;
 import org.flowutils.rectangle.Rectangle;
+import org.flowutils.rectangle.intrectangle.IntRectangle;
 
 /**
- * A single channel field.
+ * A two dimensional field with a single floating point value for each position.
+ *
+ * Can be rendered to a raster or float array.
  */
 public interface Field {
 
     /**
      * @return the value at the specified position, with a sample size of zero (= maximum detail available)
      */
-    float getValue(double x, double y);
+    float sampleValue(double x, double y);
 
     /**
      * @param sampleSize size of the area to sample around the specified coordinate.  0 = use maximum available detail.
      * @return the value at the specified position, with the specified sample size.
      */
-    float getValue(double x, double y, double sampleSize);
+    float sampleValue(double x, double y, double sampleSize);
 
     /**
      * Writes the area 0,0 to 1,1 from this field to the specified raster.
@@ -28,6 +32,26 @@ public interface Field {
      * Writes the specified area from this field to the specified raster
      */
     void renderToRaster(Raster raster, Rectangle area);
+
+    /**
+     * Writes the specified area from this field to the specified raster
+     *
+     * @param targetRaster MultiRaster to render to
+     * @param sourceArea source area from the field to render
+     * @param targetArea target area to render to on the raster
+     */
+    void renderToRaster(Raster targetRaster, Rectangle sourceArea, IntRectangle targetArea);
+
+    /**
+     * Writes the specified area from this field to the specified raster
+     *
+     * @param targetRaster MultiRaster to render to
+     * @param sourceArea source area from the field to render
+     * @param targetArea target area to render to on the raster
+     * @param renderListener listener that is notified of rendering progress, or null if no listener specified.
+     */
+    void renderToRaster(Raster targetRaster, Rectangle sourceArea, IntRectangle targetArea, RenderListener renderListener);
+
 
     /**
      * Renders a part of this field to the target array
@@ -43,6 +67,7 @@ public interface Field {
      * @param sourceStepX x step to apply to the source after each element sample of the field
      * @param sourceStepY y step to apply to the source after each row sampled from the field
      * @param sourceSampleSize sample size to use when sampling the field
+     * @param renderListener listener that is notified of rendering progress, or null if no listener specified.
      */
     void renderToArray(float[] target,
                        int targetSizeX,
@@ -54,5 +79,6 @@ public interface Field {
                        double sourceStartY,
                        double sourceStepX,
                        double sourceStepY,
-                       double sourceSampleSize);
+                       double sourceSampleSize,
+                       RenderListener renderListener);
 }

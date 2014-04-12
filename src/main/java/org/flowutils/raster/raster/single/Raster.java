@@ -1,5 +1,7 @@
-package org.flowutils.raster.raster;
+package org.flowutils.raster.raster.single;
 
+
+import org.flowutils.rectangle.intrectangle.IntRectangle;
 
 /**
  * Represents the data of a single channel in a raster.
@@ -16,6 +18,11 @@ public interface Raster {
      * @return y size of the channel in grid cells.
      */
     int getSizeY();
+
+    /**
+     * @return rectangle starting at 0,0 and extending to sizeX-1, sizeY-1 (inclusive).
+     */
+    IntRectangle getExtent();
 
     /**
      * @return read & write array with the values in the channel, laid out row by row, using the
@@ -51,12 +58,21 @@ public interface Raster {
     /**
      * @return the interpolated value at the specified coordinate.  Throws exception if the coordinate is outside the raster.
      */
-    float getInterpolatedValue(float x, float y);
+    float sampleValue(double x, double y);
+
+    /**
+     * @return the interpolated value at the specified coordinate.  Throws exception if the coordinate is outside the raster.
+     */
+    float sampleValue(double x, double y, double sampleSize);
 
     /**
      * @return true if the data array contains data other than the values associated with this raster,
-     *         false if the data array only contains data for this raster.
+     *         false if the data array only contains data for this raster, dataOffset is zero, dataXStep is one, and dataYSkip is zero.
      */
     boolean isDataInterleaved();
 
+    /**
+     * @return number of elements to step over to get to the next row.
+     */
+    int getDataRowStep();
 }

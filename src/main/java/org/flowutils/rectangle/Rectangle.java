@@ -33,7 +33,19 @@ public interface Rectangle {
      */
     boolean isEmpty();
 
+    /**
+     * @return true if the coordinate is within the rectangle.
+     */
+    boolean contains(double x, double y);
+
+    /**
+     * @return true if the specified rectangle is contained inside this rectangle.
+     */
     boolean contains(Rectangle rectangle);
+
+    /**
+     * @return true if the specified rectangle overlaps this rectangle (including just an edge).
+     */
     boolean intersects(Rectangle rectangle);
 
     // TODO: Add union, intersects, union of many, etc.?
