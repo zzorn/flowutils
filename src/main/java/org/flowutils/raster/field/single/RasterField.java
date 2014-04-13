@@ -108,7 +108,7 @@ public final class RasterField extends FieldBase {
         this.defaultValue = defaultValue;
     }
 
-    public float sampleValue(double x, double y, double sampleSize) {
+    public float getValue(double x, double y, double sampleSize) {
         return sampleRasterAt(raster, x, y, wrapX, wrapY, extendBorder, defaultValue);
     }
 

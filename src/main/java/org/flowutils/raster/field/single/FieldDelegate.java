@@ -21,12 +21,12 @@ public final class FieldDelegate extends FieldBase {
         this.channel = channel;
     }
 
-    @Override public float sampleValue(double x, double y) {
-        return sourceField.sampleValue(x, y, channel, 0);
+    @Override public float getValue(double x, double y) {
+        return sourceField.getValue(x, y, channel, 0);
     }
 
-    @Override public float sampleValue(double x, double y, double sampleSize) {
-        return sourceField.sampleValue(x, y, channel, sampleSize);
+    @Override public float getValue(double x, double y, double sampleSize) {
+        return sourceField.getValue(x, y, channel, sampleSize);
     }
 
 }

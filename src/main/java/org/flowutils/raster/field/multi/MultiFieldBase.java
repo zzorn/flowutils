@@ -11,6 +11,7 @@ import org.flowutils.rectangle.ImmutableRectangle;
 import org.flowutils.rectangle.Rectangle;
 import org.flowutils.rectangle.intrectangle.IntRectangle;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -23,7 +24,7 @@ import static org.flowutils.Check.notNull;
  * Handles most of the raster rendering, and provides functionality that allows subclasses to specify the available channels
  * if they do not want to implement the channel querying operations themselves.
  *
- * The inner loop of the raster rendering can be overridden if a subclass has a more efficient way to calculate the values than the sampleValue methods.
+ * The inner loop of the raster rendering can be overridden if a subclass has a more efficient way to calculate the values than the getValue methods.
  */
 public abstract class MultiFieldBase implements MultiField {
 
@@ -36,6 +37,10 @@ public abstract class MultiFieldBase implements MultiField {
 
     protected MultiFieldBase() {
         this.availableChannels = null;
+    }
+
+    protected MultiFieldBase(Symbol ... availableChannels) {
+        this(Arrays.asList(availableChannels));
     }
 
     protected MultiFieldBase(Collection<Symbol> availableChannels) {
@@ -70,8 +75,8 @@ public abstract class MultiFieldBase implements MultiField {
         }
     }
 
-    @Override public float sampleValue(double x, double y, Symbol channelId) {
-        return sampleValue(x, y, channelId, 0);
+    @Override public float getValue(double x, double y, Symbol channelId) {
+        return getValue(x, y, channelId, 0);
     }
 
 
@@ -212,7 +217,7 @@ public abstract class MultiFieldBase implements MultiField {
     /**
      * The core part of the render to array function, with all inputs checked for validity by the caller.
      * This can be overridden if there is a more efficient way to calculate the channel values than to call the
-     * sampleValue functions for each target position.
+     * getValue functions for each target position.
      *
      * @param channelCount number of channels.
      * @param targetChannelIds channel ids for each channel
@@ -259,7 +264,10 @@ public abstract class MultiFieldBase implements MultiField {
                 // Loop over the channels
                 for (int channel = 0; channel < channelCount; channel++) {
                     // Sample value from the channel and assign it to the correct place in the correct raster data array
-                    targetDatas[channel][indexes[channel]] = sampleValue(sourceX, sourceY, targetChannelIds[channel], sourceSampleSize);
+                    targetDatas[channel][indexes[channel]] = getValue(sourceX,
+                                                                      sourceY,
+                                                                      targetChannelIds[channel],
+                                                                      sourceSampleSize);
                 }
 
                 // Step to next source and target location along x axis

@@ -15,13 +15,13 @@ public interface Field {
     /**
      * @return the value at the specified position, with a sample size of zero (= maximum detail available)
      */
-    float sampleValue(double x, double y);
+    float getValue(double x, double y);
 
     /**
      * @param sampleSize size of the area to sample around the specified coordinate.  0 = use maximum available detail.
      * @return the value at the specified position, with the specified sample size.
      */
-    float sampleValue(double x, double y, double sampleSize);
+    float getValue(double x, double y, double sampleSize);
 
     /**
      * Writes the area 0,0 to 1,1 from this field to the specified raster.

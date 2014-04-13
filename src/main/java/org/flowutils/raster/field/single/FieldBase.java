@@ -18,8 +18,8 @@ public abstract class FieldBase implements Field {
 
     private static final int PROGRESS_REPORTS_PER_RENDERING = 20;
 
-    @Override public float sampleValue(double x, double y) {
-        return sampleValue(x, y, 0);
+    @Override public float getValue(double x, double y) {
+        return getValue(x, y, 0);
     }
 
     @Override public final void renderToRaster(Raster raster) {
@@ -117,7 +117,7 @@ public abstract class FieldBase implements Field {
 
             for (int x = 0; x < targetSizeX; x++) {
                 // Sample value from field and assign it to the correct place in the raster data array
-                target[i] = sampleValue(sourceX, sourceY, sourceSampleSize);
+                target[i] = getValue(sourceX, sourceY, sourceSampleSize);
 
                 // Step to next source and target location along x axis
                 i += targetXStep;

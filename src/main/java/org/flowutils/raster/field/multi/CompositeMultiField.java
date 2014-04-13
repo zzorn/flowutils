@@ -15,12 +15,12 @@ public final class CompositeMultiField extends MultiFieldBase {
 
     private final ConcurrentMap<Symbol, Field> fields = new ConcurrentHashMap<Symbol, Field>();
 
-    @Override public final float sampleValue(double x, double y, Symbol channelId) {
-        return sampleValue(x, y, channelId, 0);
+    @Override public final float getValue(double x, double y, Symbol channelId) {
+        return getValue(x, y, channelId, 0);
     }
 
-    @Override public final float sampleValue(double x, double y, Symbol channelId, double sampleSize) {
-        return getChannel(channelId).sampleValue(x, y, sampleSize);
+    @Override public final float getValue(double x, double y, Symbol channelId, double sampleSize) {
+        return getChannel(channelId).getValue(x, y, sampleSize);
     }
 
     @Override public final boolean hasChannel(Symbol channelId) {

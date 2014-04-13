@@ -109,7 +109,7 @@ public final class MultiRasterField extends MultiFieldBase {
         this.defaultValue = defaultValue;
     }
 
-    @Override public float sampleValue(double x, double y, Symbol channelId, double sampleSize) {
+    @Override public float getValue(double x, double y, Symbol channelId, double sampleSize) {
         return RasterField.sampleRasterAt(raster.getChannel(channelId), x, y, wrapX, wrapY, extendBorder, defaultValue);
     }
 

@@ -3,6 +3,7 @@ package org.flowutils.raster;
 /**
  * Describes the type of an edge a raster has, when trying to read or write outside it.
  */
+@Deprecated
 public enum EdgeType {
 
     /**

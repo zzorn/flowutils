@@ -22,7 +22,7 @@ public interface MultiField {
      * @param channelId id of channel to get data for
      * @return the data value at the specified location and channel.
      */
-    float sampleValue(double x, double y, Symbol channelId);
+    float getValue(double x, double y, Symbol channelId);
 
     /**
      * @param x x coordinate to get data for
@@ -31,7 +31,7 @@ public interface MultiField {
      * @param sampleSize size of the area to sample.  If zero, will use the most exact available value.
      * @return the data value at the specified location and channel.
      */
-    float sampleValue(double x, double y, Symbol channelId, double sampleSize);
+    float getValue(double x, double y, Symbol channelId, double sampleSize);
 
     /**
      * @return ids of the available channels.
