@@ -22,14 +22,14 @@ public final class RasterField extends FieldBase {
     /**
      * Wraps edges in x and y directions.
      */
-    RasterField(Raster raster) {
+    public RasterField(Raster raster) {
         this(raster, true, true, false, 0);
     }
 
     /**
      * Uses the specified defaultValue for any place outside the raster.
      */
-    RasterField(Raster raster, float defaultValue) {
+    public RasterField(Raster raster, float defaultValue) {
         this(raster, false, false, false, defaultValue);
     }
 
@@ -39,7 +39,7 @@ public final class RasterField extends FieldBase {
      * @param wrapX if true, the values are wrapped in the x direction.
      * @param wrapY if true, the values are wrapped in the y direction.
      */
-    RasterField(Raster raster, boolean wrapX, boolean wrapY) {
+    public RasterField(Raster raster, boolean wrapX, boolean wrapY) {
         this(raster, wrapX, wrapY, true, 0);
     }
 
@@ -50,7 +50,7 @@ public final class RasterField extends FieldBase {
      * @param wrapY if true, the values are wrapped in the y direction.
      * @param defaultValue the default value to use outside the raster for directions that are not wrapped.
      */
-    RasterField(Raster raster, boolean wrapX, boolean wrapY, float defaultValue) {
+    public RasterField(Raster raster, boolean wrapX, boolean wrapY, float defaultValue) {
         this(raster, wrapX, wrapY, false, defaultValue);
     }
 
@@ -60,7 +60,7 @@ public final class RasterField extends FieldBase {
      * @param extendBorder if true, values are clamped to the border value for non-wrapped directions.
      * @param defaultValue the default value to use outside the raster for directions that are not wrapped if the border value is not extended.
      */
-    RasterField(Raster raster, boolean wrapX, boolean wrapY, boolean extendBorder, float defaultValue) {
+    public RasterField(Raster raster, boolean wrapX, boolean wrapY, boolean extendBorder, float defaultValue) {
         this.raster = raster;
         this.wrapX = wrapX;
         this.wrapY = wrapY;

@@ -5,6 +5,7 @@ import org.flowutils.Symbol;
 import org.flowutils.raster.field.single.Field;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -14,6 +15,18 @@ import java.util.concurrent.ConcurrentMap;
 public final class CompositeMultiField extends MultiFieldBase {
 
     private final ConcurrentMap<Symbol, Field> fields = new ConcurrentHashMap<Symbol, Field>();
+
+    public CompositeMultiField() {
+    }
+
+    /**
+     * @param channels initial channels to add.
+     */
+    public CompositeMultiField(Map<Symbol, Field> channels) {
+        for (Map.Entry<Symbol, Field> entry : channels.entrySet()) {
+            addChannel(entry.getKey(), entry.getValue());
+        }
+    }
 
     @Override public final float getValue(double x, double y, Symbol channelId) {
         return getValue(x, y, channelId, 0);
@@ -38,7 +51,7 @@ public final class CompositeMultiField extends MultiFieldBase {
     /**
      * Register a field to use for a channel.  Replaces any previous field used for that channel.
      */
-    public final void setChannel(Symbol channelId, Field field) {
+    public final void addChannel(Symbol channelId, Field field) {
         Check.notNull(channelId, "channelId");
         Check.notNull(field, "field");
 
@@ -46,7 +59,7 @@ public final class CompositeMultiField extends MultiFieldBase {
     }
 
     /**
-     * Removes the field for the specified channel, if it has been set with setChannel.
+     * Removes the field for the specified channel, if it has been added with addChannel.
      */
     public final void removeChannel(Symbol channelId) {
         fields.remove(channelId);

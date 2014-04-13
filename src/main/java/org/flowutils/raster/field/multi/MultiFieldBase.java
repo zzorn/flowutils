@@ -1,6 +1,7 @@
 package org.flowutils.raster.field.multi;
 
 import org.flowutils.Check;
+import org.flowutils.MathUtils;
 import org.flowutils.Symbol;
 import org.flowutils.raster.field.RenderListener;
 import org.flowutils.raster.field.single.Field;
@@ -189,7 +190,7 @@ public abstract class MultiFieldBase implements MultiField {
         if (targetSizeX == 0 || targetSizeY == 0 || channelCount == 0) return;
 
         // Initialize progress reporting counter
-        final int listenerStep = targetSizeY / PROGRESS_REPORTS_PER_RENDERING + 1;
+        final int listenerStep = Math.max(targetSizeY / PROGRESS_REPORTS_PER_RENDERING, 1);
         int listenerCountdown = listenerStep;
 
         // Loop the target raster cells over the target area and sample the field to get a value for each.
@@ -253,9 +254,11 @@ public abstract class MultiFieldBase implements MultiField {
                                     int listenerCountdown,
                                     int[] indexes) {
 
+        boolean continueRendering = true;
+
         // Y loop
         double sourceY = sourceStartY;
-        for (int y = 0; y < targetSizeY; y++) {
+        for (int y = 0; y < targetSizeY && continueRendering; y++) {
 
             // X loop
             double sourceX = sourceStartX;
@@ -284,11 +287,11 @@ public abstract class MultiFieldBase implements MultiField {
             }
 
             // Report progress at some intervals, and also on the last line
-            if (renderListener != null && (listenerCountdown-- <= 0 || y >= targetSizeY-1)) {
+            if (renderListener != null && (--listenerCountdown <= 0 || y >= targetSizeY-1)) {
                 listenerCountdown = listenerStep;
 
-                double progress = ((double)y) / targetSizeY;
-                renderListener.onRenderProgress(progress);
+                double progress = ((double)y) / (targetSizeY - 1);
+                continueRendering = renderListener.onRenderProgress(progress);
             }
         }
     }

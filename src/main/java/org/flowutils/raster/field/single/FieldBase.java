@@ -104,13 +104,15 @@ public abstract class FieldBase implements Field {
         Check.positiveOrZero(sourceSampleSize, "sourceSampleSize");
 
         // Initialize progress reporting counter
-        final int listenerStep = targetSizeY / PROGRESS_REPORTS_PER_RENDERING + 1;
+        final int listenerStep = Math.max(targetSizeY / PROGRESS_REPORTS_PER_RENDERING, 1);
         int listenerCountdown = listenerStep;
+
+        boolean continueRendering = true;
 
         // Loop the target raster cells over the target area and sample the field to get a value for each.
         int i = targetOffset;
         double sourceY = sourceStartY;
-        for (int y = 0; y < targetSizeY; y++) {
+        for (int y = 0; y < targetSizeY && continueRendering; y++) {
 
             // Reset source x position for each row
             double sourceX = sourceStartX;
@@ -129,11 +131,11 @@ public abstract class FieldBase implements Field {
             sourceY += sourceStepY;
 
             // Report progress at some intervals, and also on the last line
-            if (listener != null && (listenerCountdown-- <= 0 || y >= targetSizeY-1)) {
+            if (listener != null && (--listenerCountdown <= 0 || y >= targetSizeY-1)) {
                 listenerCountdown = listenerStep;
 
                 double progress = ((double)y) / targetSizeY;
-                listener.onRenderProgress(progress);
+                continueRendering = listener.onRenderProgress(progress);
             }
         }
     }
