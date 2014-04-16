@@ -27,7 +27,7 @@ public abstract class RawImageRendererBase implements RawImageRenderer {
     }
 
     /**
-     * Called before each pixel is rendered.
+     * Called before pixels are rendered.
      * @param target target that will be rendered to.
      * @param width target width
      * @param height target height
