@@ -15,6 +15,21 @@ public final class Gradient {
     private final TreeMap<Double, Double> values = new TreeMap<Double, Double>();
 
     /**
+     * Creates a new gradient
+     *
+     * @param positionValuePairs zero or more comma separated position and value pairs.
+     *                           E.g.: position1, value1, position2, value2, etc.
+     */
+    public Gradient(double ... positionValuePairs) {
+        if ((positionValuePairs.length % 2) != 0) throw new IllegalArgumentException("Odd number of position and value pairs (parameters should be comma separated positions and values for the preceding position");
+
+        for (int i = 0; i < positionValuePairs.length; i += 2) {
+            addValue(positionValuePairs[i], positionValuePairs[i + 1]);
+        }
+    }
+
+
+    /**
      * Adds a value to the gradient at a specific position
      */
     public void addValue(double position, double value) {
