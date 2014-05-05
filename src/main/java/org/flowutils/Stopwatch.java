@@ -90,14 +90,14 @@ public final class Stopwatch {
      * @return time elapsed so far on this lap, as a human readable string including a time unit.
      */
     public String getElapsedLapTime() {
-        return convertSecondsToReadableString(getElapsedLapTime_ns() * NANOSECONDS_TO_SECONDS);
+        return convertSecondsToReadableString(getElapsedLapTimeSeconds());
     }
 
     /**
-     * @return time elapsed so far on this lap, in nanoseconds.
+     * @return time elapsed so far on this lap, in seconds.
      */
-    public long getElapsedLapTime_ns() {
-        return getElapsedLapTime_ns(getCurrentTime_ns());
+    public double getElapsedLapTimeSeconds() {
+        return getElapsedLapTime_ns(getCurrentTime_ns()) * NANOSECONDS_TO_SECONDS;
     }
 
     private long getElapsedLapTime_ns(long now) {
