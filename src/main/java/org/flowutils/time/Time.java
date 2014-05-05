@@ -17,6 +17,12 @@ public interface Time {
     double getSecondsSinceLastStep();
 
     /**
+     * @return number of seconds since the last step was recorded, in gametime, converted to a float.
+     * Returns seconds since reset if this is the first tick.
+     */
+    float getSecondsSinceLastStepAsFloat();
+
+    /**
      * @return number of seconds that the most recent full step lasted, in gametime.
      * Returns zero if this is the first tick.
      */

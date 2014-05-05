@@ -86,6 +86,10 @@ public abstract class TimeBase implements Time {
         return MILLISECONDS_TO_SECONDS * (getCurrentTimeMs() - lastStepTimeStamp);
     }
 
+    @Override public float getSecondsSinceLastStepAsFloat() {
+        return (float) getSecondsSinceLastStep();
+    }
+
     @Override public double getLastStepDurationSeconds() {
         return lastStepDurationSeconds;
     }
