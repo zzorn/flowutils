@@ -49,6 +49,22 @@ public final class Stopwatch {
     }
 
     /**
+     * Creates a new stopwatch and starts it.
+     *
+     * @param numberOfInitialLapsToDiscard this number of initial measured laps will be discarded.
+     *                                     Can be used to ignore the initial rounds of some testing while the JVM warms up.
+     * @param description human readable description for what we are measuring.
+     * @param startPaused if true the Stopwatch will start in the paused state.
+     */
+    public Stopwatch(String description, int numberOfInitialLapsToDiscard, boolean startPaused) {
+        this.description = description;
+        this.lapsToDiscard = numberOfInitialLapsToDiscard;
+        this.paused = startPaused;
+
+        start(numberOfInitialLapsToDiscard);
+    }
+
+    /**
      * Starts the stopwatch from zero, clearing any previous results and laps.
      * Will discard the same number of initial laps as specified in the constructor.
      */
