@@ -9,6 +9,9 @@ import java.lang.management.ManagementFactory;
 public final class Stopwatch {
 
     private static final double NANOSECONDS_TO_SECONDS = (1.0 / 1000000000.0);
+
+    private String description;
+    private final int lapsToDiscard;
     private int lapsToDiscardLeft = 0;
     private int lapsRecorded = 0;
     private long totalTime_ns = 0;
@@ -20,7 +23,16 @@ public final class Stopwatch {
      * Creates a new stopwatch and starts it.
      */
     public Stopwatch() {
-        this(0);
+        this(null, 0);
+    }
+
+    /**
+     * Creates a new stopwatch and starts it.
+     *
+     * @param description human readable description for what we are measuring.
+     */
+    public Stopwatch(String description) {
+        this(description, 0);
     }
 
     /**
@@ -28,16 +40,20 @@ public final class Stopwatch {
      *
      * @param numberOfInitialLapsToDiscard this number of initial measured laps will be discarded.
      *                                     Can be used to ignore the initial rounds of some testing while the JVM warms up.
+     * @param description human readable description for what we are measuring.
      */
-    public Stopwatch(int numberOfInitialLapsToDiscard) {
+    public Stopwatch(String description, int numberOfInitialLapsToDiscard) {
+        this.description = description;
+        this.lapsToDiscard = numberOfInitialLapsToDiscard;
         start(numberOfInitialLapsToDiscard);
     }
 
     /**
      * Starts the stopwatch from zero, clearing any previous results and laps.
+     * Will discard the same number of initial laps as specified in the constructor.
      */
     public void start() {
-        start(0);
+        start(lapsToDiscard);
     }
 
     /**
@@ -146,18 +162,35 @@ public final class Stopwatch {
 
     /**
      * Returns the measured average lap time as a human readable string.
-     * @param description description of what we are measuring.
      */
-    public String getResult(String description) {
-        return description + " took on average " + getAverageLapTimeAsString() + ".";
+    public String getResult() {
+        if (description != null) {
+            return description + " took on average " + getAverageLapTimeAsString() + ".";
+        }
+        else {
+            return "Average time " + getAverageLapTimeAsString() + ".";
+        }
     }
 
     /**
      * Prints the measured average lap time to system out.
-     * @param description description of what we are measuring.
      */
-    public void printResult(String description) {
-        System.out.println(getResult(description));
+    public void printResult() {
+        System.out.println(getResult());
+    }
+
+    /**
+     * @return human readable description of what we are measuring.
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description human readable description of what we are measuring.
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     private String getAverageLapTimeAsString() {
