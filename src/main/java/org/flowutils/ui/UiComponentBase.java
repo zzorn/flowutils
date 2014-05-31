@@ -17,6 +17,13 @@ public abstract class UiComponentBase implements UiComponent {
     }
 
     /**
+     * @return true if the UI has already been created.
+     */
+    public final boolean uiCreated() {
+        return ui != null;
+    }
+
+    /**
      * @return a new Swing user interface for this class.
      */
     protected abstract JComponent createUi();
