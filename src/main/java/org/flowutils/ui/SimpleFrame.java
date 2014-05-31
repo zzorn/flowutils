@@ -1,4 +1,4 @@
-package org.flowutils;
+package org.flowutils.ui;
 
 import javax.swing.*;
 import java.awt.*;
