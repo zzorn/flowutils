@@ -10,11 +10,11 @@ public class PropertiesTest {
 
     @Test
     public void testProperties() throws Exception {
-        final PropertiesBase defaults = new PropertiesMap();
+        final PropertiesMap defaults = new PropertiesMap();
         defaults.set("Foo", 1);
         defaults.set("Zap", 11);
 
-        PropertiesBase properties = new PropertiesMap(defaults);
+        PropertiesMap properties = new PropertiesMap(defaults);
 
         assertEquals(null, properties.get("Bar"));
         assertEquals(1, properties.get("Foo"));
