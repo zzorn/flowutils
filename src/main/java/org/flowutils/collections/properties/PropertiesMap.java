@@ -13,7 +13,7 @@ import static org.flowutils.Check.notNull;
  * Map backed implementation.
  * Thread safe.
  */
-public final class PropertiesMap implements InheritableProperties {
+public final class PropertiesMap extends PropertiesBase implements InheritableProperties {
 
     private final ConcurrentHashMap<Symbol, Object> values = new ConcurrentHashMap<>();
     private List<ReadableProperties> defaults;
@@ -57,10 +57,6 @@ public final class PropertiesMap implements InheritableProperties {
         if (defaultProperties != null) addDefaults(defaultProperties);
     }
 
-    @Override public <T> T get(String id) {
-        return get(Symbol.get(id));
-    }
-
     @Override public <T> T get(Symbol id) {
         if (defaults == null) {
             notNull(id, "id");
@@ -71,10 +67,6 @@ public final class PropertiesMap implements InheritableProperties {
         else {
             return get(id, null);
         }
-    }
-
-    @Override public <T> T get(String id, T defaultValue) {
-        return get(Symbol.get(id), defaultValue);
     }
 
     @Override public <T> T get(Symbol id, T defaultValue) {
@@ -99,10 +91,6 @@ public final class PropertiesMap implements InheritableProperties {
             // No value found, use provided default
             return defaultValue;
         }
-    }
-
-    @Override public boolean has(String id) {
-        return has(Symbol.get(id));
     }
 
     @Override public boolean has(Symbol id) {
@@ -180,16 +168,6 @@ public final class PropertiesMap implements InheritableProperties {
         return values.put(id, value);
     }
 
-    @Override public Object set(String id, Object value) {
-        return set(Symbol.get(id), value);
-    }
-
-    @Override public void setAll(Map<Symbol, Object> parameters) {
-        notNull(parameters, "parameters");
-
-        values.putAll(parameters);
-    }
-
     @Override public void setAll(ReadableProperties parameters) {
         notNull(parameters, "parameters");
 
@@ -198,10 +176,6 @@ public final class PropertiesMap implements InheritableProperties {
 
     @Override public <T> T remove(Symbol id) {
         return (T) values.remove(id);
-    }
-
-    @Override public <T> T remove(String id) {
-        return remove(Symbol.get(id));
     }
 
     @Override public void removeAll() {
