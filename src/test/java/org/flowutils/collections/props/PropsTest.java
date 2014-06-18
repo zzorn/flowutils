@@ -1,4 +1,4 @@
-package org.flowutils.collections.properties;
+package org.flowutils.collections.props;
 
 import org.flowutils.Symbol;
 
@@ -6,15 +6,15 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class PropertiesTest {
+public class PropsTest {
 
     @Test
     public void testProperties() throws Exception {
-        final PropertiesMap defaults = new PropertiesMap();
+        final PropsMap defaults = new PropsMap();
         defaults.set("Foo", 1);
         defaults.set("Zap", 11);
 
-        PropertiesMap properties = new PropertiesMap(defaults);
+        PropsMap properties = new PropsMap(defaults);
 
         assertEquals(null, properties.get("Bar"));
         assertEquals(1, properties.get("Foo"));

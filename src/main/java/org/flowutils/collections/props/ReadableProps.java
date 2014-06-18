@@ -1,4 +1,4 @@
-package org.flowutils.collections.properties;
+package org.flowutils.collections.props;
 
 import org.flowutils.Symbol;
 
@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Represents a set of named values that can be read from.
  */
-public interface ReadableProperties {
+public interface ReadableProps {
 
     /**
      * @return value of the specified property.

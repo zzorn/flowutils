@@ -1,4 +1,4 @@
-package org.flowutils.collections.properties;
+package org.flowutils.collections.props;
 
 import org.flowutils.Symbol;
 
@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Represents a set of named values that can be written to.
  */
-public interface WritableProperties {
+public interface WritableProps {
 
     /**
      * Sets the specified property to the specified value.
@@ -29,7 +29,7 @@ public interface WritableProperties {
     /**
      * Sets all of the properties from the provided input parameters (including any default properties).
      */
-    void setAll(ReadableProperties parameters);
+    void setAll(ReadableProps parameters);
 
     /**
      * Removes the specified property.

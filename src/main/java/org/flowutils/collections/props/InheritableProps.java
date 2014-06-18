@@ -1,4 +1,4 @@
-package org.flowutils.collections.properties;
+package org.flowutils.collections.props;
 
 import org.flowutils.Symbol;
 
@@ -9,24 +9,24 @@ import java.util.Set;
 /**
  * A set of named values that may have a backing set to fall back to when retrieving values.
  */
-public interface InheritableProperties extends Properties {
+public interface InheritableProps extends Props {
 
     /**
      * @param defaultProperties a set of properties that will be used to retrieve values if no value is available in these properties.
      *                          The default properties are added last in the list of defaults.
      */
-    void addDefaults(ReadableProperties defaultProperties);
+    void addDefaults(ReadableProps defaultProperties);
 
     /**
      * @param index position in the defaults to add these new defaults at.
      * @param defaultProperties a set of properties that will be used to retrieve values if no value is available in these properties.
      */
-    void addDefaults(int index, ReadableProperties defaultProperties);
+    void addDefaults(int index, ReadableProps defaultProperties);
 
     /**
      * @param defaultProperties default properties to remove from the default fallback list.
      */
-    void removeDefaults(ReadableProperties defaultProperties);
+    void removeDefaults(ReadableProps defaultProperties);
 
     /**
      * Remove all default fallback properties.
@@ -37,7 +37,7 @@ public interface InheritableProperties extends Properties {
      * @return list of properties instances used to retrieve values when they are not found in this property instance,
      * or empty list if no fallback properties instance is used.
      */
-    List<ReadableProperties> getDefaults();
+    List<ReadableProps> getDefaults();
 
     /**
      * @return the identifiers of the properties available in this properties instance.

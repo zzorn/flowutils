@@ -1,4 +1,4 @@
-package org.flowutils.collections.properties;
+package org.flowutils.collections.props;
 
 import org.flowutils.Symbol;
 
@@ -13,15 +13,15 @@ import static org.flowutils.Check.notNull;
  *
  * The setAll(InputProperties) and getIdentifiers() methods are not very efficiently implemented, and are recommended to be overridden.
  */
-public abstract class PropertiesBase implements Properties {
+public abstract class PropsBase implements Props {
 
-    protected PropertiesBase() {
+    protected PropsBase() {
     }
 
     /**
      * @param initialValues initial property values.
      */
-    protected PropertiesBase(Map<Symbol, Object> initialValues) {
+    protected PropsBase(Map<Symbol, Object> initialValues) {
         setAll(initialValues);
     }
 
@@ -59,7 +59,7 @@ public abstract class PropertiesBase implements Properties {
     }
 
     // NOTE: Not very efficient, override if performance is important
-    @Override public void setAll(ReadableProperties parameters) {
+    @Override public void setAll(ReadableProps parameters) {
         setAll(parameters.getAll(null));
     }
 

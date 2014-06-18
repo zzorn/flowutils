@@ -1,6 +1,5 @@
-package org.flowutils.collections.properties;
+package org.flowutils.collections.props;
 
-import org.flowutils.Check;
 import org.flowutils.Symbol;
 
 import java.util.*;
@@ -13,10 +12,10 @@ import static org.flowutils.Check.notNull;
  * Map backed implementation.
  * Thread safe.
  */
-public final class PropertiesMap extends PropertiesBase implements InheritableProperties {
+public final class PropsMap extends PropsBase implements InheritableProps {
 
     private final ConcurrentHashMap<Symbol, Object> values = new ConcurrentHashMap<>();
-    private List<ReadableProperties> defaults;
+    private List<ReadableProps> defaults;
 
     private transient Set<Symbol> containedIdsReadOnly;
     private transient Map<Symbol, Object> valuesReadOnly;
@@ -24,7 +23,7 @@ public final class PropertiesMap extends PropertiesBase implements InheritablePr
     /**
      * Creates a new PropertiesMap instance.
      */
-    public PropertiesMap() {
+    public PropsMap() {
         this(null, null);
     }
 
@@ -33,7 +32,7 @@ public final class PropertiesMap extends PropertiesBase implements InheritablePr
      *
      * @param initialProperties initial properties to set.
      */
-    public PropertiesMap(Map<Symbol, Object> initialProperties) {
+    public PropsMap(Map<Symbol, Object> initialProperties) {
         this(initialProperties, null);
     }
 
@@ -42,7 +41,7 @@ public final class PropertiesMap extends PropertiesBase implements InheritablePr
      *
      * @param defaultProperties default fallback properties to use.
      */
-    public PropertiesMap(ReadableProperties defaultProperties) {
+    public PropsMap(ReadableProps defaultProperties) {
         this(null, defaultProperties);
     }
 
@@ -52,7 +51,7 @@ public final class PropertiesMap extends PropertiesBase implements InheritablePr
      * @param initialProperties initial properties to set, or null for none.
      * @param defaultProperties default fallback properties to use, or null for none.
      */
-    public PropertiesMap(Map<Symbol, Object> initialProperties, ReadableProperties defaultProperties) {
+    public PropsMap(Map<Symbol, Object> initialProperties, ReadableProps defaultProperties) {
         if (initialProperties != null) setAll(initialProperties);
         if (defaultProperties != null) addDefaults(defaultProperties);
     }
@@ -80,7 +79,7 @@ public final class PropertiesMap extends PropertiesBase implements InheritablePr
         else {
             if (defaults != null) {
                 // Search defaults
-                for (ReadableProperties aDefault : defaults) {
+                for (ReadableProps aDefault : defaults) {
                     final T valueFromDefault = aDefault.get(id);
                     if (valueFromDefault != null || aDefault.has(id)) {
                         return valueFromDefault;
@@ -103,7 +102,7 @@ public final class PropertiesMap extends PropertiesBase implements InheritablePr
         else {
             if (defaults != null) {
                 // Check if any default has it
-                for (ReadableProperties aDefault : defaults) {
+                for (ReadableProps aDefault : defaults) {
                     if (aDefault.has(id)) return true;
                 }
             }
@@ -118,7 +117,7 @@ public final class PropertiesMap extends PropertiesBase implements InheritablePr
 
         // Collect ids from defaults
         if (defaults != null) {
-            for (ReadableProperties aDefault : defaults) {
+            for (ReadableProps aDefault : defaults) {
                 aDefault.getIdentifiers(identifiersOut);
             }
         }
@@ -168,7 +167,7 @@ public final class PropertiesMap extends PropertiesBase implements InheritablePr
         return values.put(id, value);
     }
 
-    @Override public void setAll(ReadableProperties parameters) {
+    @Override public void setAll(ReadableProps parameters) {
         notNull(parameters, "parameters");
 
         parameters.getAll(values);
@@ -182,7 +181,7 @@ public final class PropertiesMap extends PropertiesBase implements InheritablePr
         values.clear();
     }
 
-    @Override public void addDefaults(ReadableProperties defaultProperties) {
+    @Override public void addDefaults(ReadableProps defaultProperties) {
         notNull(defaultProperties, "defaultProperties");
 
         if (defaults == null) {
@@ -192,7 +191,7 @@ public final class PropertiesMap extends PropertiesBase implements InheritablePr
         defaults.add(defaultProperties);
     }
 
-    @Override public void addDefaults(int index, ReadableProperties defaultProperties) {
+    @Override public void addDefaults(int index, ReadableProps defaultProperties) {
         notNull(defaultProperties, "defaultProperties");
 
         if (defaults == null) {
@@ -202,7 +201,7 @@ public final class PropertiesMap extends PropertiesBase implements InheritablePr
         defaults.add(index, defaultProperties);
     }
 
-    @Override public void removeDefaults(ReadableProperties defaultProperties) {
+    @Override public void removeDefaults(ReadableProps defaultProperties) {
         if (defaults != null) {
             defaults.remove(defaultProperties);
 
@@ -216,7 +215,7 @@ public final class PropertiesMap extends PropertiesBase implements InheritablePr
         defaults = null;
     }
 
-    @Override public List<ReadableProperties> getDefaults() {
+    @Override public List<ReadableProps> getDefaults() {
         if (defaults == null) {
             return Collections.emptyList();
         }
