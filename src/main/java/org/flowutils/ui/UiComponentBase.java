@@ -19,7 +19,7 @@ public abstract class UiComponentBase implements UiComponent {
     /**
      * @return true if the UI has already been created.
      */
-    public final boolean uiCreated() {
+    public final boolean isUiCreated() {
         return ui != null;
     }
 

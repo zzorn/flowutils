@@ -1,5 +1,6 @@
-package org.flowutils.collections;
+package org.flowutils.collections.ringbuffer;
 
+import org.flowutils.collections.ringbuffer.RingBuffer;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

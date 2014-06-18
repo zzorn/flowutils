@@ -1,4 +1,4 @@
-package org.flowutils.collections;
+package org.flowutils.collections.ringbuffer;
 
 import java.util.Arrays;
 
@@ -6,14 +6,12 @@ import java.util.Arrays;
  * Fixed size buffer that can be added to at one end, and discards values at the other.
  * Can be accessed at any point.
  *
- * Holds float values.
- *
  * Not thread safe.
  */
-public final class RingBufferFloat {
+public final class RingBuffer<T> {
 
     // Array to store values in
-    private final float[] buffer;
+    private final T[] buffer;
 
     // Points to first element
     private int first = 0;
@@ -27,10 +25,10 @@ public final class RingBufferFloat {
     /**
      * @param capacity capacity of the ringbuffer.
      */
-    public RingBufferFloat(int capacity) {
+    public RingBuffer(int capacity) {
 
         // Allocate space
-        buffer = new float[capacity];
+        buffer = (T[]) new Object[capacity];
 
         // Initialize to empty
         clear();
@@ -40,7 +38,7 @@ public final class RingBufferFloat {
      * @return the i:th element from the start of the ringbuffer, 0 = first element.
      * @throws IndexOutOfBoundsException if i is larger than the current size of the buffer.
      */
-    public float get(int i) {
+    public T get(int i) {
         if (i < 0 || i >= size) throw new IndexOutOfBoundsException("The position " + i + " is outside the bounds of the ringbuffer (it has size " + size + ")");
 
         return buffer[wrappedIndex(first + i)];
@@ -50,7 +48,7 @@ public final class RingBufferFloat {
      * @return the i:th element from the end of the ringbuffer, 0 = last element, 1 = next to last element, etc.
      * @throws IndexOutOfBoundsException if i is larger than the current size of the buffer.
      */
-    public float getFromEnd(int i) {
+    public T getFromEnd(int i) {
         if (i < 0 || i >= size) throw new IndexOutOfBoundsException("The position " + i + " counting from the end is outside the bounds of the ringbuffer (it has size " + size + ")");
 
         return buffer[wrappedIndex(last - 1 - i)];
@@ -60,7 +58,7 @@ public final class RingBufferFloat {
      * @return first element of the ringbuffer.
      * @throws IndexOutOfBoundsException if there are no elements in the buffer.
      */
-    public float getFirst() {
+    public T getFirst() {
         return get(0);
     }
 
@@ -68,7 +66,7 @@ public final class RingBufferFloat {
      * @return last element of the ringbuffer.
      * @throws IndexOutOfBoundsException if there are no elements in the buffer.
      */
-    public float getLast() {
+    public T getLast() {
         return getFromEnd(0);
     }
 
@@ -76,7 +74,7 @@ public final class RingBufferFloat {
      * Adds a new element to the start of the ringbuffer.
      * If the buffer is at full capacity, the last element will be overwritten.
      */
-    public void addFirst(float element) {
+    public void addFirst(T element) {
         // Move first to point to one before the first
         first = prevIndex(first);
 
@@ -92,7 +90,7 @@ public final class RingBufferFloat {
      * Adds a new element to the end of the ringbuffer.
      * If the buffer is at full capacity, the first element will be overwritten.
      */
-    public void addLast(float element) {
+    public void addLast(T element) {
         // Write to one past the last
         buffer[wrappedIndex(last)] = element;
 
@@ -109,14 +107,14 @@ public final class RingBufferFloat {
      *
      * @throws IndexOutOfBoundsException if there are no elements in the buffer.
      */
-    public float removeFirst() {
+    public T removeFirst() {
         if (size <= 0) throw new IndexOutOfBoundsException("The ringbuffer is empty, can not remove first element.");
 
         // Get first element
-        final float firstElement = buffer[first];
+        final T firstElement = buffer[first];
 
         // Clear removed element reference from the buffer
-        buffer[first] = 0;
+        buffer[first] = null;
 
         // Move first to point to the next element
         first = nextIndex(first);
@@ -132,15 +130,15 @@ public final class RingBufferFloat {
      *
      * @throws IndexOutOfBoundsException if there are no elements in the buffer.
      */
-    public float removeLast() {
+    public T removeLast() {
         if (size <= 0) throw new IndexOutOfBoundsException("The ringbuffer is empty, can not remove last element.");
 
         // Get last element
         final int lastIndex = wrappedIndex(last - 1);
-        final float lastElement = buffer[lastIndex];
+        final T lastElement = buffer[lastIndex];
 
         // Clear removed element reference from the buffer
-        buffer[lastIndex] = 0;
+        buffer[lastIndex] = null;
 
         // Move last to point to the previous element
         last = prevIndex(last);
@@ -165,7 +163,7 @@ public final class RingBufferFloat {
         size = 0;
 
         // Clear object references
-        Arrays.fill(buffer, 0);
+        Arrays.fill(buffer, null);
     }
 
     /**

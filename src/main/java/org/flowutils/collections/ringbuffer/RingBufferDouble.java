@@ -1,4 +1,4 @@
-package org.flowutils.collections;
+package org.flowutils.collections.ringbuffer;
 
 import java.util.Arrays;
 
@@ -6,12 +6,14 @@ import java.util.Arrays;
  * Fixed size buffer that can be added to at one end, and discards values at the other.
  * Can be accessed at any point.
  *
+ * Holds double values.
+ *
  * Not thread safe.
  */
-public final class RingBuffer<T> {
+public final class RingBufferDouble {
 
     // Array to store values in
-    private final T[] buffer;
+    private final double[] buffer;
 
     // Points to first element
     private int first = 0;
@@ -25,10 +27,10 @@ public final class RingBuffer<T> {
     /**
      * @param capacity capacity of the ringbuffer.
      */
-    public RingBuffer(int capacity) {
+    public RingBufferDouble(int capacity) {
 
         // Allocate space
-        buffer = (T[]) new Object[capacity];
+        buffer = new double[capacity];
 
         // Initialize to empty
         clear();
@@ -38,7 +40,7 @@ public final class RingBuffer<T> {
      * @return the i:th element from the start of the ringbuffer, 0 = first element.
      * @throws IndexOutOfBoundsException if i is larger than the current size of the buffer.
      */
-    public T get(int i) {
+    public double get(int i) {
         if (i < 0 || i >= size) throw new IndexOutOfBoundsException("The position " + i + " is outside the bounds of the ringbuffer (it has size " + size + ")");
 
         return buffer[wrappedIndex(first + i)];
@@ -48,7 +50,7 @@ public final class RingBuffer<T> {
      * @return the i:th element from the end of the ringbuffer, 0 = last element, 1 = next to last element, etc.
      * @throws IndexOutOfBoundsException if i is larger than the current size of the buffer.
      */
-    public T getFromEnd(int i) {
+    public double getFromEnd(int i) {
         if (i < 0 || i >= size) throw new IndexOutOfBoundsException("The position " + i + " counting from the end is outside the bounds of the ringbuffer (it has size " + size + ")");
 
         return buffer[wrappedIndex(last - 1 - i)];
@@ -58,7 +60,7 @@ public final class RingBuffer<T> {
      * @return first element of the ringbuffer.
      * @throws IndexOutOfBoundsException if there are no elements in the buffer.
      */
-    public T getFirst() {
+    public double getFirst() {
         return get(0);
     }
 
@@ -66,7 +68,7 @@ public final class RingBuffer<T> {
      * @return last element of the ringbuffer.
      * @throws IndexOutOfBoundsException if there are no elements in the buffer.
      */
-    public T getLast() {
+    public double getLast() {
         return getFromEnd(0);
     }
 
@@ -74,7 +76,7 @@ public final class RingBuffer<T> {
      * Adds a new element to the start of the ringbuffer.
      * If the buffer is at full capacity, the last element will be overwritten.
      */
-    public void addFirst(T element) {
+    public void addFirst(double element) {
         // Move first to point to one before the first
         first = prevIndex(first);
 
@@ -90,7 +92,7 @@ public final class RingBuffer<T> {
      * Adds a new element to the end of the ringbuffer.
      * If the buffer is at full capacity, the first element will be overwritten.
      */
-    public void addLast(T element) {
+    public void addLast(double element) {
         // Write to one past the last
         buffer[wrappedIndex(last)] = element;
 
@@ -107,14 +109,14 @@ public final class RingBuffer<T> {
      *
      * @throws IndexOutOfBoundsException if there are no elements in the buffer.
      */
-    public T removeFirst() {
+    public double removeFirst() {
         if (size <= 0) throw new IndexOutOfBoundsException("The ringbuffer is empty, can not remove first element.");
 
         // Get first element
-        final T firstElement = buffer[first];
+        final double firstElement = buffer[first];
 
         // Clear removed element reference from the buffer
-        buffer[first] = null;
+        buffer[first] = 0;
 
         // Move first to point to the next element
         first = nextIndex(first);
@@ -130,15 +132,15 @@ public final class RingBuffer<T> {
      *
      * @throws IndexOutOfBoundsException if there are no elements in the buffer.
      */
-    public T removeLast() {
+    public double removeLast() {
         if (size <= 0) throw new IndexOutOfBoundsException("The ringbuffer is empty, can not remove last element.");
 
         // Get last element
         final int lastIndex = wrappedIndex(last - 1);
-        final T lastElement = buffer[lastIndex];
+        final double lastElement = buffer[lastIndex];
 
         // Clear removed element reference from the buffer
-        buffer[lastIndex] = null;
+        buffer[lastIndex] = 0;
 
         // Move last to point to the previous element
         last = prevIndex(last);
@@ -163,7 +165,7 @@ public final class RingBuffer<T> {
         size = 0;
 
         // Clear object references
-        Arrays.fill(buffer, null);
+        Arrays.fill(buffer, 0);
     }
 
     /**
