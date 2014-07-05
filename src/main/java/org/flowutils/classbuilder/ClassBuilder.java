@@ -40,4 +40,25 @@ public interface ClassBuilder<T> {
      * @throws ClassBuilderException if there was any problem compiling the code or creating the instance.
      */
     T createInstance() throws ClassBuilderException;
+
+    /**
+     * @return a new unique java style identifier.
+     *         Each call creates a new identifier that has not been returned earlier by this ClassBuilder instance.
+     */
+    String createUniqueIdentifier();
+
+    /**
+     * @param prefix a valid java identifier string to prepend to the unique identifier, or null for default.  May not contain underscores.
+     * @return a new unique java style identifier.
+     *         Each call creates a new identifier that has not been returned earlier by this ClassBuilder instance.
+     */
+    String createUniqueIdentifier(String prefix);
+
+    /**
+     * @param prefix a valid java identifier string to prepend to the unique identifier, or null for default.  May not contain underscores.
+     * @param postfix a valid java identifier string to append to the identifier, or null for default.  May not contain underscores.
+     * @return a new unique java style identifier.
+     *         Each call creates a new identifier that has not been returned earlier by this ClassBuilder instance.
+     */
+    String createUniqueIdentifier(String prefix, String postfix);
 }

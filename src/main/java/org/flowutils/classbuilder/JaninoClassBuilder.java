@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.flowutils.Check.notNull;
 import static org.flowutils.classbuilder.SourceLocation.*;
@@ -35,6 +36,8 @@ public final class JaninoClassBuilder<T> implements ClassBuilder<T> {
 
     private String generatedSource;
     private Class<? extends T> generatedClass;
+
+    private final AtomicLong nextFreeUniqueId = new AtomicLong(1);
 
     /**
      * @param implementedClass interface or class that the generated class implements or extends.
@@ -236,6 +239,33 @@ public final class JaninoClassBuilder<T> implements ClassBuilder<T> {
         } catch (IllegalAccessException e) {
             throw new ClassBuilderException(e, name, null, "Could not access the compiled code.");
         }
+    }
+
+    @Override public final String createUniqueIdentifier() {
+        return createUniqueIdentifier(null, null);
+    }
+
+    @Override public final String createUniqueIdentifier(String prefix) {
+        return createUniqueIdentifier(prefix, null);
+    }
+
+    @Override public final String createUniqueIdentifier(String prefix, String postfix) {
+        if (prefix != null) {
+            Check.strictIdentifier(prefix, "prefix");
+            if (prefix.contains("_")) throw new IllegalArgumentException("The prefix should not contain underscores _, but it was " + prefix);
+        }
+        else {
+            prefix = "";
+        }
+
+        if (postfix != null) {
+            Check.strictIdentifier(postfix, "postfix");
+            if (postfix.contains("_")) throw new IllegalArgumentException("The postfix should not contain underscores _, but it was " + prefix);
+        }
+
+        final long id = nextFreeUniqueId.getAndIncrement();
+
+        return prefix + "_" + id + (postfix == null ? "" : "_" + postfix);
     }
 
 
