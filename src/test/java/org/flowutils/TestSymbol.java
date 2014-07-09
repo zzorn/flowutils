@@ -1,6 +1,5 @@
 package org.flowutils;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -19,8 +18,8 @@ public class TestSymbol {
         assertTrue(foo1 != bar);
 
 
-        assertEquals("foo", foo1.getName());
-        assertEquals("foo", foo2.getName());
+        assertEquals("foo", foo1.getString());
+        assertEquals("foo", foo2.getString());
 
 
         Symbol.get("_ahab");

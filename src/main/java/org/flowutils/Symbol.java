@@ -57,7 +57,7 @@ public final class Symbol {
      *         will start with a-z, _, or A-Z, and contain only a-z, A-Z, _, or 0-9.
 
      */
-    public String getName() {
+    public String getString() {
         return name;
     }
 
