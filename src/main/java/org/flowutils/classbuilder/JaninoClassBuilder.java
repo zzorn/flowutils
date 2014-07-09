@@ -24,6 +24,9 @@ public final class JaninoClassBuilder<T> implements ClassBuilder<T> {
     private static final String GENERATED_CLASS_NAME = "GeneratedClass";
     private static final String GENERATED_CLASS_FULL_PATH = GENERATED_CLASS_PACKAGE + "." + GENERATED_CLASS_NAME;
 
+    private static final int MAXIMUM_PREFIX_LENGTH = 128;
+    private static final int MAXIMUM_POSTFIX_LENGTH = 128;
+
     private final Class<T> implementedClass;
     private final Set<Class> importedClasses = new LinkedHashSet<Class>();
 
@@ -252,6 +255,7 @@ public final class JaninoClassBuilder<T> implements ClassBuilder<T> {
     @Override public final String createUniqueIdentifier(String prefix, String postfix) {
         if (prefix != null) {
             Check.strictIdentifier(prefix, "prefix");
+            Check.lessOrEqual(prefix.length(), "prefix length", MAXIMUM_PREFIX_LENGTH, "maximum prefix length");
             if (prefix.contains("_")) throw new IllegalArgumentException("The prefix should not contain underscores _, but it was " + prefix);
         }
         else {
@@ -260,6 +264,7 @@ public final class JaninoClassBuilder<T> implements ClassBuilder<T> {
 
         if (postfix != null) {
             Check.strictIdentifier(postfix, "postfix");
+            Check.lessOrEqual(postfix.length(), "postfix length", MAXIMUM_POSTFIX_LENGTH, "maximum postfix length");
             if (postfix.contains("_")) throw new IllegalArgumentException("The postfix should not contain underscores _, but it was " + prefix);
         }
 

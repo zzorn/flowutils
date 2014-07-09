@@ -48,15 +48,15 @@ public interface ClassBuilder<T> {
     String createUniqueIdentifier();
 
     /**
-     * @param prefix a valid java identifier string to prepend to the unique identifier, or null for default.  May not contain underscores.
+     * @param prefix a valid java identifier string to prepend to the unique identifier, or null for default.  May not contain underscores, and should not be too long (over 128 chars).
      * @return a new unique java style identifier.
      *         Each call creates a new identifier that has not been returned earlier by this ClassBuilder instance.
      */
     String createUniqueIdentifier(String prefix);
 
     /**
-     * @param prefix a valid java identifier string to prepend to the unique identifier, or null for default.  May not contain underscores.
-     * @param postfix a valid java identifier string to append to the identifier, or null for default.  May not contain underscores.
+     * @param prefix a valid java identifier string to prepend to the unique identifier, or null for default.  May not contain underscores, and should not be too long (over 128 chars).
+     * @param postfix a valid java identifier string to append to the identifier, or null for default.  May not contain underscores, and should not be too long (over 128 chars).
      * @return a new unique java style identifier.
      *         Each call creates a new identifier that has not been returned earlier by this ClassBuilder instance.
      */
