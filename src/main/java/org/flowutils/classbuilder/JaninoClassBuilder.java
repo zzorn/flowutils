@@ -184,6 +184,11 @@ public final class JaninoClassBuilder<T> implements ClassBuilder<T> {
                     "  \n" +
                     sourcesFor(FIELDS) +
                     "  \n" +
+                    "  // Constructor\n" +
+                    "  public " + GENERATED_CLASS_NAME  + "() {\n" +
+                    sourcesFor(CONSTRUCTOR) +
+                    "  }\n" +
+                    "  \n" +
                     "  // Calculation method\n" +
                     "  public " +
                     calculationMethod.getReturnType().getCanonicalName() +

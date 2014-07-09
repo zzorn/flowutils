@@ -7,6 +7,7 @@ package org.flowutils.classbuilder;
 public enum SourceLocation {
     IMPORTS(0, false, false),
     FIELDS(1, true, false),
+    CONSTRUCTOR(2, true, true),
     METHODS(1, false, false),
     BEFORE_CALCULATION(2, true, true),
     AT_CALCULATION(2, true, true),
