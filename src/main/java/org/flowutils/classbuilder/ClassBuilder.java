@@ -5,6 +5,7 @@ package org.flowutils.classbuilder;
  *
  * @param <T> a type that the generated class implements or extends.
  */
+// TODO: Extract to own library, so that we can use this one on android, where janino does not work.
 // TODO: Support arbitrary method buildup, make source location not an enum, instead have it contain method name and place in it, or such.
 //       Add static construction methods to it for locations such as fields, imports, constructor, etc.
 public interface ClassBuilder<T> {
