@@ -65,7 +65,7 @@ public class ColorGradient implements ColorFunction {
             else if (ceiling == null) colors.remove(floor.getKey());
             else {
                 if (value - floor.getKey() < ceiling.getKey() - value) colors.remove(floor.getKey());
-                else colors.remove(floor.getKey());
+                else colors.remove(ceiling.getKey());
             }
         }
     }
