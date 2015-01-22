@@ -16,10 +16,10 @@ public final class MurmurHash3 implements RandomHash {
         // If the input is zero, replace it with an arbitrary non-zero constant
         if (value == 0) value = SEED_TO_USE_INSTEAD_OF_ZERO;
 
-        value ^= value >> 33;
+        value ^= value >>> 33;
         value *= 0xff51afd7ed558ccdL;
-        value ^= value >> 33;
+        value ^= value >>> 33;
         value *= 0xc4ceb9fe1a85ec53L;
-        return value ^ (value >> 33);
+        return value ^ (value >>> 33);
     }
 }
