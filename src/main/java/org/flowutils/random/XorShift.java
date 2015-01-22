@@ -13,6 +13,13 @@ public final class XorShift extends BaseRandomSequence {
     private long seed0;
     private long seed1;
 
+    public XorShift() {
+    }
+
+    public XorShift(long seed) {
+        super(seed);
+    }
+
     @Override protected void setHashedSeed(long seed) {
 
         seed0 = seed;

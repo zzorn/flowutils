@@ -16,20 +16,33 @@ public abstract class BaseRandomSequence implements RandomSequence {
 
     /**
      * Uses the default hashing function for the seed (MurmurHash3).
+     * Seeds the random number generator using the nanosecond time counter.
      */
     protected BaseRandomSequence() {
-        this(DEFAULT_SEED_HASHING_FUNCTION);
+        this(System.nanoTime());
     }
 
     /**
+     * Uses the default hashing function for the seed (MurmurHash3).
+     *
+     * @param seed random seed to use.
+     */
+    protected BaseRandomSequence(long seed) {
+        this(seed, DEFAULT_SEED_HASHING_FUNCTION);
+    }
+
+    /**
+     * @param seed random seed to use.
      * @param seedHashingFunction hashing function to use on a user provided seed before it is used for the random
      *                            number generator.  Helps make random sequences with adjacent seeds more independent
      *                            for many random number generators.
      */
-    protected BaseRandomSequence(RandomHash seedHashingFunction) {
+    protected BaseRandomSequence(long seed, RandomHash seedHashingFunction) {
         Check.notNull(seedHashingFunction, "seedHashingFunction");
 
         this.seedHashingFunction = seedHashingFunction;
+
+        setSeed(seed);
     }
 
     @Override public final void setSeed(long seed, long ... additionalSeeds) {
@@ -100,7 +113,7 @@ public abstract class BaseRandomSequence implements RandomSequence {
     }
 
     @Override public final byte nextByte() {
-        return (byte) (nextLong() >> (64-8));
+        return (byte) (nextLong() >> (64-8)); // Use signed right shift
     }
 
     @Override public final void nextBytes(byte[] outputArray) {
@@ -118,7 +131,7 @@ public abstract class BaseRandomSequence implements RandomSequence {
     }
 
     @Override public final int nextInt() {
-        return (int) (nextLong() >> 32);
+        return (int) (nextLong() >> 32); // Use signed right shift
     }
 
     @Override public final int nextInt(int max) {
@@ -232,7 +245,8 @@ public abstract class BaseRandomSequence implements RandomSequence {
     }
 
     private long nextBits(int numberOfBits) {
-        return nextLong() >>> (64 - numberOfBits);
+        return nextLong() >>> (64 - numberOfBits); // Use unsigned right shift, most significant bits will be zero
+                                                   // and the number will be positive if numberOfBits > 0
     }
 
     /**
