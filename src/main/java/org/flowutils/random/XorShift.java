@@ -10,12 +10,19 @@ public final class XorShift extends BaseRandomSequence {
 
     private static final RandomHash seedHasher = new MurmurHash3();
 
+    // Random number generator state (2 * 64 bits)
     private long seed0;
     private long seed1;
 
+    /**
+     * Creates a new random number generator with a seed based on the current time.
+     */
     public XorShift() {
     }
 
+    /**
+     * @param seed initial seed for the random number generator.
+     */
     public XorShift(long seed) {
         super(seed);
     }
