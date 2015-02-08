@@ -10,18 +10,47 @@ public abstract class ServiceBase extends LoggingBase implements Service {
 
     private boolean initialized = false;
     private boolean shutdown = false;
-
     private boolean shutDownWhenJVMClosing = true;
+    private final Class<? extends Service> serviceType;
+    private final String name;
+    private ServiceProvider serviceProvider;
 
+    /**
+     */
     protected ServiceBase() {
+        this(null);
     }
 
     /**
+     * @param name name of the service, used for debug messages etc.
+     */
+    protected ServiceBase(String name) {
+        this(name, null);
+    }
+
+    /**
+     * @param name name of the service, used for debug messages etc.
+     * @param serviceType type of the service, used when accessing services from an application.
+     */
+    protected ServiceBase(String name, Class<? extends Service> serviceType) {
+        this(name, serviceType, true);
+    }
+
+    /**
+     * @param name name of the service, used for debug messages etc.
+     * @param serviceType type of the service, used when accessing services from an application.
+     *                    By default the type of the service class.
      * @param shutDownWhenJVMClosing if true, will call shutdown in a separate concurrent thread when the Java Virtual Machine is closed,
      *                               if shutdown has not already been called.
-     *                               The default is true.
      */
-    protected ServiceBase(boolean shutDownWhenJVMClosing) {
+    protected ServiceBase(String name,
+                          Class<? extends Service> serviceType,
+                          boolean shutDownWhenJVMClosing) {
+        if (serviceType == null) serviceType = getClass();
+        if (name == null) name = getClass().getSimpleName();
+
+        this.serviceType = serviceType;
+        this.name = name;
         setShutDownWhenJVMClosing(shutDownWhenJVMClosing);
     }
 
@@ -30,7 +59,7 @@ public abstract class ServiceBase extends LoggingBase implements Service {
      *         if shutdown has not already been called.
      *         False if no automatic shutdown is done.
      */
-    public boolean isShutDownWhenJVMClosing() {
+    public final boolean isShutDownWhenJVMClosing() {
         return shutDownWhenJVMClosing;
     }
 
@@ -40,26 +69,36 @@ public abstract class ServiceBase extends LoggingBase implements Service {
      *                               This method should be called before init(), as init handles registering of the shutdown hook.
      *                               The default is true.
      */
-    public void setShutDownWhenJVMClosing(boolean shutDownWhenJVMClosing) {
+    public final void setShutDownWhenJVMClosing(boolean shutDownWhenJVMClosing) {
         if (isInitialized()) throw new IllegalStateException("Must be called before calling init");
 
         this.shutDownWhenJVMClosing = shutDownWhenJVMClosing;
     }
 
-    @Override public String getServiceName() {
-        return getClass().getSimpleName();
+    @Override public final String getName() {
+        return name;
+    }
+
+    @Override public final Class<? extends Service> getType() {
+        return serviceType;
     }
 
     @Override public final void init() {
+        init(null);
+    }
+
+    @Override public final void init(ServiceProvider serviceProvider) {
         // Check that init has not been called before
         if (initialized) {
-            throw new IllegalStateException("The Service " + getServiceName() + " has already been initialized, can not initialize again!");
+            throw new IllegalStateException("The Service " + getName() + " has already been initialized, can not initialize again!");
         }
 
         logInfo(0, "Initializing");
 
+        setServiceProvider(serviceProvider);
+
         // Do any service specific initialization
-        doInit();
+        doInit(serviceProvider);
 
         initialized = true;
 
@@ -84,7 +123,7 @@ public abstract class ServiceBase extends LoggingBase implements Service {
         };
 
         // Set a clear name for the thread, to ease debugging and clarify logging
-        shutdownThread.setName("JVM_ShutdownHook_for_" + getServiceName() );
+        shutdownThread.setName("JVM_ShutdownHook_for_" + getName() );
 
         // Register the thread to be called before the JVM closes
         Runtime.getRuntime().addShutdownHook(shutdownThread);
@@ -92,7 +131,7 @@ public abstract class ServiceBase extends LoggingBase implements Service {
 
     @Override public final void shutdown() {
         if (shutdown) {
-            throw new IllegalStateException("The Service " + getServiceName() + " has already been shutdown, can not shutdown again!");
+            throw new IllegalStateException("The Service " + getName() + " has already been shutdown, can not shutdown again!");
         }
 
         // Only do the shutdown if we were initialized earlier
@@ -121,13 +160,26 @@ public abstract class ServiceBase extends LoggingBase implements Service {
 
     /**
      * Do the initialization.
+     * @param serviceProvider can be queried for other services.  Not all services have necessarily been initialized yet.
      */
-    protected abstract void doInit();
+    protected abstract void doInit(ServiceProvider serviceProvider);
 
     /**
      * Do the shutdown.
      */
     protected abstract void doShutdown();
+
+    /**
+     *
+     * @return ServiceProvider that can be queried for other services, or null if none provided (or service has not yet been initialized).
+     */
+    protected final ServiceProvider getServiceProvider() {
+        return serviceProvider;
+    }
+
+    private void setServiceProvider(ServiceProvider serviceProvider) {
+        this.serviceProvider = serviceProvider;
+    }
 
     /**
      * Utility method that ensures that the service is active, and throws an exception if that is not the case.
@@ -145,12 +197,12 @@ public abstract class ServiceBase extends LoggingBase implements Service {
 
         if (!initialized) {
             if (action == null) action = "invoke " + ThreadUtils.getCallingMethodName();
-            message = "Can not " + action + ", the " + getServiceName() +
+            message = "Can not " + action + ", the " + getName() +
                       " service has not yet been initialized!  Call init first.";
         }
         else if (shutdown) {
             if (action == null) action = "invoke " + ThreadUtils.getCallingMethodName();
-            message = "Can not " + action + ", the " + getServiceName() +
+            message = "Can not " + action + ", the " + getName() +
                       " service has already been shut down!";
         }
 
@@ -161,6 +213,7 @@ public abstract class ServiceBase extends LoggingBase implements Service {
     }
 
     @Override protected final String getLogPrefix() {
-        return getServiceName();
+        return getName();
     }
+
 }
