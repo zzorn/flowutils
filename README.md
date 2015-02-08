@@ -14,4 +14,5 @@ Contents
 * RawImage      - Fast, low-level image class, backed by an editable array of color data.
 * FloatRaster   - Two dimensional floating point raster class with various manipulation methods.
 * Time          - Can be used to keep track of elapsed gametime, update steps done, frames per second, and duration of last frame.
+* Random        - Pseudorandom number generator (xorshift) which is better than the one Java provides (LCG).
 
