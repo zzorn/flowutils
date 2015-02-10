@@ -51,25 +51,14 @@ public abstract class ServiceBase extends LoggingBase implements Service {
 
         this.serviceType = serviceType;
         this.name = name;
-        setShutDownWhenJVMClosing(shutDownWhenJVMClosing);
+        setAutomaticallyShutDownWhenJVMClosing(shutDownWhenJVMClosing);
     }
 
-    /**
-     * @return true if the service will call shutdown in a separate concurrent thread when the Java Virtual Machine is closed,
-     *         if shutdown has not already been called.
-     *         False if no automatic shutdown is done.
-     */
-    public final boolean isShutDownWhenJVMClosing() {
+    @Override public final boolean isAutomaticallyShutDownWhenJVMClosing() {
         return shutDownWhenJVMClosing;
     }
 
-    /**
-     * @param shutDownWhenJVMClosing if true, will call shutdown in a separate concurrent thread when the Java Virtual Machine is closed,
-     *                               if shutdown has not already been called.
-     *                               This method should be called before init(), as init handles registering of the shutdown hook.
-     *                               The default is true.
-     */
-    public final void setShutDownWhenJVMClosing(boolean shutDownWhenJVMClosing) {
+    @Override public final void setAutomaticallyShutDownWhenJVMClosing(boolean shutDownWhenJVMClosing) {
         if (isInitialized()) throw new IllegalStateException("Must be called before calling init");
 
         this.shutDownWhenJVMClosing = shutDownWhenJVMClosing;

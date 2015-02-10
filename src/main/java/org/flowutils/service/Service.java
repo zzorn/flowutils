@@ -51,4 +51,20 @@ public interface Service {
      * @return true if the service has been shutdown.
      */
     boolean isShutdown();
+
+    /**
+     * @return true if the service will call shutdown in a separate concurrent thread when the Java Virtual Machine is closed,
+     *         if shutdown has not already been called.
+     *         False if no automatic shutdown is done.
+     */
+    boolean isAutomaticallyShutDownWhenJVMClosing();
+
+    /**
+     * @param shutDownWhenJVMClosing if true, will call shutdown in a separate concurrent thread when the Java Virtual Machine is closed,
+     *                               if shutdown has not already been called.
+     *                               This method should be called before init(), as init handles registering of the shutdown hook.
+     *                               The default is true.
+     */
+    void setAutomaticallyShutDownWhenJVMClosing(boolean shutDownWhenJVMClosing);
+
 }

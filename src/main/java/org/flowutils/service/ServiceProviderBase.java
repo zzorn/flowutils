@@ -45,8 +45,12 @@ public class ServiceProviderBase extends ServiceBase implements ServiceProvider 
         // Ensure not already added
         if (services.containsKey(type)) throw new IllegalArgumentException("A service of the type " + type + " has already been added!");
 
+        // Add it
         logInfo("Adding service " + service.getName());
         services.put(type, service);
+
+        // Do not automatically shut it down on JVM exit, as this service provider will be automatically shut down on jvm exit and will shut down all added services.
+        service.setAutomaticallyShutDownWhenJVMClosing(false);
 
         // Start service if we are already started
         if (isActive()) {
