@@ -10,7 +10,7 @@ import java.util.Arrays;
  *
  * Not thread safe.
  */
-public final class RingBufferDouble extends RingBufferBase {
+public final class RingBufferDouble extends RingBufferBase<Double> {
 
     // Array to store values in
     private final double[] buffer;
@@ -36,6 +36,11 @@ public final class RingBufferDouble extends RingBufferBase {
 
         return buffer[wrappedIndex(first + i)];
     }
+
+    @Override public Double getElement(int index) {
+        return get(index);
+    }
+
 
     /**
      * @return the i:th element from the end of the ringbuffer, 0 = last element, 1 = next to last element, etc.

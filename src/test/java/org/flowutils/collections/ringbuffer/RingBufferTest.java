@@ -234,8 +234,20 @@ public class RingBufferTest {
         assertEquals(5, ringBuffer.getCapacity());
         assertRemoveFirstThrowsException(ringBuffer);
         assertRemoveLastThrowsException(ringBuffer);
+    }
 
+    @Test
+    public void testIterator() throws Exception {
+        RingBuffer<String> ringBuffer = new RingBuffer<String>(5);
+        ringBuffer.addLast("foo");
+        ringBuffer.addLast("bar");
+        ringBuffer.addLast("zap");
 
+        String sum = "";
+        for (String s : ringBuffer) {
+            sum += s;
+        }
+        assertEquals("foobarzap", sum);
     }
 
     private void assertGetThrowsException(RingBuffer<String> ringBuffer, final int index) {

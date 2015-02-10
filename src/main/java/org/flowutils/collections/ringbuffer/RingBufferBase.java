@@ -1,9 +1,11 @@
 package org.flowutils.collections.ringbuffer;
 
+import java.util.Iterator;
+
 /**
  * Contains common functionality for RingBuffers.
  */
-public abstract class RingBufferBase {
+public abstract class RingBufferBase<T> implements Iterable<T> {
 
     // Points to first element
     protected int first = 0;
@@ -13,6 +15,13 @@ public abstract class RingBufferBase {
 
     // Number of elements
     protected int size = 0;
+
+    /**
+     * @param index index of the element to get, 0 == first element.
+     * @return the element with the specific index from the buffer.
+     * @throws java.lang.ArrayIndexOutOfBoundsException if the index if out of the buffer bounds.
+     */
+    public abstract T getElement(int index);
 
     /**
      * Empties the buffer, and removes references to all stored elements.
@@ -60,6 +69,24 @@ public abstract class RingBufferBase {
      */
     public final boolean hasElements() {
         return size > 0;
+    }
+
+    @Override public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            private int i = 0;
+
+            @Override public boolean hasNext() {
+                return i < getSize();
+            }
+
+            @Override public T next() {
+                return getElement(i++);
+            }
+
+            @Override public void remove() {
+                throw new UnsupportedOperationException("Remove is not supported for ringbuffers");
+            }
+        };
     }
 
     /**

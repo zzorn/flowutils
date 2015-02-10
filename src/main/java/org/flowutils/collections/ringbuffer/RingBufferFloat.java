@@ -10,7 +10,7 @@ import java.util.Arrays;
  *
  * Not thread safe.
  */
-public final class RingBufferFloat extends RingBufferBase {
+public final class RingBufferFloat extends RingBufferBase<Float> {
 
     // Array to store values in
     private final float[] buffer;
@@ -35,6 +35,10 @@ public final class RingBufferFloat extends RingBufferBase {
         if (i < 0 || i >= size) throw new IndexOutOfBoundsException("The position " + i + " is outside the bounds of the ringbuffer (it has size " + size + ")");
 
         return buffer[wrappedIndex(first + i)];
+    }
+
+    @Override public Float getElement(int index) {
+        return get(index);
     }
 
     /**
