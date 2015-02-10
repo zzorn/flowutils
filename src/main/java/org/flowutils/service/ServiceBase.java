@@ -109,7 +109,7 @@ public abstract class ServiceBase extends LoggingBase implements Service {
             logTrace(3, "Shutdown Hook Registered");
         }
 
-        logInfo(1, "Initialized");
+        logTrace(1, "Initialized");
     }
 
     private void registerShutdownHook() {
@@ -140,7 +140,7 @@ public abstract class ServiceBase extends LoggingBase implements Service {
 
             doShutdown();
 
-            logInfo(1, "Shut Down");
+            logTrace(1, "Shut Down");
         }
 
         shutdown = true;
