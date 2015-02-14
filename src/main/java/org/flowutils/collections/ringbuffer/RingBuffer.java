@@ -8,19 +8,10 @@ import java.util.Arrays;
  *
  * Not thread safe.
  */
-public final class RingBuffer<T> {
+public final class RingBuffer<T> extends RingBufferBase<T> {
 
     // Array to store values in
     private final T[] buffer;
-
-    // Points to first element
-    private int first = 0;
-
-    // Points to one after last element
-    private int last = 0;
-
-    // Number of elements
-    private int size = 0;
 
     /**
      * @param capacity capacity of the ringbuffer.
@@ -42,6 +33,10 @@ public final class RingBuffer<T> {
         if (i < 0 || i >= size) throw new IndexOutOfBoundsException("The position " + i + " is outside the bounds of the ringbuffer (it has size " + size + ")");
 
         return buffer[wrappedIndex(first + i)];
+    }
+
+    @Override public T getElement(int index) {
+        return get(index);
     }
 
     /**
@@ -149,30 +144,6 @@ public final class RingBuffer<T> {
         return lastElement;
     }
 
-
-    /**
-     * Empties the buffer, and removes references to all stored elements.
-     * The capacity remains unchanged, the new size is zero.
-     */
-    public void clear() {
-        // Initialize pointers
-        first = 0;
-        last = 0;
-
-        // Initialize size
-        size = 0;
-
-        // Clear object references
-        Arrays.fill(buffer, null);
-    }
-
-    /**
-     * @return number of elements in the ringbuffer.
-     */
-    public int getSize() {
-        return size;
-    }
-
     /**
      * @return the maximum capacity of the ringbuffer.
      */
@@ -180,43 +151,8 @@ public final class RingBuffer<T> {
         return buffer.length;
     }
 
-    /**
-     * @return true if the ringbuffer has reached capacity, and any new elements added will drop out an element at the other end.
-     */
-    public boolean isFull() {
-        return size >= buffer.length;
+    @Override protected void clearBufferContents() {
+        // Clear object references
+        Arrays.fill(buffer, null);
     }
-
-    /**
-     * @return true if the ringbuffer is empty.
-     */
-    public boolean isEmpty() {
-        return size <= 0;
-    }
-
-    /**
-     * @return true if the ringbuffer is not empty.
-     */
-    public boolean hasElements() {
-        return size > 0;
-    }
-
-    private int nextIndex(final int i) {
-        int index = (i + 1) % buffer.length;
-        if (index < 0) index += buffer.length;
-        return index;
-    }
-
-    private int prevIndex(final int i) {
-        int index = (i - 1) % buffer.length;
-        if (index < 0) index += buffer.length;
-        return index;
-    }
-
-    private int wrappedIndex(int i) {
-        int index =  i % buffer.length;
-        if (index < 0) index += buffer.length;
-        return index;
-    }
-
 }

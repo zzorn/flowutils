@@ -84,6 +84,34 @@ public final class RawImage {
     }
 
     /**
+     * @return the red component of the color value at the specified pixel, as a value between 0 and 1.  Throws exception if out of range.
+     */
+    public double getRed(int x, int y) {
+        return getColorComponent(getPixel(x, y), 0);
+    }
+
+    /**
+     * @return the green component of the color value at the specified pixel, as a value between 0 and 1.  Throws exception if out of range.
+     */
+    public double getGreen(int x, int y) {
+        return getColorComponent(getPixel(x, y), 1);
+    }
+
+    /**
+     * @return the blue component of the color value at the specified pixel, as a value between 0 and 1.  Throws exception if out of range.
+     */
+    public double getBlue(int x, int y) {
+        return getColorComponent(getPixel(x, y), 2);
+    }
+
+    /**
+     * @return the alpha component of the color value at the specified pixel, as a value between 0 and 1.  Throws exception if out of range.
+     */
+    public double getAlpha(int x, int y) {
+        return getColorComponent(getPixel(x, y), 3);
+    }
+
+    /**
      * Sets the color RGBA value at the specified pixel.  Throws exception if coordinates are out of range.
      */
     public void setPixel(int x, int y, int colorCode) {
@@ -92,6 +120,48 @@ public final class RawImage {
 
         imageData[x + y*width] = colorCode;
     }
+
+    /**
+     * Sets the color value at the specified pixel.  Throws exception if coordinates are out of range.
+     */
+    public void setPixel(int x, int y, double red, double green, double blue) {
+
+        int colorCode = colorComponent(red, 0) |
+                        colorComponent(green, 1) |
+                        colorComponent(blue, 2) |
+                        colorComponent(1.0, 3);
+
+        setPixel(x, y, colorCode);
+    }
+
+    /**
+     * Sets the color value at the specified pixel.  Throws exception if coordinates are out of range.
+     */
+    public void setPixel(int x, int y, double red, double green, double blue, double alpha) {
+
+        int colorCode = colorComponent(red, 0) |
+                        colorComponent(green, 1) |
+                        colorComponent(blue, 2) |
+                        colorComponent(alpha, 3);
+
+        setPixel(x, y, colorCode);
+    }
+
+    private int colorComponent(double c, int pos) {
+        int value = (int) (c * 256);
+        if (value < 0) value = 0;
+        if (value > 255) value = 255;
+
+        return value << (8 * pos);
+    }
+
+    private double getColorComponent(int colorCode, int pos) {
+        colorCode = colorCode >>> (8 * pos);
+        colorCode &= 0xFF;
+
+        return colorCode / 255.0;
+    }
+
 
     /**
      * Ensures the latest changes to the image data buffer are updated into the image.

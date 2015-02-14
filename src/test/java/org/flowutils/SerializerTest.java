@@ -31,7 +31,6 @@ public class SerializerTest {
                 return createKryoSerializerWithRegisteredClasses();
             }
         }));
-
     }
 
     private KryoSerializer createKryoSerializerWithRegisteredClasses() {

@@ -209,6 +209,13 @@ public final class Stopwatch {
         this.description = description;
     }
 
+    /**
+     * @return true if the Stopwatch is paused.
+     */
+    public boolean isPaused() {
+        return paused;
+    }
+
     private String getAverageLapTimeAsString() {
         return convertSecondsToReadableString(getAverageLapTimeSeconds());
     }
