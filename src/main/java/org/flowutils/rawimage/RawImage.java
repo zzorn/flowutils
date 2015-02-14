@@ -2,8 +2,13 @@ package org.flowutils.rawimage;
 
 import org.flowutils.Check;
 import org.flowutils.MathUtils;
+import org.flowutils.rectangle.intrectangle.ImmutableIntRectangle;
+import org.flowutils.rectangle.intrectangle.IntRectangle;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.DirectColorModel;
 import java.awt.image.MemoryImageSource;
@@ -13,13 +18,16 @@ import java.util.Arrays;
 /**
  * Fast, low-level image, backed by a raw array of color data.
  */
+// TODO: Rename to FastImage?
 public final class RawImage {
 
     private final int width;
     private final int height;
+    private final IntRectangle extent;
 
     private Image image = null;
     private int[] imageData = null;
+
 
     /**
      * Creates a new empty black RawImage with the specified size in pixels.
@@ -30,6 +38,7 @@ public final class RawImage {
 
         this.width = width;
         this.height = height;
+        extent = new ImmutableIntRectangle(width, height);
 
         initialize();
     }
@@ -46,6 +55,13 @@ public final class RawImage {
      */
     public int getHeight() {
         return height;
+    }
+
+    /**
+     * @return extent of the image as an IntRectangle from 0,0 to width-1, height-1.
+     */
+    public IntRectangle getExtent() {
+        return extent;
     }
 
     /**

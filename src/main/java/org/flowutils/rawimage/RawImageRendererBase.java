@@ -1,11 +1,22 @@
 package org.flowutils.rawimage;
 
+import org.flowutils.Check;
+import org.flowutils.raster.field.RenderListener;
+import org.flowutils.rectangle.Rectangle;
+import org.flowutils.rectangle.intrectangle.IntRectangle;
+
 /**
  * Abstract base class that loops through the pixels and renders each.
  */
 public abstract class RawImageRendererBase implements RawImageRenderer {
 
-    @Override public final void renderImage(RawImage target) {
+    @Override
+    public void renderImage(final RawImage target, IntRectangle targetArea, final Rectangle sourceArea, final RenderListener listener) {
+        Check.notNull(target, "target");
+        if (targetArea == null) {
+            targetArea = target.getExtent();
+        }
+
         final int w = target.getWidth();
         final int h = target.getHeight();
         final int[] buffer = target.getBuffer();
@@ -14,10 +25,15 @@ public abstract class RawImageRendererBase implements RawImageRenderer {
 
         // Render pixels
         int index = 0;
-        for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
+        boolean continueRendering = true;
+        for (int y = targetArea.getMinY(); y <= targetArea.getMaxY() && continueRendering; y++) {
+            for (int x = targetArea.getMinX(); x <= targetArea.getMaxX(); x++) {
                 final int pixelColor = getPixelColor(x, y, w, h);
                 buffer[index++] = pixelColor;
+            }
+
+            if (listener != null && (y % 10) == 0) {
+                continueRendering = listener.onRenderProgress(targetArea.getRelativeY(y));
             }
         }
 

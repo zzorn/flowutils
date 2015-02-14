@@ -4,6 +4,7 @@ import org.flowutils.Symbol;
 import org.flowutils.raster.field.RenderListener;
 import org.flowutils.raster.field.single.Field;
 import org.flowutils.raster.raster.multi.MultiRaster;
+import org.flowutils.rawimage.RawImage;
 import org.flowutils.rectangle.Rectangle;
 import org.flowutils.rectangle.intrectangle.IntRectangle;
 
@@ -74,7 +75,7 @@ public interface MultiField {
     void renderToRaster(MultiRaster targetRaster, Rectangle sourceArea, IntRectangle targetArea, RenderListener renderListener);
 
     /**
-     * Renders a part of this multifield to the target arrays
+     * Renders a part of this multifield to the target float arrays
      *
      * @param targetChannelIds ids of channels to render to, in the same order as the other target arrays.
      * @param targetDatas target data arrays to render to
@@ -103,4 +104,64 @@ public interface MultiField {
                         double sourceStepY,
                         double sourceSampleSize,
                         RenderListener renderListener);
+
+    /**
+     * Writes the specified area from this field to the specified area on the RawImage
+     *
+     * @param redChannelId id of channel to use for the red color component. If null, defaults to zero.
+     * @param greenChannelId id of channel to use for the green color component. If null, defaults to zero.
+     * @param blueChannelId id of channel to use for the blue color component. If null, defaults to zero.
+     * @param alphaChannelId id of channel to use for the transparency color component.  If null, defaults to fully opaque.
+     * @param rawImage RawImage to render to
+     * @param sourceArea source area from the field to render (null to render the area 0, 0 to 1, 1
+     * @param targetArea area on the raster to render to (null to render to the whole raster)
+     * @param renderListener listener that is notified of rendering progress, or null if no listener specified.
+     */
+    void renderToRawImage(Symbol redChannelId,
+                          Symbol greenChannelId,
+                          Symbol blueChannelId,
+                          Symbol alphaChannelId,
+                          RawImage rawImage,
+                          Rectangle sourceArea,
+                          IntRectangle targetArea,
+                          RenderListener renderListener);
+
+    /**
+     * Renders a part of this multifield to the target float arrays
+     *
+     * @param redChannelId id of channel to use for the red color component. If null, defaults to zero.
+     * @param greenChannelId id of channel to use for the green color component. If null, defaults to zero.
+     * @param blueChannelId id of channel to use for the blue color component. If null, defaults to zero.
+     * @param alphaChannelId id of channel to use for the transparency color component.  If null, defaults to fully opaque.
+     * @param rgbaData array with 32 bit pixels with 8 bit color data in RGBA sequence.
+     * @param targetSizeX size of the target area to render to
+     * @param targetSizeY size of the target area to render to
+     * @param targetOffset offset to the start of the area to render to in the array
+     * @param targetXStep step to apply to get from one element to the next in a row (1 == no extra steps between each element)
+     * @param targetYSkip elements to skip between each target row
+     * @param sourceStartX x position to start sampling the field from
+     * @param sourceStartY y position to start sampling the field from
+     * @param sourceStepX x step to apply to the source after each element sample of the field
+     * @param sourceStepY y step to apply to the source after each row sampled from the field
+     * @param sourceSampleSize sample size to use when sampling the field
+
+     * @param renderListener listener that is notified of rendering progress, or null if no listener specified.
+     */
+    void renderToImageArray(Symbol redChannelId,
+                            Symbol greenChannelId,
+                            Symbol blueChannelId,
+                            Symbol alphaChannelId,
+                            int[] rgbaData,
+                            int targetSizeX,
+                            int targetSizeY,
+                            int targetOffset,
+                            int targetXStep,
+                            int targetYSkip,
+                            double sourceStartX,
+                            double sourceStartY,
+                            double sourceStepX,
+                            double sourceStepY,
+                            double sourceSampleSize,
+                            RenderListener renderListener);
+
 }

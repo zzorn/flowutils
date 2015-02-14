@@ -1,8 +1,11 @@
 package org.flowutils.rawimage;
 
 
+import org.flowutils.rectangle.MutableRectangle;
+import org.flowutils.rectangle.Rectangle;
+
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -10,10 +13,12 @@ import java.awt.event.ComponentEvent;
  * A Swing Panel that shows a backing FastImage.
  * The image is either provided directly, or created with a renderer which recreates it whenever the panel is resized.
  */
+// TODO: Should this contain the source area, or should that be a separate panel with zoom etc?  Maybe separate panel
 public class RawImagePanel extends JPanel {
 
     private RawImageRenderer renderer;
-    private RawImage rawImage = null;
+    private RawImage  rawImage   = null;
+    private final Rectangle sourceArea = new MutableRectangle(0, 0, 1, 1);
 
     private boolean imagePainted = false;
 
@@ -23,11 +28,11 @@ public class RawImagePanel extends JPanel {
     public RawImagePanel() {
         // Listen to resizes, and re-render the image when a resize happened
         addComponentListener(new ComponentAdapter() {
-                public void componentResized(ComponentEvent e) {
+            public void componentResized(ComponentEvent e) {
 
-                    if (RawImagePanel.this.renderer != null) {
-                        final int width = getWidth();
-                        final int height = getHeight();
+                if (RawImagePanel.this.renderer != null) {
+                    final int width = getWidth();
+                    final int height = getHeight();
 
                         // Create image if we have any size to work with.
                         if (width > 0 && height > 0) rawImage = new RawImage(width, height);
@@ -91,6 +96,14 @@ public class RawImagePanel extends JPanel {
     }
 
     /**
+     * @return the area to render to this image by the renderer.
+     * Can be modified.
+     */
+    public Rectangle getSourceArea() {
+        return sourceArea;
+    }
+
+    /**
      * Triggers a re-render of the image and a repaint of this panel.
      */
     public void reRender() {
@@ -103,7 +116,7 @@ public class RawImagePanel extends JPanel {
 
             // Re-render the image if needed
             if (!imagePainted && renderer != null) {
-                renderer.renderImage(rawImage);
+                renderer.renderImage(rawImage, rawImage.getExtent(), sourceArea, null);
                 imagePainted = true;
 
                 // Flush the image to be sure we have the latest version
