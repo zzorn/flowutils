@@ -54,13 +54,6 @@
             <version>2.22</version>
         </dependency>
 
-        <!-- For java compilation and bytecode generation -->
-        <dependency>
-            <groupId>org.codehaus.janino</groupId>
-            <artifactId>janino</artifactId>
-            <version>2.7.3</version>
-        </dependency>
-
     </dependencies>
 
     <repositories>
