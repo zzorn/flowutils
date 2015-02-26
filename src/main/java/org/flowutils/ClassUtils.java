@@ -28,6 +28,86 @@ public class ClassUtils {
         else throw new UnsupportedOperationException("Unexpected number type " + numberType);
     }
 
+    /**
+     * @return a + b as a Number instance of the same type as a.
+     */
+    public static <T extends Number> T addNumbers(T a, T b) {
+        notNull(a, "a");
+        notNull(b, "b");
+
+        if (a instanceof Integer) return (T) Integer.valueOf(a.intValue() + b.intValue());
+        else if (a instanceof Float) return (T) Float.valueOf(a.floatValue() + b.floatValue());
+        else if (a instanceof Double) return (T) Double.valueOf(a.doubleValue() + b.doubleValue());
+        else if (a instanceof Long) return (T) Long.valueOf(a.longValue() + b.longValue());
+        else if (a instanceof Byte) return (T) Byte.valueOf((byte) (a.byteValue() + b.byteValue()));
+        else if (a instanceof Short) return (T) Short.valueOf((short) (a.shortValue() + b.shortValue()));
+        else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
+    }
+
+    /**
+     * @return a - b as a Number instance of the same type as a.
+     */
+    public static <T extends Number> T subNumbers(T a, T b) {
+        notNull(a, "a");
+        notNull(b, "b");
+
+        if (a instanceof Integer) return (T) Integer.valueOf(a.intValue() - b.intValue());
+        else if (a instanceof Float) return (T) Float.valueOf(a.floatValue() - b.floatValue());
+        else if (a instanceof Double) return (T) Double.valueOf(a.doubleValue() - b.doubleValue());
+        else if (a instanceof Long) return (T) Long.valueOf(a.longValue() - b.longValue());
+        else if (a instanceof Byte) return (T) Byte.valueOf((byte) (a.byteValue() - b.byteValue()));
+        else if (a instanceof Short) return (T) Short.valueOf((short) (a.shortValue() - b.shortValue()));
+        else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
+    }
+
+    /**
+     * @return a * b as a Number instance of the same type as a.
+     */
+    public static <T extends Number> T mulNumbers(T a, T b) {
+        notNull(a, "a");
+        notNull(b, "b");
+
+        if (a instanceof Integer) return (T) Integer.valueOf(a.intValue() * b.intValue());
+        else if (a instanceof Float) return (T) Float.valueOf(a.floatValue() * b.floatValue());
+        else if (a instanceof Double) return (T) Double.valueOf(a.doubleValue() * b.doubleValue());
+        else if (a instanceof Long) return (T) Long.valueOf(a.longValue() * b.longValue());
+        else if (a instanceof Byte) return (T) Byte.valueOf((byte) (a.byteValue() * b.byteValue()));
+        else if (a instanceof Short) return (T) Short.valueOf((short) (a.shortValue() * b.shortValue()));
+        else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
+    }
+
+    /**
+     * @return a / b as a Number instance of the same type as a.
+     */
+    public static <T extends Number> T divNumbers(T a, T b) {
+        notNull(a, "a");
+        notNull(b, "b");
+
+        if (a instanceof Integer) return (T) Integer.valueOf(a.intValue() / b.intValue());
+        else if (a instanceof Float) return (T) Float.valueOf(a.floatValue() / b.floatValue());
+        else if (a instanceof Double) return (T) Double.valueOf(a.doubleValue() / b.doubleValue());
+        else if (a instanceof Long) return (T) Long.valueOf(a.longValue() / b.longValue());
+        else if (a instanceof Byte) return (T) Byte.valueOf((byte) (a.byteValue() / b.byteValue()));
+        else if (a instanceof Short) return (T) Short.valueOf((short) (a.shortValue() / b.shortValue()));
+        else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
+    }
+
+    /**
+     * @return the modulus of a and b, a %b as a Number instance of the same type as a.
+     */
+    public static <T extends Number> T modNumbers(T a, T b) {
+        notNull(a, "a");
+        notNull(b, "b");
+
+        if (a instanceof Integer) return (T) Integer.valueOf(a.intValue() % b.intValue());
+        else if (a instanceof Float) return (T) Float.valueOf(a.floatValue() % b.floatValue());
+        else if (a instanceof Double) return (T) Double.valueOf(a.doubleValue() % b.doubleValue());
+        else if (a instanceof Long) return (T) Long.valueOf(a.longValue() % b.longValue());
+        else if (a instanceof Byte) return (T) Byte.valueOf((byte) (a.byteValue() % b.byteValue()));
+        else if (a instanceof Short) return (T) Short.valueOf((short) (a.shortValue() % b.shortValue()));
+        else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
+    }
+
     public static boolean isWrappedPrimitiveType(Class<?> type) {
         return Boolean.class.equals(type) ||
                Byte.class.equals(type) ||

@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.flowutils.ClassUtils.*;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -58,5 +59,16 @@ public class ClassUtilsTest {
         assertEquals("-1.0d", wrappedPrimitiveTypeAsConstantString((double) -1));
         assertEquals("'f'", wrappedPrimitiveTypeAsConstantString('f'));
         assertEquals("'_'", wrappedPrimitiveTypeAsConstantString('_'));
+    }
+
+    @Test
+    public void testNumberMaths() throws Exception {
+        assertEquals(Integer.valueOf(3), addNumbers(1, 2));
+        assertEquals(Long.valueOf(123), subNumbers(10000000123L, 10000000000L));
+        assertEquals(Short.valueOf((short)2), subNumbers((short)3, (short)1));
+        assertEquals(Float.valueOf(6), mulNumbers(3f, 2f));
+        assertEquals(Double.valueOf(0.5), divNumbers(1.0, 2.0));
+        assertEquals(Byte.valueOf((byte)4), modNumbers((byte)20, (byte)16));
+
     }
 }
