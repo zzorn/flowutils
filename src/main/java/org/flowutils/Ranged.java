@@ -83,6 +83,86 @@ public final class Ranged {
     }
 
     /**
+     * Creates a Ranged value from the input value by mapping 0 to 0 and end to 1.
+     * @param value a value in the 0..end range.  Will be clamped to that range if it is outside it.
+     *              Infinite or NaN are not allowed and will cause an exception.
+     * @param end end of the range.   Corresponds to a Ranged value of 1.
+     */
+    public Ranged(float value, float end) {
+        setRelativePos(value, 0, end);
+    }
+
+    /**
+     * Creates a Ranged value from the input value by mapping start to 0 and end to 1.
+     * @param value a value in the start..end range.  Will be clamped to that range if it is outside it.
+     *              Infinite or NaN are not allowed and will cause an exception.
+     * @param start start of the range.  Corresponds to a Ranged value of 0.
+     * @param end end of the range.  Corresponds to a Ranged value of 1.
+     */
+    public Ranged(float value, float start, float end) {
+        setRelativePos(value, start, end);
+    }
+
+    /**
+     * Creates a Ranged value from the input value by mapping 0 to 0 and end to 1.
+     * @param value a value in the 0..end range.  Will be clamped to that range if it is outside it.
+     *              Infinite or NaN are not allowed and will cause an exception.
+     * @param end end of the range.   Corresponds to a Ranged value of 1.
+     */
+    public Ranged(double value, double end) {
+        setRelativePos(value, 0, end);
+    }
+
+    /**
+     * Creates a Ranged value from the input value by mapping start to 0 and end to 1.
+     * @param value a value in the start..end range.  Will be clamped to that range if it is outside it.
+     *              Infinite or NaN are not allowed and will cause an exception.
+     * @param start start of the range.  Corresponds to a Ranged value of 0.
+     * @param end end of the range.  Corresponds to a Ranged value of 1.
+     */
+    public Ranged(double value, double start, double end) {
+        setRelativePos(value, start, end);
+    }
+
+    /**
+     * Creates a Ranged value from the input value by mapping 0 to 0 and end to 1.
+     * @param value a value in the 0..end range.  Will be clamped to that range if it is outside it.
+     * @param end end of the range.   Corresponds to a Ranged value of 1.
+     */
+    public Ranged(int value, int end) {
+        setRelativePos(value, 0, end);
+    }
+
+    /**
+     * Creates a Ranged value from the input value by mapping start to 0 and end to 1.
+     * @param value a value in the start..end range.  Will be clamped to that range if it is outside it.
+     * @param start start of the range.  Corresponds to a Ranged value of 0.
+     * @param end end of the range.  Corresponds to a Ranged value of 1.
+     */
+    public Ranged(int value, int start, int end) {
+        setRelativePos(value, start, end);
+    }
+
+    /**
+     * Creates a Ranged value from the input value by mapping 0 to 0 and end to 1.
+     * @param value a value in the 0..end range.  Will be clamped to that range if it is outside it.
+     * @param end end of the range.   Corresponds to a Ranged value of 1.
+     */
+    public Ranged(long value, long end) {
+        setRelativePos(value, 0, end);
+    }
+
+    /**
+     * Creates a Ranged value from the input value by mapping start to 0 and end to 1.
+     * @param value a value in the start..end range.  Will be clamped to that range if it is outside it.
+     * @param start start of the range.  Corresponds to a Ranged value of 0.
+     * @param end end of the range.  Corresponds to a Ranged value of 1.
+     */
+    public Ranged(long value, long start, long end) {
+        setRelativePos(value, start, end);
+    }
+
+    /**
      * @return the value of this Ranged object, which will be between zero and one, inclusive.
      */
     public double get() {
@@ -247,11 +327,81 @@ public final class Ranged {
     }
 
     /**
+     * Sets the value to the relative position of the position between 0 and end.
+     * If position is 0, the value will be 0, if the position is the same as end, the value will be 1.
+     * @return this Ranged instance, for chaining operations.
+     */
+    public Ranged setRelativePos(float position, float end) {
+        value = MathUtils.relPosAndClamp(position, 0.0, end);
+        return this;
+    }
+
+    /**
+     * Sets the value to the relative position of the position between start and end.
+     * If position is same as start, the value will be 0, if the position is the same as end, the value will be 1.
+     * @return this Ranged instance, for chaining operations.
+     */
+    public Ranged setRelativePos(float position, float start, float end) {
+        value = MathUtils.relPosAndClamp(position, start, end);
+        return this;
+    }
+
+    /**
+     * Sets the value to the relative position of the position between 0 and end.
+     * If position is 0, the value will be 0, if the position is the same as end, the value will be 1.
+     * @return this Ranged instance, for chaining operations.
+     */
+    public Ranged setRelativePos(double position, double end) {
+        value = MathUtils.relPosAndClamp(position, 0.0, end);
+        return this;
+    }
+
+    /**
      * Sets the value to the relative position of the position between start and end.
      * If position is same as start, the value will be 0, if the position is the same as end, the value will be 1.
      * @return this Ranged instance, for chaining operations.
      */
     public Ranged setRelativePos(double position, double start, double end) {
+        value = MathUtils.relPosAndClamp(position, start, end);
+        return this;
+    }
+
+    /**
+     * Sets the value to the relative position of the position between 0 and end.
+     * If position is 0, the value will be 0, if the position is the same as end, the value will be 1.
+     * @return this Ranged instance, for chaining operations.
+     */
+    public Ranged setRelativePos(int position, int end) {
+        value = MathUtils.relPosAndClamp(position, 0, end);
+        return this;
+    }
+
+    /**
+     * Sets the value to the relative position of the position between start and end.
+     * If position is same as start, the value will be 0, if the position is the same as end, the value will be 1.
+     * @return this Ranged instance, for chaining operations.
+     */
+    public Ranged setRelativePos(int position, int start, int end) {
+        value = MathUtils.relPosAndClamp(position, start, end);
+        return this;
+    }
+
+    /**
+     * Sets the value to the relative position of the position between 0 and end.
+     * If position is 0, the value will be 0, if the position is the same as end, the value will be 1.
+     * @return this Ranged instance, for chaining operations.
+     */
+    public Ranged setRelativePos(long position, long end) {
+        value = MathUtils.relPosAndClamp(position, 0, end);
+        return this;
+    }
+
+    /**
+     * Sets the value to the relative position of the position between start and end.
+     * If position is same as start, the value will be 0, if the position is the same as end, the value will be 1.
+     * @return this Ranged instance, for chaining operations.
+     */
+    public Ranged setRelativePos(long position, long start, long end) {
         value = MathUtils.relPosAndClamp(position, start, end);
         return this;
     }

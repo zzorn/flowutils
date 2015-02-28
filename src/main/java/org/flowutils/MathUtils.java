@@ -108,6 +108,26 @@ public final class MathUtils {
     }
 
     /**
+     * @return relative position of t between start and end.
+     *         if t == start, returns 0, if t == end, returns 1, etc.
+     *         In case start equals end, returns 0.5.
+     */
+    public static double relPos(int t, int start, int end) {
+        if (end == start) return 0.5;
+        else return (double) (t - start) / (end - start);
+    }
+
+    /**
+     * @return relative position of t between start and end.
+     *         if t == start, returns 0, if t == end, returns 1, etc.
+     *         In case start equals end, returns 0.5.
+     */
+    public static double relPos(long t, long start, long end) {
+        if (end == start) return 0.5;
+        else return (double) (t - start) / (end - start);
+    }
+
+    /**
      * @return relative position of t between start and end, clamped to the range 0..1 (inclusive).
      *         if t == start, returns 0, if t == end, returns 1, etc.
      *         In case start equals end, returns 0.5.
@@ -125,6 +145,26 @@ public final class MathUtils {
     public static double relPosAndClamp(double t, double start, double end) {
         if (end == start) return 0.5;
         else return clamp0To1((t - start) / (end - start));
+    }
+
+    /**
+     * @return relative position of t between start and end, clamped to the range 0..1 (inclusive).
+     *         if t == start, returns 0, if t == end, returns 1, etc.
+     *         In case start equals end, returns 0.5.
+     */
+    public static double relPosAndClamp(int t, int start, int end) {
+        if (end == start) return 0.5;
+        else return clamp0To1((double) (t - start) / (end - start));
+    }
+
+    /**
+     * @return relative position of t between start and end, clamped to the range 0..1 (inclusive).
+     *         if t == start, returns 0, if t == end, returns 1, etc.
+     *         In case start equals end, returns 0.5.
+     */
+    public static double relPosAndClamp(long t, long start, long end) {
+        if (end == start) return 0.5;
+        else return clamp0To1((double) (t - start) / (end - start));
     }
 
     /**
