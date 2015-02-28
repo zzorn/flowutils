@@ -15,7 +15,7 @@ import static org.flowutils.Check.notNull;
  * This is a mutable class, so the value it holds may change.
  * This class is not thread safe (the same Ranged instance should not be accessed from different threads at the same time).
  */
-public final class Ranged {
+public final class Ranged extends Number {
 
     private static final double EPSILON = Double.MIN_VALUE * 10;
 
@@ -441,18 +441,33 @@ public final class Ranged {
     }
 
     /**
-     * @return the value as a float.
+     * @return the value as an integer (either 0 or 1).
      */
-    public float toFloat() {
+    @Override public int intValue() {
+        if (value >= 0.5) return 1;
+        else return 0;
+    }
+
+    /**
+     * @return the value as an long (either 0 or 1).
+     */
+    @Override public long longValue() {
+        if (value >= 0.5) return 1;
+        else return 0;
+    }
+
+    /**
+     * @return the value as a float (in range 0..1).
+     */
+    @Override public float floatValue() {
         return (float) value;
     }
 
     /**
-     * @return the value as an integer (either 0 or 1).
+     * @return the value as a double (in range 0..1).
      */
-    public int toInt() {
-        if (value >= 0.5) return 1;
-        else return 0;
+    @Override public double doubleValue() {
+        return value;
     }
 
     /**

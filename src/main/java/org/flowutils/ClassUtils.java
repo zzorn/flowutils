@@ -25,6 +25,7 @@ public class ClassUtils {
         else if (numberType == Long.class   || numberType == Long.TYPE)    return (T) Long.valueOf(numberToConvert.longValue());
         else if (numberType == Byte.class   || numberType == Byte.TYPE)    return (T) Byte.valueOf(numberToConvert.byteValue());
         else if (numberType == Short.class  || numberType == Short.TYPE)   return (T) Short.valueOf(numberToConvert.shortValue());
+        else if (numberType == Ranged.class)                               return (T) new Ranged(numberToConvert.doubleValue());
         else throw new UnsupportedOperationException("Unexpected number type " + numberType);
     }
 
@@ -41,6 +42,7 @@ public class ClassUtils {
         else if (a instanceof Long) return (T) Long.valueOf(a.longValue() + b.longValue());
         else if (a instanceof Byte) return (T) Byte.valueOf((byte) (a.byteValue() + b.byteValue()));
         else if (a instanceof Short) return (T) Short.valueOf((short) (a.shortValue() + b.shortValue()));
+        else if (a instanceof Ranged) return (T) new Ranged(a.doubleValue() + b.doubleValue());
         else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
     }
 
@@ -57,6 +59,7 @@ public class ClassUtils {
         else if (a instanceof Long) return (T) Long.valueOf(a.longValue() - b.longValue());
         else if (a instanceof Byte) return (T) Byte.valueOf((byte) (a.byteValue() - b.byteValue()));
         else if (a instanceof Short) return (T) Short.valueOf((short) (a.shortValue() - b.shortValue()));
+        else if (a instanceof Ranged) return (T) new Ranged(a.doubleValue() - b.doubleValue());
         else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
     }
 
@@ -73,6 +76,7 @@ public class ClassUtils {
         else if (a instanceof Long) return (T) Long.valueOf(a.longValue() * b.longValue());
         else if (a instanceof Byte) return (T) Byte.valueOf((byte) (a.byteValue() * b.byteValue()));
         else if (a instanceof Short) return (T) Short.valueOf((short) (a.shortValue() * b.shortValue()));
+        else if (a instanceof Ranged) return (T) new Ranged(a.doubleValue() * b.doubleValue());
         else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
     }
 
@@ -89,6 +93,7 @@ public class ClassUtils {
         else if (a instanceof Long) return (T) Long.valueOf(a.longValue() / b.longValue());
         else if (a instanceof Byte) return (T) Byte.valueOf((byte) (a.byteValue() / b.byteValue()));
         else if (a instanceof Short) return (T) Short.valueOf((short) (a.shortValue() / b.shortValue()));
+        else if (a instanceof Ranged) return (T) new Ranged(a.doubleValue() / b.doubleValue());
         else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
     }
 
@@ -105,6 +110,7 @@ public class ClassUtils {
         else if (a instanceof Long) return (T) Long.valueOf(a.longValue() % b.longValue());
         else if (a instanceof Byte) return (T) Byte.valueOf((byte) (a.byteValue() % b.byteValue()));
         else if (a instanceof Short) return (T) Short.valueOf((short) (a.shortValue() % b.shortValue()));
+        else if (a instanceof Ranged) return (T) new Ranged(a.doubleValue() % b.doubleValue());
         else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
     }
 
