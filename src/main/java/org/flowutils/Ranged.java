@@ -38,10 +38,48 @@ public final class Ranged {
     }
 
     /**
+     * Creates a new Ranged object.
+     * @param value a value in the 0..1 range.  Will be clamped to that range if it is outside it.
+     *              Infinite or NaN are not allowed and will cause an exception.
+     */
+    public Ranged(float value) {
+        set(value);
+    }
+
+    /**
+     * Creates a new Ranged object.
+     * @param value a value in the 0..1 range.  Will be clamped to that range if it is outside it.
+     */
+    public Ranged(int value) {
+        set(value);
+    }
+
+    /**
+     * Creates a new Ranged based on a boolean value (true = 1, false = 0).
+     */
+    public Ranged(boolean value) {
+        set(value);
+    }
+
+    /**
      * Creates a new Ranged object using an other Ranged object as initial value.
      */
     public Ranged(Ranged source) {
         set(source);
+    }
+
+    /**
+     * Creates a new Ranged with a random value, using the specified random number generator.
+     */
+    public Ranged(RandomSequence random) {
+        setRandom(random);
+    }
+
+    /**
+     * Creates a new Ranged with a random value, using the specified random number generator.
+     */
+    public Ranged(Random random) {
+        setRandom(random);
     }
 
     /**
@@ -64,12 +102,20 @@ public final class Ranged {
     }
 
     /**
-     * @param source a ranged object to copy the value of.
+     * @param value a value in the 0..1 range.  Will be clamped to that range if it is outside it.
+     *              Infinite or NaN are not allowed and will cause an exception.
      * @return this instance for chaining operations.
      */
-    public Ranged set(Ranged source) {
-        notNull(source, "source");
-        return set(source.get());
+    public Ranged set(float value) {
+        return set((double) value);
+    }
+
+    /**
+     * @param value a value in the 0..1 range.  Will be clamped to that range if it is outside it.
+     * @return this instance for chaining operations.
+     */
+    public Ranged set(int value) {
+        return set((double) value);
     }
 
     /**
@@ -82,6 +128,15 @@ public final class Ranged {
         else this.value = 0.0;
 
         return this;
+    }
+
+    /**
+     * @param source a ranged object to copy the value of.
+     * @return this instance for chaining operations.
+     */
+    public Ranged set(Ranged source) {
+        notNull(source, "source");
+        return set(source.get());
     }
 
     /**
