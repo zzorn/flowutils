@@ -108,6 +108,26 @@ public final class MathUtils {
     }
 
     /**
+     * @return relative position of t between start and end, clamped to the range 0..1 (inclusive).
+     *         if t == start, returns 0, if t == end, returns 1, etc.
+     *         In case start equals end, returns 0.5.
+     */
+    public static float relPosAndClamp(float t, float start, float end) {
+        if (end == start) return 0.5f;
+        else return clamp0To1((t - start) / (end - start));
+    }
+
+    /**
+     * @return relative position of t between start and end, clamped to the range 0..1 (inclusive).
+     *         if t == start, returns 0, if t == end, returns 1, etc.
+     *         In case start equals end, returns 0.5.
+     */
+    public static double relPosAndClamp(double t, double start, double end) {
+        if (end == start) return 0.5;
+        else return clamp0To1((t - start) / (end - start));
+    }
+
+    /**
      * Maps a value within a source range to the corresponding position in a target range.
      */
     public static float map(float t, float sourceStart, float sourceEnd, float targetStart, float targetEnd) {
@@ -157,6 +177,56 @@ public final class MathUtils {
     public static double mapAndClamp(double t, double sourceStart, double sourceEnd, double targetStart, double targetEnd) {
         double r = relPos(t, sourceStart, sourceEnd);
         return clampToRange(mix(r, targetStart, targetEnd), targetStart, targetEnd);
+    }
+
+    /**
+     * @return the average of the parameters.
+     */
+    public static float average(float v1, float v2) {
+        return 0.5f * (v1 + v2);
+    }
+
+    /**
+     * @return the average of the parameters.
+     */
+    public static double average(double v1, double v2) {
+        return 0.5 * (v1 + v2);
+    }
+
+    /**
+     * @return the average of the parameters.
+     */
+    public static float average(float v1, float v2, float v3) {
+        return (v1 + v2 + v3) / 3.0f;
+    }
+
+    /**
+     * @return the average of the parameters.
+     */
+    public static double average(double v1, double v2, double v3) {
+        return (v1 + v2 + v3) / 3.0;
+    }
+
+    /**
+     * @return the average of the parameters.
+     */
+    public static float average(float v1, float v2, float v3, float v4, float ... additionalValues) {
+        float sum = v1 + v2 + v3 + v4;
+        for (float additionalValue : additionalValues) {
+            sum += additionalValue;
+        }
+        return sum / (additionalValues.length + 4);
+    }
+
+    /**
+     * @return the average of the parameters.
+     */
+    public static double average(double v1, double v2, double v3, double v4, double ... additionalValues) {
+        double sum = v1 + v2 + v3 + v4;
+        for (double additionalValue : additionalValues) {
+            sum += additionalValue;
+        }
+        return sum / (additionalValues.length + 4);
     }
 
 
