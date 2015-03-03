@@ -1,5 +1,7 @@
 package org.flowutils.gradient;
 
+import org.flowutils.mapping.Mapper;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -8,7 +10,7 @@ import static org.flowutils.MathUtils.map;
 /**
  * Simple value gradient.
  */
-public final class Gradient {
+public final class Gradient implements Mapper<Double, Double> {
 
     public static final double DEFAULT_VALUE = 0.0;
 
@@ -97,4 +99,7 @@ public final class Gradient {
 
     }
 
+    @Override public Double convert(Double sourceValue) {
+        return getValue(sourceValue);
+    }
 }
