@@ -59,6 +59,9 @@ public class ServiceProviderBase extends ServiceBase implements ServiceProvider 
             decreaseLoggingIndent();
         }
 
+        // Allow extending classes to hook into service addition and removal
+        onServiceAdded(service);
+
         return service;
     }
 
@@ -82,6 +85,9 @@ public class ServiceProviderBase extends ServiceBase implements ServiceProvider 
                 service.shutdown();
                 decreaseLoggingIndent();
             }
+
+            // Allow extending classes to hook into service addition and removal
+            onServiceRemoved(service);
         }
         else {
             logInfo("Can not remove service " + serviceType + ", not found");
@@ -125,4 +131,19 @@ public class ServiceProviderBase extends ServiceBase implements ServiceProvider 
      * Called before services are initialized.  Can be used to register services using calls to addService().
      */
     protected void registerServices() {}
+
+    /**
+     * Called when a service has been added to this ServiceProvider.
+     * @param service the added service
+     */
+    protected <T extends Service> void onServiceAdded(T service) {
+    }
+
+    /**
+     * Called when a service has been removed from this ServiceProvider.
+     * @param service the removed service
+     */
+    protected <T extends Service> void onServiceRemoved(T service) {
+    }
+
 }
