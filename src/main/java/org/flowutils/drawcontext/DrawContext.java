@@ -11,6 +11,7 @@ package org.flowutils.drawcontext;
  * @param <IMAGE> the image class used by this DrawContext.
  */
 // TODO: In the future relative drawing operations might be added, that use coordinates between 0 and 1 instead of 0 and width/height
+// TODO: Consider splitting color and font related methods off into ColorContext and FontContext interfaces and base classes.  Makes them usable in other places as well.
 public interface DrawContext<COLOR, FONT, IMAGE> {
 
     /**
@@ -69,6 +70,105 @@ public interface DrawContext<COLOR, FONT, IMAGE> {
      * @return a large gap size for UI layouts and such.
      */
     float getLargeGap();
+
+    /**
+     * @param luminance 0f = black, 1f = white.
+     * @return a greyscale color with the specified luminance.
+     */
+    COLOR getColor(float luminance);
+
+    /**
+     * @param red red component of the color, in the range 0..1.
+     * @param green green component of the color, in the range 0..1.
+     * @param blue blue component of the color, in the range 0..1.
+     * @return the specified color.
+     */
+    COLOR getColor(float red, float green, float blue);
+
+    /**
+     * @param red red component of the color, in the range 0..1.
+     * @param green green component of the color, in the range 0..1.
+     * @param blue blue component of the color, in the range 0..1.
+     * @param alpha alpha component of the color, in the range 0..1. 0 = transparent, 1 = solid.
+     * @return the specified color.
+     */
+    COLOR getColor(float red, float green, float blue, float alpha);
+
+    /**
+     * @param hue hue to use, from 0 to 1.
+     * @param saturation the saturation to use, 0 = greyscale, 1 = color.
+     * @param luminance the luminance to use, 0 = dark, 1 = bright.
+     * @return the specified color.
+     */
+    COLOR getColorFromHSL(float hue, float saturation, float luminance);
+
+    /**
+     * @param hue hue to use, from 0 to 1.
+     * @param saturation the saturation to use, 0 = greyscale, 1 = color.
+     * @param luminance the luminance to use, 0 = dark, 1 = bright.
+     * @param alpha alpha component of the color, in the range 0..1. 0 = transparent, 1 = solid.
+     * @return the specified color.
+     */
+    COLOR getColorFromHSL(float hue, float saturation, float luminance, float alpha);
+
+    /**
+     * @param colorCode a color code in the same format as Java Swing color codes.
+     * @return the color specified by the provided color code
+     */
+    COLOR getColorFromColorCode(int colorCode);
+
+    /**
+     * @return red component of the color, in the range 0..1.
+     */
+    float getRed(COLOR color);
+
+    /**
+     * @return green component of the color, in the range 0..1.
+     */
+    float getGreen(COLOR color);
+
+    /**
+     * @return blue component of the color, in the range 0..1.
+     */
+    float getBlue(COLOR color);
+
+    /**
+     * @return alpha component of the color, in the range 0..1.  0 = transparent, 1 = solid.
+     */
+    float getAlpha(COLOR color);
+
+    /**
+     * @return the hue of the color, in the range 0..1.  Returns 0 if the color has no distinct hue (e.g. greyscale)
+     */
+    float getHue(COLOR color);
+
+    /**
+     * @return the saturation of the color, in the range 0..1. 0 = greyscale, 1 = color.
+     */
+    float getSaturation(COLOR color);
+
+    /**
+     * @return the luminance of the color, in the range 0..1. 0 = dark, 1 = bright.
+     */
+    float getLuminance(COLOR color);
+
+    /**
+     * @param mixAmount range from 0..1.  0 = return color a, 1 = color b.
+     * @param a color to use for mixAmount 0
+     * @param b color to use for mixAmount 1
+     * @return the mix of the two provided colors
+     */
+    COLOR mixColors(float mixAmount, COLOR a, COLOR b);
+
+    /**
+     * @return the color solid black.
+     */
+    COLOR getBlack();
+
+    /**
+     * @return the color solid white.
+     */
+    COLOR getWhite();
 
     /**
      * @return the default font provided by this DrawContext.  Can be used in calls to drawText.

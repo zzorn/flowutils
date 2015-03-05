@@ -142,6 +142,44 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
         return DEFAULT_PIXELS_PER_INCH;
     }
 
+    @Override public COLOR getColor(float luminance) {
+        return getColor(luminance, luminance, luminance, 1f);
+    }
+
+    @Override public COLOR getColor(float red, float green, float blue) {
+        return getColor(red, green, blue, 1f);
+    }
+
+    @Override public COLOR getColorFromHSL(float hue, float saturation, float luminance) {
+        return getColor(hue, saturation, luminance, 1f);
+    }
+
+    // TODO: Implement the various HSL color methods.
+
+    @Override public COLOR mixColors(float mixAmount, COLOR colorA, COLOR colorB) {
+        float ar = getRed(colorA);
+        float ag = getGreen(colorA);
+        float ab = getBlue(colorA);
+        float aa = getAlpha(colorA);
+        float br = getRed(colorB);
+        float bg = getGreen(colorB);
+        float bb = getBlue(colorB);
+        float ba = getAlpha(colorB);
+        float r = MathUtils.clamp0To1(MathUtils.mix(mixAmount, ar, br));
+        float g = MathUtils.clamp0To1(MathUtils.mix(mixAmount, ag, bg));
+        float b = MathUtils.clamp0To1(MathUtils.mix(mixAmount, ab, bb));
+        float a = MathUtils.clamp0To1(MathUtils.mix(mixAmount, aa, ba));
+        return getColor(r,g,b,a);
+    }
+
+    @Override public COLOR getBlack() {
+        return getColor(0f);
+    }
+
+    @Override public COLOR getWhite() {
+        return getColor(1f);
+    }
+
     @Override public final void drawPixel(COLOR color, float x, float y) {
         doDrawPixel(color, x + startX, y + startY);
     }
@@ -272,7 +310,7 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
     }
 
     @Override public final void drawImage(IMAGE image, float x, float y) {
-        doDrawImage(image, x+startX, y+startY);
+        doDrawImage(image, x + startX, y + startY);
     }
 
     @Override public final void drawImage(IMAGE image, float x, float y, float width, float height) {
@@ -282,7 +320,7 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
     @Override public final <T extends DrawContext<COLOR, IMAGE, FONT>> T subContext(float x, float y, float width, float height) {
         Check.positiveOrZero(x, "x");
         Check.positiveOrZero(y, "y");
-        Check.lessOrEqual(width, "width", (this.width-(x + this.startX)), "max width");
+        Check.lessOrEqual(width, "width", (this.width - (x + this.startX)), "max width");
         Check.lessOrEqual(height, "height", (this.height-(y + this.startY)), "max height");
 
         return doCreateSubContext(x+startX, y+startY, width, height);
@@ -294,7 +332,7 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
         doDrawLine(color, x, y, x, y, DEFAULT_LINE_WIDTH);
     }
 
-    protected abstract void doDrawLine(COLOR color, float x1, float y1, float x2, float y2, float width);
+    protected abstract void doDrawLine(COLOR color, float x1, float y1, float x2, float y2, float lineWidth);
     protected abstract void doDrawRectangle(COLOR color, float x1, float y1, float width, float height, float lineWidth);
     protected abstract void doFillRectangle(COLOR fillColor, float x1, float y1, float width, float height);
     protected abstract void doDrawOval(COLOR color,
