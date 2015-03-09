@@ -40,6 +40,22 @@ public abstract class RectangleBase implements Rectangle {
         init(minX, minY, maxX, maxY);
     }
 
+    @Override public final double getX() {
+        return minX;
+    }
+
+    @Override public final double getY() {
+        return minY;
+    }
+
+    @Override public final double getWidth() {
+        return empty ? 0 : maxX - minX;
+    }
+
+    @Override public final double getHeight() {
+        return empty ? 0 : maxY - minY;
+    }
+
     @Override
     public final double getMinX() {
         return minX;
@@ -76,12 +92,12 @@ public abstract class RectangleBase implements Rectangle {
 
     @Override
     public final double getSizeX() {
-        return maxX - minX;
+        return empty ? 0 : maxX - minX;
     }
 
     @Override
     public final double getSizeY() {
-        return maxY - minY;
+        return empty ? 0 : maxY - minY;
     }
 
     @Override public double getSizeAverage() {
