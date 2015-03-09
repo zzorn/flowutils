@@ -423,8 +423,8 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
     @Override public final <T extends DrawContext<COLOR, IMAGE, FONT>> T subContext(float x, float y, float width, float height) {
         Check.positiveOrZero(x, "x");
         Check.positiveOrZero(y, "y");
-        Check.lessOrEqual(width, "width", (this.width - (x + this.startX)), "max width");
-        Check.lessOrEqual(height, "height", (this.height-(y + this.startY)), "max height");
+        Check.lessOrEqual(width, "width", this.width - x, "max width");
+        Check.lessOrEqual(height, "height", this.height - y, "max height");
 
         return doCreateSubContext(x+startX, y+startY, width, height);
     }
