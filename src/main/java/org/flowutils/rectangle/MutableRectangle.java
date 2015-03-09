@@ -59,6 +59,34 @@ public final class MutableRectangle extends RectangleBase {
     }
 
     /**
+     * Moves the minX edge of the rectangle by the specified amount.
+     */
+    public void changeMinX(double x1Delta) {
+        set(minX+x1Delta, minY, maxX, maxY);
+    }
+
+    /**
+     * Moves the minY edge of the rectangle by the specified amount.
+     */
+    public void changeMinY(double y1Delta) {
+        set(minX, minY+y1Delta, maxX, maxY);
+    }
+
+    /**
+     * Moves the maxX edge of the rectangle by the specified amount.
+     */
+    public void changeMaxX(double x2Delta) {
+        set(minX, minY, maxX+x2Delta, maxY);
+    }
+
+    /**
+     * Moves the maxY edge of the rectangle by the specified amount.
+     */
+    public void changeMaxY(double y2Delta) {
+        set(minX, minY, maxX, maxY+y2Delta);
+    }
+
+    /**
      * Moves the rectangle by the specified amount along the x and y axis.
      */
     public void move(double deltaX, double deltaY) {
