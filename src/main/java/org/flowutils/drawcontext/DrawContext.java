@@ -118,6 +118,21 @@ public interface DrawContext<COLOR, FONT, IMAGE> {
     COLOR getColorFromColorCode(int colorCode);
 
     /**
+     * @return the Java Swing type color code with the specified color components and full alpha.
+     */
+    int getColorCode(float red, float green, float blue);
+
+    /**
+     * @return the Java Swing type color code with the specified color components.
+     */
+    int getColorCode(float red, float green, float blue, float alpha);
+
+    float getRedFromCode(int colorCode);
+    float getGreenFromCode(int colorCode);
+    float getBlueFromCode(int colorCode);
+    float getAlphaFromCode(int colorCode);
+
+    /**
      * @return red component of the color, in the range 0..1.
      */
     float getRed(COLOR color);
@@ -159,6 +174,8 @@ public interface DrawContext<COLOR, FONT, IMAGE> {
      * @return the mix of the two provided colors
      */
     COLOR mixColors(float mixAmount, COLOR a, COLOR b);
+
+    int mixColorCodes(float mixAmount, int colorA, int colorB);
 
     /**
      * @return the color solid black.

@@ -19,6 +19,11 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
 
     protected static final float DEFAULT_PIXELS_PER_INCH = 96;
     protected static final int OUTLINE_DISTANCE = 1;
+    protected static final int RED_SHIFT = 16;
+    protected static final int ALPHA_SHIFT = 24;
+    protected static final int GREEN_SHIFT = 8;
+    protected static final int BLUE_SHIFT = 0;
+    protected static final int COLOR_COMPONENT_MASK = 0xFF;
 
     private float gap = DEFAULT_GAP_PIXELS;
 
@@ -154,6 +159,37 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
         return getColor(hue, saturation, luminance, 1f);
     }
 
+    @Override public final int getColorCode(float red, float green, float blue) {
+        return getColorCode(red, green, blue, 1f);
+    }
+
+    @Override public final int getColorCode(float red, float green, float blue, float alpha) {
+        int r = MathUtils.clampToRange((int) (red*255), 0, 255);
+        int g = MathUtils.clampToRange((int) (green*255), 0, 255);
+        int b = MathUtils.clampToRange((int) (blue*255), 0, 255);
+        int a = MathUtils.clampToRange((int) (alpha*255), 0, 255);
+        return ((a & COLOR_COMPONENT_MASK) << ALPHA_SHIFT) |
+               ((r & COLOR_COMPONENT_MASK) << RED_SHIFT) |
+               ((g & COLOR_COMPONENT_MASK) << GREEN_SHIFT)  |
+               ((b & COLOR_COMPONENT_MASK) << BLUE_SHIFT);
+    }
+
+    @Override public final float getRedFromCode(int colorCode) {
+        return ((colorCode >> RED_SHIFT) & COLOR_COMPONENT_MASK) / 255f;
+    }
+
+    @Override public final float getGreenFromCode(int colorCode) {
+        return ((colorCode >> GREEN_SHIFT) & COLOR_COMPONENT_MASK) / 255f;
+    }
+
+    @Override public final float getBlueFromCode(int colorCode) {
+        return ((colorCode >> BLUE_SHIFT) & COLOR_COMPONENT_MASK) / 255f;
+    }
+
+    @Override public final float getAlphaFromCode(int colorCode) {
+        return ((colorCode >> ALPHA_SHIFT) & COLOR_COMPONENT_MASK) / 255f;
+    }
+
     // TODO: Implement the various HSL color methods.
 
     @Override public COLOR mixColors(float mixAmount, COLOR colorA, COLOR colorB) {
@@ -170,6 +206,22 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
         float b = MathUtils.clamp0To1(MathUtils.mix(mixAmount, ab, bb));
         float a = MathUtils.clamp0To1(MathUtils.mix(mixAmount, aa, ba));
         return getColor(r,g,b,a);
+    }
+
+    @Override public final int mixColorCodes(float mixAmount, int colorA, int colorB) {
+        float ar = getRedFromCode(colorA);
+        float ag = getGreenFromCode(colorA);
+        float ab = getBlueFromCode(colorA);
+        float aa = getAlphaFromCode(colorA);
+        float br = getRedFromCode(colorB);
+        float bg = getGreenFromCode(colorB);
+        float bb = getBlueFromCode(colorB);
+        float ba = getAlphaFromCode(colorB);
+        float r = MathUtils.clamp0To1(MathUtils.mix(mixAmount, ar, br));
+        float g = MathUtils.clamp0To1(MathUtils.mix(mixAmount, ag, bg));
+        float b = MathUtils.clamp0To1(MathUtils.mix(mixAmount, ab, bb));
+        float a = MathUtils.clamp0To1(MathUtils.mix(mixAmount, aa, ba));
+        return getColorCode(r, g, b, a);
     }
 
     @Override public COLOR getBlack() {
