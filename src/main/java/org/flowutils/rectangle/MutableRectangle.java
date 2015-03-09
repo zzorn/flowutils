@@ -3,8 +3,6 @@ package org.flowutils.rectangle;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.flowutils.Check.notNull;
-
 /**
  * Rectangle implementation that can be changed.
  * Provides support for listening to changes.
@@ -36,6 +34,14 @@ public final class MutableRectangle extends RectangleBase {
         set(minX, y1, maxX, y2);
     }
 
+    public void setX(double x1) {
+        set(x1, minY, maxX, maxY);
+    }
+
+    public void setY(double y1) {
+        set(minX, y1, maxX, maxY);
+    }
+
     public void setMinX(double x1) {
         set(x1, minY, maxX, maxY);
     }
@@ -52,6 +58,55 @@ public final class MutableRectangle extends RectangleBase {
         set(minX, minY, maxX, y2);
     }
 
+    /**
+     * Moves the rectangle by the specified amount along the x and y axis.
+     */
+    public void move(double deltaX, double deltaY) {
+        set(minX + deltaX, minY + deltaY, maxX + deltaX, maxY + deltaY);
+    }
+
+    /**
+     * Resizes the rectangle with the specified amount, the minX and minY of the rectangle will not move.
+     * @param deltaXSize units to add to maxX
+     * @param deltaYSize units to add to maxY
+     */
+    public void resize(double deltaXSize, double deltaYSize) {
+        resize(deltaXSize, deltaYSize, false);
+    }
+
+    /**
+     * Resizes the rectangle with the specified amount.
+     * @param deltaXSize units to add to the sizeX
+     * @param deltaYSize units to add to the sizeY
+     * @param center if true the center of the rectangle will not move, if false the minX and minY of of the rectangle will not move.
+     */
+    public void resize(double deltaXSize, double deltaYSize, boolean center) {
+        double w = getWidth() + deltaXSize;
+        double h = getHeight() + deltaYSize;
+        setSize(w, h, center);
+    }
+
+    /**
+     * Scales the rectangle with the specified factor, the minX and minY of the rectangle will not move.
+     * @param xScale units to multiply sizeX with
+     * @param yScale units to multiply sizeY with
+     */
+    public void scale(double xScale, double yScale) {
+        scale(xScale, yScale, false);
+    }
+
+    /**
+     * Scales the rectangle with the specified factor.
+     * @param xScale units to multiply sizeX with
+     * @param yScale units to multiply sizeY with
+     * @param center if true the center of the rectangle will not move, if false the minX and minY of of the rectangle will not move.
+     */
+    public void scale(double xScale, double yScale, boolean center) {
+        double w = getWidth() * xScale;
+        double h = getHeight() * yScale;
+        setSize(w, h, center);
+    }
+
     public void setWidth(double width) {
         set(minX, minX + width, minY, maxY);
     }
@@ -59,6 +114,36 @@ public final class MutableRectangle extends RectangleBase {
     public void setHeight(double height) {
         set(minX, maxX, minY, minY + height);
     }
+
+
+    /**
+     * Sets the size of the rectangle to the specified size.  The minX and minY of of the rectangle will not move.
+     * @param xSize new width of the rectangle
+     * @param ySize new height of the rectangle
+     */
+    public void setSize(double xSize, double ySize) {
+        setSize(xSize, ySize, false);
+    }
+
+    /**
+     * Sets the size of the rectangle to the specified size.
+     * @param xSize new width of the rectangle
+     * @param ySize new height of the rectangle
+     * @param center if true the center of the rectangle will not move, if false the minX and minY of of the rectangle will not move.
+     */
+    public void setSize(double xSize, double ySize, boolean center) {
+        if (center) {
+            double cx = getCenterX();
+            double cy = getCenterY();
+            set(cx - 0.5* xSize, cy - 0.5* ySize,
+                cx + 0.5* xSize, cy + 0.5* ySize);
+        }
+        else {
+            set(minX,     minY,
+                minX + xSize, minY + ySize);
+        }
+    }
+
 
     public void set(Rectangle bounds) {
         set(bounds.getMinX(), bounds.getMinY(), bounds.getMaxX(), bounds.getMaxY());
