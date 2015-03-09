@@ -1,5 +1,9 @@
 package org.flowutils.drawcontext;
 
+import org.flowutils.rectangle.MutableRectangle;
+import org.flowutils.rectangle.Rectangle;
+import org.flowutils.rectangle.intrectangle.IntRectangle;
+
 /**
  * Implementation neutral drawing context.
  *
@@ -23,6 +27,18 @@ public interface DrawContext<COLOR, FONT, IMAGE> {
      * @return height of this DrawContext
      */
     float getHeight();
+
+    /**
+     * @return a (possibly new) rectangle covering the visible size of the DrawContext, from 0,0 to width,height (exclusive).
+     *         May or may not change when the DrawContext size changes.
+     */
+    Rectangle getSize();
+
+    /**
+     * @param sizeOut the rectangle to write the size to.  Should not be null.
+     * @return the provided rectangle set to cover the visible size of the DrawContext, from 0,0 to width,height (exclusive).
+     */
+    MutableRectangle getSize(MutableRectangle sizeOut);
 
     /**
      * @return x coordinate in the center of this draw context.
@@ -403,5 +419,19 @@ public interface DrawContext<COLOR, FONT, IMAGE> {
      * @return a new DrawContext that covers a subset of this DrawContext.  It is not allowed to extend outside the current draw context.
      */
     <T extends DrawContext<COLOR, IMAGE, FONT>> T subContext(float x, float y, float width, float height);
+
+    /**
+     * Creates a new DrawContext that is a sub-area of this DrawContext.
+     * @param rectangle the area within this DrawContext that the subContext should cover.
+     * @return a new DrawContext that covers a subset of this DrawContext.  It is not allowed to extend outside the current draw context.
+     */
+    <T extends DrawContext<COLOR, IMAGE, FONT>> T subContext(Rectangle rectangle);
+
+    /**
+     * Creates a new DrawContext that is a sub-area of this DrawContext.
+     * @param rectangle the area within this DrawContext that the subContext should cover.
+     * @return a new DrawContext that covers a subset of this DrawContext.  It is not allowed to extend outside the current draw context.
+     */
+    <T extends DrawContext<COLOR, IMAGE, FONT>> T subContext(IntRectangle rectangle);
 
 }

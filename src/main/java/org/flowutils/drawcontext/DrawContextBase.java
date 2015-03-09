@@ -2,6 +2,13 @@ package org.flowutils.drawcontext;
 
 import org.flowutils.Check;
 import org.flowutils.MathUtils;
+import org.flowutils.rectangle.ImmutableRectangle;
+import org.flowutils.rectangle.MutableRectangle;
+import org.flowutils.rectangle.Rectangle;
+import org.flowutils.rectangle.intrectangle.IntRectangle;
+import org.w3c.dom.css.Rect;
+
+import static org.flowutils.Check.notNull;
 
 /**
  * Common functionality for DrawContexts.
@@ -41,6 +48,29 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
 
     protected DrawContextBase(float startX, float startY, float width, float height) {
         setContextSize(startX, startY, width, height);
+    }
+
+    protected DrawContextBase(Rectangle rectangle) {
+        setContextSize(rectangle);
+    }
+
+    protected DrawContextBase(IntRectangle rectangle) {
+        setContextSize(rectangle);
+    }
+
+
+    protected final void setContextSize(Rectangle area) {
+        setContextSize((float) area.getMinX(),
+                       (float) area.getMinY(),
+                       (float) area.getSizeX(),
+                       (float) area.getSizeY());
+    }
+
+    protected final void setContextSize(IntRectangle area) {
+        setContextSize((float) area.getMinX(),
+                       (float) area.getMinY(),
+                       (float) area.getSizeX(),
+                       (float) area.getSizeY());
     }
 
     protected final void setContextSize(float startX, float startY, float width, float height) {
@@ -109,6 +139,16 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
 
     @Override public float getHeight() {
         return height;
+    }
+
+    @Override public Rectangle getSize() {
+        return new ImmutableRectangle(getStartX(), getStartY(), getEndX(), getEndY());
+    }
+
+    @Override public MutableRectangle getSize(MutableRectangle sizeOut) {
+        notNull(sizeOut, "sizeOut");
+        sizeOut.set(getStartX(), getStartY(), getEndX(), getEndY());
+        return sizeOut;
     }
 
     @Override public float getCenterX() {
@@ -369,6 +409,17 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
         doDrawImage(image, x+startX, y+startY, width, height);
     }
 
+    @Override public final <T extends DrawContext<COLOR, IMAGE, FONT>> T subContext(IntRectangle rectangle) {
+        return subContext(rectangle.getMinX(), rectangle.getMinY(), rectangle.getSizeX(), rectangle.getSizeY());
+    }
+
+    @Override public final <T extends DrawContext<COLOR, IMAGE, FONT>> T subContext(Rectangle rectangle) {
+        return subContext((float) rectangle.getMinX(),
+                          (float) rectangle.getMinY(),
+                          (float) rectangle.getSizeX(),
+                          (float) rectangle.getSizeY());
+    }
+
     @Override public final <T extends DrawContext<COLOR, IMAGE, FONT>> T subContext(float x, float y, float width, float height) {
         Check.positiveOrZero(x, "x");
         Check.positiveOrZero(y, "y");
@@ -376,6 +427,15 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
         Check.lessOrEqual(height, "height", (this.height-(y + this.startY)), "max height");
 
         return doCreateSubContext(x+startX, y+startY, width, height);
+    }
+
+    protected final MutableRectangle getContextSize(MutableRectangle rectangleOut) {
+        rectangleOut.set(startX, startY, getEndX(), getEndY());
+        return rectangleOut;
+    }
+
+    protected final ImmutableRectangle getContextSize() {
+        return new ImmutableRectangle(startX, startY, getEndX(), getEndY());
     }
 
     protected abstract <T extends DrawContext<COLOR, IMAGE, FONT>> T doCreateSubContext(float startX, float startY, float width, float height);
