@@ -1,5 +1,8 @@
 package org.flowutils.rectangle;
 
+import org.flowutils.Check;
+
+import static org.flowutils.Check.notNull;
 import static org.flowutils.MathUtils.*;
 
 /**
@@ -13,6 +16,29 @@ public abstract class RectangleBase implements Rectangle {
     protected double maxY;
 
     protected boolean empty = true;
+
+    protected RectangleBase() {
+        empty = true;
+    }
+
+    public RectangleBase(Rectangle rectangle) {
+        notNull(rectangle, "rectangle");
+
+        if (rectangle.isEmpty()) {
+            empty = true;
+        }
+        else {
+            init(rectangle.getMinX(), rectangle.getMinY(), rectangle.getMaxX(), rectangle.getMaxY());
+        }
+    }
+
+    protected RectangleBase(double width, double height) {
+        this(0, 0, width, height);
+    }
+
+    protected RectangleBase(double minX, double minY, double maxX, double maxY) {
+        init(minX, minY, maxX, maxY);
+    }
 
     @Override
     public final double getMinX() {
@@ -135,6 +161,11 @@ public abstract class RectangleBase implements Rectangle {
     }
 
     protected final void init(double x1, double y1, double x2, double y2) {
+        Check.normalNumber(x1, "x1");
+        Check.normalNumber(x2, "x2");
+        Check.normalNumber(y1, "y1");
+        Check.normalNumber(y2, "y2");
+
         if (x1 <= x2) {
             minX = x1;
             maxX = x2;

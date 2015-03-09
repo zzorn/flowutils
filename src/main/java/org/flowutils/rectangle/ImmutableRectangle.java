@@ -1,12 +1,25 @@
 package org.flowutils.rectangle;
 
+import static org.flowutils.Check.notNull;
+
 /**
  * A Rectangle that can not be moved or re-sized.
  */
 public final class ImmutableRectangle extends RectangleBase {
 
-    public ImmutableRectangle(double x1, double y1, double x2, double y2) {
-        init(x1, y1, x2, y2);
+    public ImmutableRectangle() {
+    }
+
+    public ImmutableRectangle(Rectangle rectangle) {
+        super(rectangle);
+    }
+
+    public ImmutableRectangle(double width, double height) {
+        super(width, height);
+    }
+
+    public ImmutableRectangle(double minX, double minY, double maxX, double maxY) {
+        super(minX, minY, maxX, maxY);
     }
 
     @Override

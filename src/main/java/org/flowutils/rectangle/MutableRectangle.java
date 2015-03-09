@@ -3,6 +3,8 @@ package org.flowutils.rectangle;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.flowutils.Check.notNull;
+
 /**
  * Rectangle implementation that can be changed.
  * Provides support for listening to changes.
@@ -12,12 +14,18 @@ public final class MutableRectangle extends RectangleBase {
     private Map<RectangleListener, Object> listeners = null;
 
     public MutableRectangle() {
-        this(0,0,0,0);
-        empty = true;
     }
 
-    public MutableRectangle(double x1, double y1, double x2, double y2) {
-        set(x1, y1, x2, y2);
+    public MutableRectangle(Rectangle rectangle) {
+        super(rectangle);
+    }
+
+    public MutableRectangle(double width, double height) {
+        super(width, height);
+    }
+
+    public MutableRectangle(double minX, double minY, double maxX, double maxY) {
+        super(minX, minY, maxX, maxY);
     }
 
     public void setX(double x1, double x2) {
@@ -26,6 +34,30 @@ public final class MutableRectangle extends RectangleBase {
 
     public void setY(double y1, double y2) {
         set(minX, y1, maxX, y2);
+    }
+
+    public void setMinX(double x1) {
+        set(x1, minY, maxX, maxY);
+    }
+
+    public void setMaxX(double x2) {
+        set(minX, minY, x2, maxY);
+    }
+
+    public void setMinY(double y1) {
+        set(minX, y1, maxX, maxY);
+    }
+
+    public void setMaxY(double y2) {
+        set(minX, minY, maxX, y2);
+    }
+
+    public void setWidth(double width) {
+        set(minX, minX + width, minY, maxY);
+    }
+
+    public void setHeight(double height) {
+        set(minX, maxX, minY, minY + height);
     }
 
     public void set(Rectangle bounds) {
