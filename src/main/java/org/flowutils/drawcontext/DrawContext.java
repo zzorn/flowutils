@@ -16,6 +16,7 @@ import org.flowutils.rectangle.intrectangle.IntRectangle;
  */
 // TODO: In the future relative drawing operations might be added, that use coordinates between 0 and 1 instead of 0 and width/height
 // TODO: Consider splitting color and font related methods off into ColorContext and FontContext interfaces and base classes.  Makes them usable in other places as well.
+// TODO: Create replacement mutable Color class with float values.
 public interface DrawContext<COLOR, FONT, IMAGE> {
 
     /**
