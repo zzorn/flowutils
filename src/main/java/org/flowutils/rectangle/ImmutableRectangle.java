@@ -5,6 +5,7 @@ import static org.flowutils.Check.notNull;
 /**
  * A Rectangle that can not be moved or re-sized.
  */
+// TODO: Refactor rectangles to use x,y,width,height for constructor parameters and in general?
 public final class ImmutableRectangle extends RectangleBase {
 
     public ImmutableRectangle() {
@@ -20,6 +21,10 @@ public final class ImmutableRectangle extends RectangleBase {
 
     public ImmutableRectangle(double minX, double minY, double maxX, double maxY) {
         super(minX, minY, maxX, maxY);
+    }
+
+    public static ImmutableRectangle fromWidthHeight(double x, double y, double width, double height) {
+        return new ImmutableRectangle(x, y, x+width, y+height);
     }
 
     @Override

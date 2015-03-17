@@ -299,6 +299,28 @@ public interface DrawContext<COLOR, FONT, IMAGE> {
                        float outlineWidth);
 
     /**
+     * Draws a hollow rectangle of the specified color.
+     * @param lineWidth width of the line used to draw the rectangle.
+     */
+    void drawRectangle(COLOR color, Rectangle rectangle, float lineWidth);
+
+    /**
+     * Draws a filled rectangle of the specified color.
+     */
+    void fillRectangle(COLOR fillColor, Rectangle rectangle);
+
+    /**
+     * Draws an outlined filled rectangle of the specified color.
+     * @param fillColor color to fill with
+     * @param outlineColor color to use for the outline
+     * @param outlineWidth width of the outline.
+     */
+    void outlineRectangle(COLOR fillColor,
+                          Rectangle rectangle,
+                          COLOR outlineColor,
+                          float outlineWidth);
+
+    /**
      * Draws a hollow oval with the specified center and size.
      */
     void drawOval(COLOR color, float centerX, float centerY, float width, float height, float lineWidth);

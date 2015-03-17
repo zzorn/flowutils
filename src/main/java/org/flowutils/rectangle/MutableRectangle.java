@@ -26,6 +26,11 @@ public final class MutableRectangle extends RectangleBase {
         super(minX, minY, maxX, maxY);
     }
 
+    public static MutableRectangle fromWidthHeight(double x, double y, double width, double height) {
+        return new MutableRectangle(x, y, x+width, y+height);
+    }
+
+
     public void setX(double x1, double x2) {
         set(x1, minY, x2, maxY);
     }

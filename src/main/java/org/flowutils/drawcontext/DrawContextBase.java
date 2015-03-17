@@ -295,6 +295,36 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
         doFillRectangle(fillColor, x+startX, y+startY, width, height);
     }
 
+    @Override public final void drawRectangle(COLOR color, Rectangle rectangle, float lineWidth) {
+        drawRectangle(color,
+                      (float) rectangle.getX(),
+                      (float) rectangle.getY(),
+                      (float) rectangle.getWidth(),
+                      (float) rectangle.getHeight(),
+                      lineWidth);
+    }
+
+    @Override public final void fillRectangle(COLOR fillColor, Rectangle rectangle) {
+        fillRectangle(fillColor,
+                      (float) rectangle.getX(),
+                      (float) rectangle.getY(),
+                      (float) rectangle.getWidth(),
+                      (float) rectangle.getHeight());
+    }
+
+    @Override public final void outlineRectangle(COLOR fillColor,
+                                           Rectangle rectangle,
+                                           COLOR outlineColor,
+                                           float outlineWidth) {
+        outlineRectangle(fillColor,
+                      (float) rectangle.getX(),
+                      (float) rectangle.getY(),
+                      (float) rectangle.getWidth(),
+                      (float) rectangle.getHeight(),
+                      outlineColor,
+                      outlineWidth);
+    }
+
     @Override public final void drawOval(COLOR color,
                                    float centerX,
                                    float centerY,
