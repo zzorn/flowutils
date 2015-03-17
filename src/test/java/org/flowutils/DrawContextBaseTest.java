@@ -29,6 +29,9 @@ public class DrawContextBaseTest {
         assertEquals(20, drawContext.subContext(ImmutableRectangle.fromWidthHeight(0, 0, 20, 10)).getWidth(), EPSILON);
         assertEquals(15, drawContext.subContext(ImmutableRectangle.fromWidthHeight(5, 5, 15, 5)).getWidth(), EPSILON);
         assertEquals(5, drawContext.subContext(ImmutableRectangle.fromWidthHeight(0, 0, 5, 10)).getWidth(), EPSILON);
+
+        assertEquals(5, drawContext.subContext(ImmutableRectangle.fromWidthHeight(5, 3, 5, 6)).getSize().getWidth(), EPSILON);
+        assertEquals(0, drawContext.subContext(ImmutableRectangle.fromWidthHeight(5, 3, 5, 6)).getSize().getX(), EPSILON);
     }
 
     private static class TestDrawContext extends DrawContextBase<Integer, Object, Object> {
