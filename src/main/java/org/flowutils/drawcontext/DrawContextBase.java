@@ -142,12 +142,12 @@ public abstract class DrawContextBase<COLOR, FONT, IMAGE> implements DrawContext
     }
 
     @Override public Rectangle getSize() {
-        return new ImmutableRectangle(getStartX(), getStartY(), getEndX(), getEndY());
+        return new ImmutableRectangle(0, 0, getWidth(), getHeight());
     }
 
     @Override public MutableRectangle getSize(MutableRectangle sizeOut) {
         notNull(sizeOut, "sizeOut");
-        sizeOut.set(getStartX(), getStartY(), getEndX(), getEndY());
+        sizeOut.set(0, 0, getWidth(), getHeight());
         return sizeOut;
     }
 
