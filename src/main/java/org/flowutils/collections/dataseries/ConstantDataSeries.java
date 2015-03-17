@@ -12,7 +12,7 @@ public final class ConstantDataSeries<T extends Number, V> extends DataSeriesBas
      * @param seriesAxis axis that the positions of the values in this DataSeries are distributed along.
      * @param constantValue value to return for all positions.
      */
-    protected ConstantDataSeries(Axis<T> seriesAxis, V constantValue) {
+    public ConstantDataSeries(Axis<T> seriesAxis, V constantValue) {
         super(seriesAxis);
         setConstantValue(constantValue);
     }
@@ -23,7 +23,7 @@ public final class ConstantDataSeries<T extends Number, V> extends DataSeriesBas
      * @param start start of the data range
      * @param end end of the data range
      */
-    protected ConstantDataSeries(Axis<T> seriesAxis, V constantValue, T start, T end) {
+    public ConstantDataSeries(Axis<T> seriesAxis, V constantValue, T start, T end) {
         super(seriesAxis);
         setRange(start, end);
         setConstantValue(constantValue);
