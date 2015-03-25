@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.flowutils.Check.notNull;
+import static org.flowutils.ClassUtils.*;
 
 /**
  * Common functionality for a data series.
@@ -66,10 +67,13 @@ public abstract class DataSeriesBase<T extends Number, V> implements DataSeries<
 
         outputList.clear();
 
-        T position = startPosition;
+        // Anchor steps at zero, sample in the middle of each step:
+        // position = startPosition - startPosition % stepSize + stepSize / 2
+        T position = addNumbers(subNumbers(startPosition, modNumbers(startPosition, stepSize)),
+                                divNumbers(stepSize, convertNumber(2.0, stepSize)));
         for (int i = 0; i < valueCount; i++) {
             outputList.add(getValue(position));
-            position = ClassUtils.addNumbers(position, stepSize);
+            position = addNumbers(position, stepSize);
         }
 
         return outputList;
