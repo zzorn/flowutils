@@ -67,9 +67,11 @@ public abstract class DataSeriesBase<T extends Number, V> implements DataSeries<
 
         outputList.clear();
 
-        // Anchor steps at zero:
-        // position = startPosition - modPositive(startPosition, stepSize)
-        T position = subNumbers(startPosition, modPosNumbers(startPosition, stepSize));
+        // Anchor steps at zero, sample at half step positions:
+        // position = startPosition - modPositive(startPosition, stepSize) + stepSize/2
+        T position = addNumbers(
+                        subNumbers(startPosition, modPosNumbers(startPosition, stepSize)),
+                        divNumbers(stepSize, convertNumber(2, stepSize)));
         for (int i = 0; i < valueCount; i++) {
             outputList.add(getValue(position));
             position = addNumbers(position, stepSize);
