@@ -98,7 +98,7 @@ public class ClassUtils {
     }
 
     /**
-     * @return the modulus of a and b, a %b as a Number instance of the same type as a.
+     * @return the modulus of a and b, a % b as a Number instance of the same type as a.
      */
     public static <T extends Number> T modNumbers(T a, T b) {
         notNull(a, "a");
