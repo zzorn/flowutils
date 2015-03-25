@@ -8,6 +8,12 @@ import java.util.Collection;
  */
 public final class StringUtils {
 
+    private static final int MILLISECONDS = 1;
+    private static final int SECONDS = 1000 * MILLISECONDS;
+    private static final int MINUTES = 60 * SECONDS;
+    private static final int HOURS = 60 * MINUTES;
+    private static final int DAYS = 24 * HOURS;
+
     /**
      * @return a valid java identifier, generated from the user readable name.
      */
@@ -252,6 +258,53 @@ public final class StringUtils {
         else {
             return text.substring(0, firstIndex);
         }
+    }
+
+    /**
+     * @return a human readable string representation in english for the specified number of milliseconds.
+     * E.g. "1 day 5 hours 20 min 4s 100ms"
+     */
+    public static String timeIntervalToString(long milliseconds) {
+        final StringBuilder s = new StringBuilder();
+
+        // Append minus sign if interval is negative
+        if (milliseconds < 0) {
+            s.append("-");
+            milliseconds = -milliseconds;
+        }
+
+        milliseconds = appendTimePeriod(milliseconds, s, DAYS, "day", "days", true);
+        milliseconds = appendTimePeriod(milliseconds, s, HOURS, "hour", "hours", true);
+        milliseconds = appendTimePeriod(milliseconds, s, MINUTES, "min", "min", true);
+        milliseconds = appendTimePeriod(milliseconds, s, SECONDS, "s", "s", true);
+        milliseconds = appendTimePeriod(milliseconds, s, MILLISECONDS, "ms", "ms", false);
+
+        // Should be none left
+        assert milliseconds == 0;
+
+        return s.toString();
+    }
+
+    private static long appendTimePeriod(long milliseconds,
+                                         StringBuilder s,
+                                         final long periodLength,
+                                         final String periodNameSingular,
+                                         final String periodNamePlural,
+                                         final boolean skipIfZero) {
+
+        if (milliseconds >= periodLength || (!skipIfZero && s.length() == 0)) {
+
+            if (s.length() > 1) s.append(" ");
+
+            // Append number of periods and period name
+            final long periods = milliseconds / periodLength;
+            s.append(periods).append(" " + (periods == 1 ? periodNameSingular : periodNamePlural));
+
+            // Remove periods from time remaining
+            milliseconds %= periodLength;
+        }
+
+        return milliseconds;
     }
 
     private StringUtils() {
