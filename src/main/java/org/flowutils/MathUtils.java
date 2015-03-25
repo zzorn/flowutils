@@ -633,4 +633,56 @@ public final class MathUtils {
         // Use the fast floor formula
         return value < 0.0f ? (int)(value - 1) : (int) value;
     }
+
+    /**
+     * @return a modulus b, with always a positive result (if the result would be negative, b is added to it).
+     */
+    public static int modPositive(int a, int b) {
+        int result = a % b;
+        if (result >= 0) {
+            return result;
+        }
+        else {
+            return result + b;
+        }
+    }
+
+    /**
+     * @return a modulus b, with always a positive result (if the result would be negative, b is added to it).
+     */
+    public static long modPositive(long a, long b) {
+        long result = a % b;
+        if (result >= 0) {
+            return result;
+        }
+        else {
+            return result + b;
+        }
+    }
+
+    /**
+     * @return a modulus b, with always a positive result (if the result would be negative, b is added to it).
+     */
+    public static float modPositive(float a, float b) {
+        float result = a % b;
+        if (result >= 0) {
+            return result;
+        }
+        else {
+            return result + b;
+        }
+    }
+
+    /**
+     * @return a modulus b, with always a positive result (if the result would be negative, b is added to it).
+     */
+    public static double modPositive(double a, double b) {
+        double result = a % b;
+        if (result >= 0) {
+            return result;
+        }
+        else {
+            return result + b;
+        }
+    }
 }

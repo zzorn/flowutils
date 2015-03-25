@@ -2,6 +2,7 @@ package org.flowutils;
 
 
 import static org.flowutils.Check.notNull;
+import static org.flowutils.MathUtils.*;
 
 /**
  *
@@ -99,6 +100,7 @@ public class ClassUtils {
 
     /**
      * @return the modulus of a and b, a % b as a Number instance of the same type as a.
+     * The result has the same sign as a.
      */
     public static <T extends Number> T modNumbers(T a, T b) {
         notNull(a, "a");
@@ -108,9 +110,27 @@ public class ClassUtils {
         else if (a instanceof Float) return (T) Float.valueOf(a.floatValue() % b.floatValue());
         else if (a instanceof Double) return (T) Double.valueOf(a.doubleValue() % b.doubleValue());
         else if (a instanceof Long) return (T) Long.valueOf(a.longValue() % b.longValue());
-        else if (a instanceof Byte) return (T) Byte.valueOf((byte) (a.byteValue() % b.byteValue()));
-        else if (a instanceof Short) return (T) Short.valueOf((short) (a.shortValue() % b.shortValue()));
+        else if (a instanceof Byte) return (T) Byte.valueOf((byte) (a.intValue() % b.intValue()));
+        else if (a instanceof Short) return (T) Short.valueOf((short) (a.intValue() % b.intValue()));
         else if (a instanceof Ranged) return (T) new Ranged(a.doubleValue() % b.doubleValue());
+        else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
+    }
+
+    /**
+     * @return the modulus of a and b, a % b as a Number instance of the same type as a.
+     * Returns a positive value even if a is negative, by adding b to it (as opposed to the java modulus operation).
+     */
+    public static <T extends Number> T modPosNumbers(T a, T b) {
+        notNull(a, "a");
+        notNull(b, "b");
+
+        if (a instanceof Integer) return (T) Integer.valueOf(modPositive(a.intValue(), b.intValue()));
+        else if (a instanceof Float) return (T) Float.valueOf(modPositive(a.floatValue(), b.floatValue()));
+        else if (a instanceof Double) return (T) Double.valueOf(modPositive(a.doubleValue(), b.doubleValue()));
+        else if (a instanceof Long) return (T) Long.valueOf(modPositive(a.longValue(), b.longValue()));
+        else if (a instanceof Byte) return (T) Byte.valueOf((byte) (modPositive(a.intValue(), b.intValue())));
+        else if (a instanceof Short) return (T) Short.valueOf((short) (modPositive(a.intValue(), b.intValue())));
+        else if (a instanceof Ranged) return (T) new Ranged(modPositive(a.doubleValue(), b.doubleValue()));
         else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
     }
 
