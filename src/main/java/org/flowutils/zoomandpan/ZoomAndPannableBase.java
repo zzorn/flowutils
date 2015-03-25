@@ -13,6 +13,10 @@ public abstract class ZoomAndPannableBase implements ZoomAndPannable {
         zoom(zoomChange, 0.5, 0.5);
     }
 
+    @Override public final void zoom(double zoomChangeX, double zoomChangeY) {
+        zoom(zoomChangeX, zoomChangeY, 0.5, 0.5);
+    }
+
     @Override public final void zoom(double zoomChange, double viewCenterX, double viewCenterY) {
         zoom(zoomChange, zoomChange, viewCenterX, viewCenterY);
     }

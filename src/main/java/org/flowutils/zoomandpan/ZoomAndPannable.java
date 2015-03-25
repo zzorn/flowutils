@@ -12,6 +12,13 @@ public interface ZoomAndPannable {
     void zoom(double zoomChange);
 
     /**
+     * Zooms in or out at the center of the visible area.
+     * @param zoomChangeX factor to multiply the x zoom with, > 1 increases magnification, < 1 decreases magnification.
+     * @param zoomChangeY factor to multiply the y zoom with, > 1 increases magnification, < 1 decreases magnification.
+     */
+    void zoom(double zoomChangeX, double zoomChangeY);
+
+    /**
      * @param zoomChange factor to multiply the zoom with, > 1 increases magnification, < 1 decreases magnification.
      * @param viewCenterX relative position on the view to keep centered when zooming, 0..1 range.
      * @param viewCenterY relative position on the view to keep centered when zooming, 0..1 range.
