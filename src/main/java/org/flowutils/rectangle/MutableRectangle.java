@@ -135,9 +135,25 @@ public final class MutableRectangle extends RectangleBase {
      * @param center if true the center of the rectangle will not move, if false the minX and minY of of the rectangle will not move.
      */
     public void scale(double xScale, double yScale, boolean center) {
+        if (center) {
+            scale(xScale, yScale, 0.5, 0.5);
+        }
+        else {
+            scale(xScale, yScale, 0, 0);
+        }
+    }
+
+    /**
+     * Scales the rectangle with the specified factor, using the specified relative position as the unmoving center of the scaling.
+     * @param xScale units to multiply sizeX with
+     * @param yScale units to multiply sizeY with
+     * @param relativeCenterX relative position within the rectangle of the center of the scaling (0..1, can be outside the rectangle as well).
+     * @param relativeCenterY relative position within the rectangle of the center of the scaling (0..1, can be outside the rectangle as well).
+     */
+    public void scale(double xScale, double yScale, double relativeCenterX, double relativeCenterY) {
         double w = getWidth() * xScale;
         double h = getHeight() * yScale;
-        setSize(w, h, center);
+        setSize(w, h, relativeCenterX, relativeCenterY);
     }
 
     public void setWidth(double width) {
@@ -166,21 +182,31 @@ public final class MutableRectangle extends RectangleBase {
      */
     public void setSize(double xSize, double ySize, boolean center) {
         if (center) {
-            double cx = getCenterX();
-            double cy = getCenterY();
-            set(cx - 0.5* xSize, cy - 0.5* ySize,
-                cx + 0.5* xSize, cy + 0.5* ySize);
+            setSize(xSize, ySize, 0.5, 0.5);
         }
         else {
-            set(minX,     minY,
-                minX + xSize, minY + ySize);
+            setSize(xSize, ySize, 0, 0);
         }
     }
 
+    /**
+     * Sets the size of the rectangle to the specified size.
+     * @param xSize new width of the rectangle
+     * @param ySize new height of the rectangle
+     * @param relativeCenterX relative position within the rectangle of the center of the scaling (0..1, can be outside the rectangle as well).
+     * @param relativeCenterY relative position within the rectangle of the center of the scaling (0..1, can be outside the rectangle as well).
+     */
+    public void setSize(double xSize, double ySize, double relativeCenterX, double relativeCenterY) {
+        double cx = getRelativeX(relativeCenterX);
+        double cy = getRelativeY(relativeCenterY);
+        set(cx - 0.5* xSize, cy - 0.5* ySize,
+            cx + 0.5* xSize, cy + 0.5* ySize);
+    }
 
-    public void set(Rectangle bounds) {
-        set(bounds.getMinX(), bounds.getMinY(), bounds.getMaxX(), bounds.getMaxY());
-        empty = bounds.isEmpty();
+
+    public void set(Rectangle rectangle) {
+        set(rectangle.getMinX(), rectangle.getMinY(), rectangle.getMaxX(), rectangle.getMaxY());
+        empty = rectangle.isEmpty();
     }
 
     public void set(double x1, double y1, double x2, double y2) {
