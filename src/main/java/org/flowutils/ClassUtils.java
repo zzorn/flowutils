@@ -114,6 +114,22 @@ public class ClassUtils {
         else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
     }
 
+    /**
+     * @return the absolute value of a, as a Number instance of the same type as a.
+     */
+    public static <T extends Number> T absNumber(T a) {
+        notNull(a, "a");
+
+        if (a instanceof Integer) return (T) Integer.valueOf(Math.abs(a.intValue()));
+        else if (a instanceof Float) return (T) Float.valueOf(Math.abs(a.floatValue()));
+        else if (a instanceof Double) return (T) Double.valueOf(Math.abs(a.doubleValue()));
+        else if (a instanceof Long) return (T) Long.valueOf(Math.abs(a.longValue()));
+        else if (a instanceof Byte) return (T) Byte.valueOf((byte) (Math.abs(a.intValue())));
+        else if (a instanceof Short) return (T) Short.valueOf((short) (Math.abs(a.intValue())));
+        else if (a instanceof Ranged) return (T) new Ranged(Math.abs(a.doubleValue()));
+        else throw new UnsupportedOperationException("Unexpected number type " + a.getClass());
+    }
+
     public static boolean isWrappedPrimitiveType(Class<?> type) {
         return Boolean.class.equals(type) ||
                Byte.class.equals(type) ||
