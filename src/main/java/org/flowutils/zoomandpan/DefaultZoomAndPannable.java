@@ -12,6 +12,7 @@ import org.flowutils.rectangle.RectangleListener;
 public class DefaultZoomAndPannable extends ZoomAndPannableBase {
 
     private final MutableRectangle visibleWorldArea = new MutableRectangle(1, 1);
+    private final MutableRectangle previousVisibleWorldArea = new MutableRectangle(1, 1);
     private Rectangle totalWorldArea = null;
 
     private boolean enforceZoomRange = false;
@@ -116,6 +117,8 @@ public class DefaultZoomAndPannable extends ZoomAndPannableBase {
     }
 
     @Override public final void zoom(double zoomChangeX, double zoomChangeY, double viewCenterX, double viewCenterY) {
+        previousVisibleWorldArea.set(visibleWorldArea);
+
         visibleWorldArea.scale(zoomChangeX, zoomChangeY, viewCenterX, viewCenterY);
 
         if (enforceZoomRange) {
@@ -126,31 +129,46 @@ public class DefaultZoomAndPannable extends ZoomAndPannableBase {
         }
 
         ensureWorldVisible();
+
+        notifyListenersOfChanges(previousVisibleWorldArea, visibleWorldArea);
     }
 
     @Override public final void pan(double deltaX, double deltaY) {
+        previousVisibleWorldArea.set(visibleWorldArea);
+
         final double panDeltaX = deltaX * visibleWorldArea.getSizeX();
         final double panDeltaY = deltaY * visibleWorldArea.getSizeY();
 
         visibleWorldArea.move(panDeltaX, panDeltaY);
 
         ensureWorldVisible();
+
+        notifyListenersOfChanges(previousVisibleWorldArea, visibleWorldArea);
     }
 
     @Override public final void setZoom(double zoomX, double zoomY) {
         Check.positive(zoomX, "zoomX");
         Check.positive(zoomY, "zoomY");
+
+        previousVisibleWorldArea.set(visibleWorldArea);
+
         visibleWorldArea.setSize(viewSizeX / zoomX,
                                  viewSizeY / zoomY,
                                  true);
 
         ensureWorldVisible();
+
+        notifyListenersOfChanges(previousVisibleWorldArea, visibleWorldArea);
     }
 
     @Override public final void setPan(double x, double y, double relativeViewCenterX, double relativeViewCenterY) {
+        previousVisibleWorldArea.set(visibleWorldArea);
+
         visibleWorldArea.setPosition(x, y, relativeViewCenterX, relativeViewCenterY);
 
         ensureWorldVisible();
+
+        notifyListenersOfChanges(previousVisibleWorldArea, visibleWorldArea);
     }
 
     private void ensureWorldVisible() {
@@ -179,7 +197,11 @@ public class DefaultZoomAndPannable extends ZoomAndPannableBase {
      */
     public final void showAll() {
         if (totalWorldArea != null && !totalWorldArea.isEmpty()) {
+            previousVisibleWorldArea.set(visibleWorldArea);
+
             visibleWorldArea.set(totalWorldArea);
+
+            notifyListenersOfChanges(previousVisibleWorldArea, visibleWorldArea);
         }
     }
 
@@ -385,5 +407,26 @@ public class DefaultZoomAndPannable extends ZoomAndPannableBase {
         setMaxVisibleSizeY(maxViewSizeY);
         setEnforceZoomRange(true);
     }
+
+    private void notifyListenersOfChanges(MutableRectangle previousVisible, MutableRectangle currentVisible) {
+        // Determine amount of panning
+        double panRelativeX = (currentVisible.getCenterX() - previousVisible.getCenterX()) / previousVisible.getSizeX();
+        double panRelativeY = (currentVisible.getCenterY() - previousVisible.getCenterY()) / previousVisible.getSizeY();
+
+        // Notify about panning if there was any
+        if (panRelativeX != 0 || panRelativeY != 0) {
+            notifyPanned(panRelativeX, panRelativeY);
+        }
+
+        // Determine amount zoom
+        double zoomX = previousVisible.getSizeX() / currentVisible.getSizeX();
+        double zoomY = previousVisible.getSizeY() / currentVisible.getSizeY();
+
+        // Notify about zoom if there was any
+        if (zoomX != 1 || zoomY != 1) {
+            notifyZoomed(zoomX, zoomY);
+        }
+    }
+
 
 }

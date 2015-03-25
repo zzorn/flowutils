@@ -88,4 +88,13 @@ public interface ZoomAndPannable {
      */
     public void showAll();
 
+    /**
+     * @param listener listener that is notified about zoom and pan events.
+     */
+    void addListener(ZoomAndPannableListener listener);
+
+    /**
+     * @param listener listener to remove.
+     */
+    void removeListener(ZoomAndPannableListener listener);
 }
