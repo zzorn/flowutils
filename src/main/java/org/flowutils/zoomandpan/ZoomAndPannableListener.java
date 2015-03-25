@@ -1,7 +1,7 @@
 package org.flowutils.zoomandpan;
 
 /**
- * Listens to zoom and pan events.
+ * Listens to zoom and pan changes.
  */
 public interface ZoomAndPannableListener {
 
