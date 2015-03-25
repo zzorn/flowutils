@@ -197,10 +197,30 @@ public final class MutableRectangle extends RectangleBase {
      * @param relativeCenterY relative position within the rectangle of the center of the scaling (0..1, can be outside the rectangle as well).
      */
     public void setSize(double xSize, double ySize, double relativeCenterX, double relativeCenterY) {
-        double cx = getRelativeX(relativeCenterX);
-        double cy = getRelativeY(relativeCenterY);
+        double cx = getMappedX(relativeCenterX);
+        double cy = getMappedY(relativeCenterY);
         set(cx - 0.5* xSize, cy - 0.5* ySize,
             cx + 0.5* xSize, cy + 0.5* ySize);
+    }
+
+    /**
+     * Sets the center position of the rectangle to the specified coordiantes.
+     */
+    public void setPosition(double x, double y) {
+        setPosition(x, y, 0.5, 0.5);
+    }
+
+    /**
+     * Sets the position of the rectangle.
+     * @param x world position.
+     * @param y world position.
+     * @param relativeX relative position (0..1) inside the rectangle that should be at the specified world position.
+     * @param relativeY relative position (0..1) inside the rectangle that should be at the specified world position.
+     */
+    public void setPosition(double x, double y, double relativeX, double relativeY) {
+        double dx = x - getMappedX(relativeX);
+        double dy = y - getMappedX(relativeY);
+        move(dx, dy);
     }
 
 
@@ -286,4 +306,5 @@ public final class MutableRectangle extends RectangleBase {
             }
         }
     }
+
 }
