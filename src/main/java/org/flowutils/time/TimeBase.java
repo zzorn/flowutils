@@ -3,6 +3,7 @@ package org.flowutils.time;
 import org.flowutils.Check;
 import org.flowutils.MathUtils;
 import org.flowutils.MathUtils;
+import org.flowutils.TimeUtils;
 
 /**
  * Base class for common functionality of Time implementations.
@@ -82,6 +83,10 @@ public abstract class TimeBase implements Time {
                                                     smoothedStepDurationSeconds);
     }
 
+    @Override public long getMillisecondsSinceLastStep() {
+        return getCurrentTimeMs() - lastStepTimeStamp;
+    }
+
     @Override public double getSecondsSinceLastStep() {
         return MILLISECONDS_TO_SECONDS * (getCurrentTimeMs() - lastStepTimeStamp);
     }
@@ -135,6 +140,13 @@ public abstract class TimeBase implements Time {
         this.smoothingFactor = smoothingFactor;
     }
 
+    @Override public void delayMilliseconds(long milliseconds) {
+        TimeUtils.delay(milliseconds);
+    }
+
+    @Override public void delaySeconds(double seconds) {
+        TimeUtils.delaySeconds(seconds);
+    }
 
     protected abstract long getCurrentTimeMs();
 }
