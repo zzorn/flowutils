@@ -1,7 +1,5 @@
 package org.flowutils.serializer;
 
-import org.flowutils.Check;
-
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -148,8 +146,10 @@ public abstract class SerializerBase implements Serializer {
         notNull(outputFile, "outputFile");
         if (!overwrite && outputFile.exists()) throw new IllegalArgumentException("The output file '" + outputFile + "' exists, and overwriting was not allowed.");
 
+        final byte[] serializedData = serialize(object);
+
         try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile, false)) {
-            fileOutputStream.write(serialize(object));
+            fileOutputStream.write(serializedData);
         }
     }
 
