@@ -2,6 +2,7 @@ package org.flowutils;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Utility functions for working with strings.
@@ -281,6 +282,50 @@ public final class StringUtils {
 
         // Should be none left
         assert milliseconds == 0;
+
+        return s.toString();
+    }
+
+    /**
+     * Converts a timestamp of the type used in java Date class to a standard string representation.
+     * @return timestamp in the format "yyyy-mm-dd hh:mm:ss.sss".
+     */
+    public static String timestampToString(long timestamp) {
+        return timestampToString(timestamp, true);
+    }
+
+    /**
+     * Converts a timestamp of the type used in java Date class to a standard string representation.
+     * @return timestamp in the format "yyyy-mm-dd hh:mm:ss.sss" if includeTime is true, otherwise "yyyy-mm-dd".
+     */
+    public static String timestampToString(long timestamp, boolean includeTime) {
+        return timestampToString(timestamp, includeTime, " ");
+    }
+
+    /**
+     * Converts a timestamp of the type used in java Date class to a standard string representation.
+     * @return timestamp in the format "yyyy-mm-dd"[timeSeparator]"hh:mm:ss.sss" if includeTime is true, otherwise "yyyy-mm-dd".
+     */
+    public static String timestampToString(long timestamp, boolean includeTime, String timeSeparator) {
+        Date date = new Date(timestamp);
+        StringBuilder s = new StringBuilder();
+
+        s.append(date.getYear() + 1900);
+        s.append("-");
+        s.append(date.getMonth() + 1);
+        s.append("-");
+        s.append(date.getDate());
+
+        if (includeTime) {
+            s.append(timeSeparator);
+            s.append(date.getHours());
+            s.append(":");
+            s.append(date.getMinutes());
+            s.append(":");
+            s.append(date.getSeconds());
+            s.append(".");
+            s.append(MathUtils.modPositive(timestamp, 1000));
+        }
 
         return s.toString();
     }
