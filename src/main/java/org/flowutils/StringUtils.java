@@ -262,10 +262,40 @@ public final class StringUtils {
     }
 
     /**
+     * @return a string representation of the number, at least numberOfDigitsToFillTo digits long, filling leading spaces with zeroes as needed.
+     */
+    public static String fillWithLeadingZeroes(int number, int numberOfDigitsToFillTo) {
+        if (number < 0) {
+            return "-" + fillWithLeadingZeroes(-number, numberOfDigitsToFillTo);
+        }
+        else {
+            String s = "" + number;
+            while (s.length() < numberOfDigitsToFillTo) {
+                s = "0" + s;
+            }
+            return s;
+        }
+    }
+
+    /**
+     * @param milliseconds milliseconds to convert to a readable string.
      * @return a human readable string representation in english for the specified number of milliseconds.
      * E.g. "1 day 5 hours 20 min 4s 100ms"
      */
     public static String timeIntervalToString(long milliseconds) {
+        return timeIntervalToString(milliseconds, " ", " ", false);
+    }
+
+    /**
+     * @param milliseconds milliseconds to convert to a readable string.
+     * @param separator separator to use between different periods.  E.g. "1 hour[separator]5 minutes"
+     * @param unitSeparator separator to use between the number and the unit.  E.g. "5[unitSeparator]minutes"
+     * @param forceSingular if true, units will be in singular even if they would be in plural, e.g. "5 hour".
+     * @return a human readable string representation in english for the specified number of milliseconds.
+     * E.g. "1 day 5 hours 20 min 4s 100ms"
+     *
+     */
+    public static String timeIntervalToString(long milliseconds, String separator, String unitSeparator, boolean forceSingular) {
         final StringBuilder s = new StringBuilder();
 
         // Append minus sign if interval is negative
@@ -274,11 +304,11 @@ public final class StringUtils {
             milliseconds = -milliseconds;
         }
 
-        milliseconds = appendTimePeriod(milliseconds, s, DAYS, "day", "days", true);
-        milliseconds = appendTimePeriod(milliseconds, s, HOURS, "hour", "hours", true);
-        milliseconds = appendTimePeriod(milliseconds, s, MINUTES, "min", "min", true);
-        milliseconds = appendTimePeriod(milliseconds, s, SECONDS, "s", "s", true);
-        milliseconds = appendTimePeriod(milliseconds, s, MILLISECONDS, "ms", "ms", false);
+        milliseconds = appendTimePeriod(milliseconds, s, DAYS, "day", "days", true, forceSingular, separator, unitSeparator);
+        milliseconds = appendTimePeriod(milliseconds, s, HOURS, "hour", "hours", true, forceSingular, separator, unitSeparator);
+        milliseconds = appendTimePeriod(milliseconds, s, MINUTES, "min", "min", true, forceSingular, separator, unitSeparator);
+        milliseconds = appendTimePeriod(milliseconds, s, SECONDS, "s", "s", true, forceSingular, separator, unitSeparator);
+        milliseconds = appendTimePeriod(milliseconds, s, MILLISECONDS, "ms", "ms", false, forceSingular, separator, unitSeparator);
 
         // Should be none left
         assert milliseconds == 0;
@@ -310,21 +340,21 @@ public final class StringUtils {
         Date date = new Date(timestamp);
         StringBuilder s = new StringBuilder();
 
-        s.append(date.getYear() + 1900);
+        s.append(fillWithLeadingZeroes(date.getYear() + 1900, 4));
         s.append("-");
-        s.append(date.getMonth() + 1);
+        s.append(fillWithLeadingZeroes(date.getMonth() + 1, 2));
         s.append("-");
-        s.append(date.getDate());
+        s.append(fillWithLeadingZeroes(date.getDate(), 2));
 
         if (includeTime) {
             s.append(timeSeparator);
-            s.append(date.getHours());
+            s.append(fillWithLeadingZeroes(date.getHours(), 2));
             s.append(":");
-            s.append(date.getMinutes());
+            s.append(fillWithLeadingZeroes(date.getMinutes(), 2));
             s.append(":");
-            s.append(date.getSeconds());
+            s.append(fillWithLeadingZeroes(date.getSeconds(), 2));
             s.append(".");
-            s.append(MathUtils.modPositive(timestamp, 1000));
+            s.append(fillWithLeadingZeroes((int) MathUtils.modPositive(timestamp, 1000), 3));
         }
 
         return s.toString();
@@ -335,15 +365,18 @@ public final class StringUtils {
                                          final long periodLength,
                                          final String periodNameSingular,
                                          final String periodNamePlural,
-                                         final boolean skipIfZero) {
+                                         final boolean skipIfZero,
+                                         final boolean forceSingular,
+                                         final String separator,
+                                         final String unitSeparator) {
 
         if (milliseconds >= periodLength || (!skipIfZero && s.length() == 0)) {
 
-            if (s.length() > 1) s.append(" ");
+            if (s.length() > 1) s.append(separator);
 
             // Append number of periods and period name
             final long periods = milliseconds / periodLength;
-            s.append(periods).append(" " + (periods == 1 ? periodNameSingular : periodNamePlural));
+            s.append(periods).append(unitSeparator).append(((periods == 1 || forceSingular) ? periodNameSingular : periodNamePlural));
 
             // Remove periods from time remaining
             milliseconds %= periodLength;
