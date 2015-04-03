@@ -5,14 +5,20 @@ package org.flowutils.rectangle.intrectangle;
  */
 public final class ImmutableIntRectangle extends IntRectangleBase {
 
+    public ImmutableIntRectangle() {
+    }
+
+    public ImmutableIntRectangle(IntRectangle rectangle) {
+        super(rectangle);
+    }
+
     public ImmutableIntRectangle(int width, int height) {
-        init(0, 0, width-1, height-1);
+        super(width, height);
     }
 
-    public ImmutableIntRectangle(int x1, int y1, int x2, int y2) {
-        init(x1, y1, x2, y2);
+    public ImmutableIntRectangle(int minX, int minY, int maxX, int maxY) {
+        super(minX, minY, maxX, maxY);
     }
-
 
     @Override
     public boolean equals(Object o) {

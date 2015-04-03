@@ -3,7 +3,7 @@ package org.flowutils.rectangle;
 /**
  * Listener that is notified about changes to a Rectangle.
  */
-public interface RectangleListener {
+public interface RectangleListener<T> {
 
     /**
      * Called when the specified Rectangle is changed.
@@ -11,6 +11,6 @@ public interface RectangleListener {
      * @param rectangle Rectangle that changed.
      * @param listenerData data object specified when the listener was added to the Rectangle.
      */
-    void onChanged(Rectangle rectangle, Object listenerData);
+    void onChanged(Rectangle rectangle, T listenerData);
 
 }

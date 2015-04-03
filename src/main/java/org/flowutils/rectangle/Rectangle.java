@@ -7,6 +7,11 @@ package org.flowutils.rectangle;
  */
 public interface Rectangle {
 
+    double getX();
+    double getY();
+    double getWidth();
+    double getHeight();
+
     double getMinX();
     double getMaxX();
     double getMinY();

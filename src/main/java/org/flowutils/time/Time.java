@@ -11,6 +11,12 @@ public interface Time {
     void nextStep();
 
     /**
+     * @return number of milliseconds seconds since the last step was recorded, in gametime.
+     * Returns milliseconds since reset if this is the first tick.
+     */
+    long getMillisecondsSinceLastStep();
+
+    /**
      * @return number of seconds since the last step was recorded, in gametime.
      * Returns seconds since reset if this is the first tick.
      */
@@ -93,4 +99,13 @@ public interface Time {
      */
     void setSmoothingFactor(double smoothingFactor);
 
+    /**
+     * Sleeps the current thread for approximately the specified number of milliseconds.
+     */
+    void delayMilliseconds(long milliseconds);
+
+    /**
+     * Sleeps the current thread for approximately the specified number of seconds.
+     */
+    void delaySeconds(double seconds);
 }

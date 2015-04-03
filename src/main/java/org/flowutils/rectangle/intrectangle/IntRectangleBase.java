@@ -1,5 +1,8 @@
 package org.flowutils.rectangle.intrectangle;
 
+import org.flowutils.rectangle.Rectangle;
+
+import static org.flowutils.Check.notNull;
 import static org.flowutils.MathUtils.map;
 
 /**
@@ -13,6 +16,29 @@ public abstract class IntRectangleBase implements IntRectangle {
     protected int maxY;
 
     protected boolean empty = true;
+
+    protected IntRectangleBase() {
+        empty = true;
+    }
+
+    protected IntRectangleBase(IntRectangle rectangle) {
+        notNull(rectangle, "rectangle");
+
+        if (rectangle.isEmpty()) {
+            empty = true;
+        }
+        else {
+            init(rectangle.getMinX(), rectangle.getMinY(), rectangle.getMaxX(), rectangle.getMaxY());
+        }
+    }
+
+    protected IntRectangleBase(int width, int height) {
+        this(0, 0, width - 1, height - 1);
+    }
+
+    protected IntRectangleBase(int minX, int minY, int maxX, int maxY) {
+        init(minX, minY, maxX, maxY);
+    }
 
     @Override
     public final int getMinX() {

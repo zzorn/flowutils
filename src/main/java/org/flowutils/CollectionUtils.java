@@ -14,6 +14,7 @@ public class CollectionUtils {
     /**
      * @return a random element from a list, or null if the list is empty.
      */
+    // TODO: Move to RandomSequence
     public static <T> T getRandomElement(List<T> list) {
         return getRandomElement(list, RANDOM);
     }
@@ -22,6 +23,7 @@ public class CollectionUtils {
      * @param random random instance to use.
      * @return a random element from a list, or null if the list is empty.
      */
+    // TODO: Move to RandomSequence
     public static <T> T getRandomElement(List<T> list, Random random) {
         if (list == null || list.isEmpty()) {
             return null;

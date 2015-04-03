@@ -1,5 +1,7 @@
 package org.flowutils.serializer;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Set;
@@ -64,6 +66,14 @@ public interface Serializer {
     byte[] serialize(Object object);
 
     /**
+     * Serialize the object and saves it to a file.
+     * @param object object to serialize.
+     * @param outputFile file to write the serialized object to.
+     * @param overwrite if true, the file will be overwritten if it exists, if false, an exception will be thrown if the file already exists.
+     */
+    void serialize(Object object, File outputFile, boolean overwrite) throws IOException;
+
+    /**
      * Deserialize the object from a byte array.
      *
      * @param data serialized form of object.
@@ -78,6 +88,14 @@ public interface Serializer {
      * @return de-serialized object.
      */
     <T> T deserialize(InputStream inputStream);
+
+    /**
+     * Deserialize the object from a file.
+     *
+     * @param inputFile to read the serialized object from.
+     * @return de-serialized object.
+     */
+    <T> T deserialize(File inputFile) throws IOException;
 
     /**
      * Deserialize the object from a byte array.
@@ -96,6 +114,15 @@ public interface Serializer {
      * @return de-serialized object.
      */
     <T> T deserialize(Class<T> expectedType, InputStream inputStream);
+
+    /**
+     * Deserialize the object from a file.
+     *
+     * @param expectedType expected type of object.  If unknown, just pass in Object.class.
+     * @param inputFile to read the serialized object from.
+     * @return de-serialized object.
+     */
+    <T> T deserialize(Class<T> expectedType, File inputFile) throws IOException;
 
     /**
      * Register a class to allow based on its fully qualified name.

@@ -1,8 +1,6 @@
 package org.flowutils.serializer;
 
-import org.flowutils.Check;
-
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -107,7 +105,7 @@ public abstract class SerializerBase implements Serializer {
 
     @Override public final void registerAllowedClasses(Collection<Class> allowedClasses) {
         checkNotInitialized();
-        Check.notNull(allowedClasses, "allowedClasses");
+        notNull(allowedClasses, "allowedClasses");
 
         for (Class allowedClass : allowedClasses) {
             registerAllowedClass(allowedClass);
@@ -142,6 +140,29 @@ public abstract class SerializerBase implements Serializer {
         initializeIfNeeded();
 
         return doDeserialize(expectedType, inputStream);
+    }
+
+    @Override public final void serialize(Object object, File outputFile, boolean overwrite) throws IOException {
+        notNull(outputFile, "outputFile");
+        if (!overwrite && outputFile.exists()) throw new IllegalArgumentException("The output file '" + outputFile + "' exists, and overwriting was not allowed.");
+
+        final byte[] serializedData = serialize(object);
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile, false)) {
+            fileOutputStream.write(serializedData);
+        }
+    }
+
+    @Override public final <T> T deserialize(File inputFile) throws IOException {
+        return (T) deserialize(Object.class, inputFile);
+    }
+
+    @Override public final <T> T deserialize(Class<T> expectedType, File inputFile) throws IOException {
+        notNull(inputFile, "inputFile");
+
+        try (FileInputStream fileInputStream = new FileInputStream(inputFile)) {
+            return deserialize(expectedType, fileInputStream);
+        }
     }
 
     /**
