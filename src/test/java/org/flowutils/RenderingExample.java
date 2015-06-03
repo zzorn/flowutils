@@ -5,6 +5,9 @@ import org.flowutils.raster.field.multi.CompositeMultiField;
 import org.flowutils.raster.field.single.NoiseField;
 import org.flowutils.rawimage.RawImagePanel;
 
+import javax.swing.*;
+import java.awt.*;
+
 /**
  *
  */
@@ -22,8 +25,16 @@ public class RenderingExample {
                                                  Symbol.get("height"),
                                                  Symbol.get("moisture")));
 
-        SimpleFrame simpleFrame = new SimpleFrame("Rendering Example", view);
+        showTestFrame(view);
+    }
 
+    private static void showTestFrame(JComponent view) {
+        JFrame testFrame = new JFrame("Rendering Example");
+        testFrame.setPreferredSize(new Dimension(800, 600));
+        testFrame.setContentPane(view);
+        testFrame.pack();
+        testFrame.setVisible(true);
+        testFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
 }

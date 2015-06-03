@@ -327,10 +327,10 @@ public abstract class MultiFieldBase implements MultiField {
                            targetArea.getMinY() * (targetXStep * rawImage.getWidth());
 
         // Calculate source start and steps
-        final double sourceStartX = sourceArea.getMinX();
-        final double sourceStartY = sourceArea.getMinY();
-        final double sourceStepX = (1.0 / (targetSizeX - 1)) * sourceArea.getSizeX();
-        final double sourceStepY = (1.0 / (targetSizeY - 1)) * sourceArea.getSizeY();
+        final double sourceStartX = targetSizeX == 1 ? sourceArea.getCenterX() : sourceArea.getMinX();
+        final double sourceStartY = targetSizeY == 1 ? sourceArea.getCenterY() : sourceArea.getMinY();
+        final double sourceStepX = targetSizeX == 1 ? sourceArea.getSizeX() : (1.0 / (targetSizeX - 1)) * sourceArea.getSizeX();
+        final double sourceStepY = targetSizeY == 1 ? sourceArea.getSizeY() : (1.0 / (targetSizeY - 1)) * sourceArea.getSizeY();
         final double sampleSize = ((sourceStepX + sourceStepY) * 0.5) * sourceArea.getSizeAverage();
 
         renderToImageArray(redChannelId,

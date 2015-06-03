@@ -83,7 +83,7 @@ public class MultiFieldToRawImageRenderer implements RawImageRenderer {
 
     @Override
     public void renderImage(final RawImage target, final IntRectangle targetArea, final Rectangle sourceArea, final RenderListener listener) {
-        if (multiField != null) {
+        if (multiField != null && !targetArea.isEmpty() && targetArea.getArea() > 0) {
             multiField.renderToRawImage(redChannel,
                                         greenChannel,
                                         blueChannel,
