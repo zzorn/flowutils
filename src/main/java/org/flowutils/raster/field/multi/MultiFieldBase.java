@@ -8,12 +8,15 @@ import org.flowutils.raster.field.single.Field;
 import org.flowutils.raster.field.single.FieldDelegate;
 import org.flowutils.raster.raster.multi.MultiRaster;
 import org.flowutils.raster.raster.single.Raster;
+import org.flowutils.rawimage.RawImage;
 import org.flowutils.rectangle.ImmutableRectangle;
 import org.flowutils.rectangle.Rectangle;
 import org.flowutils.rectangle.intrectangle.IntRectangle;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -296,4 +299,171 @@ public abstract class MultiFieldBase implements MultiField {
         }
     }
 
+
+    @Override
+    public void renderToRawImage(final Symbol redChannelId,
+                                 final Symbol greenChannelId,
+                                 final Symbol blueChannelId,
+                                 final Symbol alphaChannelId,
+                                 final RawImage rawImage,
+                                 Rectangle sourceArea,
+                                 IntRectangle targetArea,
+                                 final RenderListener renderListener) {
+
+        Check.notNull(rawImage, "rawImage");
+        if (targetArea == null) targetArea = rawImage.getExtent();
+        if (!rawImage.getExtent().contains(targetArea)) throw new IllegalArgumentException("Target area ("+targetArea+") should be within the rawImage rendered to ("+rawImage.getExtent()+")");
+
+        // Default to 0,0 - 1,1 source area if none given
+        if (sourceArea == null) sourceArea = DEFAULT_RENDER_AREA;
+        if (sourceArea.isEmpty()) throw new IllegalArgumentException("Source area can not be empty");
+
+        // Calculate target offset and steps
+        final int targetSizeX = targetArea.getSizeX();
+        final int targetSizeY = targetArea.getSizeY();
+        int targetXStep = 1;
+        int targetYSkip = rawImage.getWidth() - targetSizeX;
+        int targetOffset = targetArea.getMinX() +
+                           targetArea.getMinY() * (targetXStep * rawImage.getWidth());
+
+        // Calculate source start and steps
+        final double sourceStartX = sourceArea.getMinX();
+        final double sourceStartY = sourceArea.getMinY();
+        final double sourceStepX = (1.0 / (targetSizeX - 1)) * sourceArea.getSizeX();
+        final double sourceStepY = (1.0 / (targetSizeY - 1)) * sourceArea.getSizeY();
+        final double sampleSize = ((sourceStepX + sourceStepY) * 0.5) * sourceArea.getSizeAverage();
+
+        renderToImageArray(redChannelId,
+                           greenChannelId,
+                           blueChannelId,
+                           alphaChannelId,
+                           rawImage.getBuffer(),
+                           targetSizeX,
+                           targetSizeY,
+                           targetOffset,
+                           targetXStep,
+                           targetYSkip,
+                           sourceStartX,
+                           sourceStartY,
+                           sourceStepX,
+                           sourceStepY,
+                           sampleSize,
+                           renderListener);
+    }
+
+    @Override
+    public void renderToImageArray(final Symbol redChannelId,
+                                   final Symbol greenChannelId,
+                                   final Symbol blueChannelId,
+                                   final Symbol alphaChannelId,
+                                   final int[] rgbaData,
+                                   final int targetSizeX,
+                                   final int targetSizeY,
+                                   final int targetOffset,
+                                   final int targetXStep,
+                                   final int targetYSkip,
+                                   final double sourceStartX,
+                                   final double sourceStartY,
+                                   final double sourceStepX,
+                                   final double sourceStepY,
+                                   final double sourceSampleSize,
+                                   final RenderListener renderListener) {
+
+        Check.notNull(rgbaData, "rgbaData");
+        Check.positiveOrZero(targetSizeX, "targetSizeX");
+        Check.positiveOrZero(targetSizeY, "targetSizeY");
+        Check.positiveOrZero(sourceSampleSize, "sourceSampleSize");
+
+        // Shortcut out if we have nothing to render
+        if (targetSizeX == 0 || targetSizeY == 0) return;
+
+        // Initialize progress reporting counter
+        final int listenerStep = Math.max(targetSizeY / PROGRESS_REPORTS_PER_RENDERING, 1);
+        int listenerCountdown = listenerStep;
+
+        // Collect channels to sample
+        final List<Symbol> channels = new ArrayList<Symbol>();
+        final int redSource   = createMapping(redChannelId,   channels);
+        final int greenSource = createMapping(greenChannelId, channels);
+        final int blueSource  = createMapping(blueChannelId,  channels);
+        final int alphaSource = createMapping(alphaChannelId, channels);
+        final Symbol[] sourceChannels = channels.toArray(new Symbol[channels.size()]);
+        final int channelCount = sourceChannels.length;
+        final float[] channelValues = new float[channelCount];
+
+        // Initialize loop
+        boolean continueRendering = true;
+        int targetIndex = targetOffset;
+
+        // Y loop
+        double sourceY = sourceStartY;
+        for (int y = 0; y < targetSizeY && continueRendering; y++) {
+
+            // X loop
+            double sourceX = sourceStartX;
+            for (int x = 0; x < targetSizeX; x++) {
+
+                // Sample channels
+                for (int i = 0; i < channelCount; i++) {
+                    channelValues[i] = getValue(sourceX, sourceY, sourceChannels[i], sourceSampleSize);
+                }
+
+                // Determine channel values
+                float red   = redSource   <= -1 ? 0.0f : channelValues[redSource];
+                float green = greenSource <= -1 ? 0.0f : channelValues[greenSource];
+                float blue  = blueSource  <= -1 ? 0.0f : channelValues[blueSource];
+                float alpha = alphaSource <= -1 ? 1.0f : channelValues[alphaSource];
+
+                // Convert to bytes
+                int r = (int) (MathUtils.clamp0To1(red)   * 255.0f);
+                int g = (int) (MathUtils.clamp0To1(green) * 255.0f);
+                int b = (int) (MathUtils.clamp0To1(blue)  * 255.0f);
+                int a = (int) (MathUtils.clamp0To1(alpha) * 255.0f);
+
+                // Combine to RGBA int
+                int rgba = (b & 0xFF) |
+                           ((g & 0xFF) << 8) |
+                           ((r & 0xFF) << 16) |
+                           ((a & 0xFF) << 24);
+
+                // Write to target array
+                rgbaData[targetIndex] = rgba;
+
+                // Step to next source and target location along x axis
+                sourceX += sourceStepX;
+                targetIndex += targetXStep;
+            }
+
+            // Step to next source and target location along y axis
+            sourceY += sourceStepY;
+            targetIndex += targetYSkip;
+
+            // Report progress at some intervals, and also on the last line
+            if (renderListener != null && (--listenerCountdown <= 0 || y >= targetSizeY-1)) {
+                listenerCountdown = listenerStep;
+
+                double progress = ((double)y) / (targetSizeY - 1);
+                continueRendering = renderListener.onRenderProgress(progress);
+            }
+        }
+
+    }
+
+    private int createMapping(final Symbol channelId, final List<Symbol> channels) {
+        if (channelId != null) {
+            int prev = channels.indexOf(channelId);
+            if (prev >= 0) {
+                // Already found
+                return prev;
+            }
+            else {
+                // Add
+                channels.add(channelId);
+                return channels.size() - 1;
+            }
+        }
+        else {
+            return -1;
+        }
+    }
 }
