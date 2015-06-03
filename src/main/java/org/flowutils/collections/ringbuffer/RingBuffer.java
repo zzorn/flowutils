@@ -40,6 +40,16 @@ public final class RingBuffer<T> extends RingBufferBase<T> {
     }
 
     /**
+     * Sets the value of the i:th element from the start of the ringbuffer (0 = first element), discarding the previous value at that location.
+     * @throws IndexOutOfBoundsException if i is larger than the current size of the buffer.
+     */
+    public void set(int i, T value) {
+        if (i < 0 || i >= size) throw new IndexOutOfBoundsException("The position " + i + " is outside the bounds of the ringbuffer (it has size " + size + ")");
+
+        buffer[wrappedIndex(first + i)] = value;
+    }
+
+    /**
      * @return the i:th element from the end of the ringbuffer, 0 = last element, 1 = next to last element, etc.
      * @throws IndexOutOfBoundsException if i is larger than the current size of the buffer.
      */
@@ -63,6 +73,20 @@ public final class RingBuffer<T> extends RingBufferBase<T> {
      */
     public T getLast() {
         return getFromEnd(0);
+    }
+
+    /**
+     * Sets the value of the first element in the ringbuffer, discarding the old value at that location.
+     */
+    public void setFirst(T value) {
+        set(0, value);
+    }
+
+    /**
+     * Sets the value of the last element in the ringbuffer, discarding the old value at that location.
+     */
+    public void setLast(T value) {
+        set(getSize() - 1, value);
     }
 
     /**

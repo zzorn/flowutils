@@ -157,6 +157,31 @@ public class RingBufferTest {
         assertEquals(4, ringBuffer.getSize());
         assertEquals(4, ringBuffer.getCapacity());
 
+        // Test setters
+
+        ringBuffer.set(2, "EditedValue");
+
+        assertEquals("$100", ringBuffer.get(0));
+        assertEquals("$99", ringBuffer.get(1));
+        assertEquals("EditedValue", ringBuffer.get(2));
+        assertEquals("$97", ringBuffer.get(3));
+
+        ringBuffer.setFirst("EditedValue2");
+
+        assertEquals("EditedValue2", ringBuffer.get(0));
+        assertEquals("$99", ringBuffer.get(1));
+        assertEquals("EditedValue", ringBuffer.get(2));
+        assertEquals("$97", ringBuffer.get(3));
+
+        ringBuffer.setLast("EditedValue3");
+
+        assertEquals("EditedValue2", ringBuffer.get(0));
+        assertEquals("$99", ringBuffer.get(1));
+        assertEquals("EditedValue", ringBuffer.get(2));
+        assertEquals("EditedValue3", ringBuffer.get(3));
+
+        // Test clear
+
         ringBuffer.clear();
 
         assertGetThrowsException(ringBuffer, 0);
