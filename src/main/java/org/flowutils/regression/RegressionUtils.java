@@ -35,6 +35,17 @@ public final class RegressionUtils {
 
     /**
      * @param exponential if true, the data will be fitted to an exponential instead of a line.
+     * @param data data to regression fit to a line or exponential.
+     *             The data is assumed to have x coordinates starting with 0 and increasing by 1 for each value.
+     *             null entries are ignored (the x is still increased for them).
+     * @return the regression function for the given data, or null if the data has less than two non-null values.
+     */
+    public static RegressionFunction calculateRegression(boolean exponential, List<Float> data) {
+        return calculateRegression(exponential, 0, data.size(), data);
+    }
+
+    /**
+     * @param exponential if true, the data will be fitted to an exponential instead of a line.
      * @param startIndex index in the data series to start from.
      * @param count number of entries to use from the data series.
      * @param data data to regression fit to a line or exponential.
