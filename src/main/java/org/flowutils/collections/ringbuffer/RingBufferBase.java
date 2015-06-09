@@ -1,11 +1,11 @@
 package org.flowutils.collections.ringbuffer;
 
-import java.util.Iterator;
+import java.util.AbstractList;
 
 /**
  * Contains common functionality for RingBuffers.
  */
-public abstract class RingBufferBase<T> implements Iterable<T> {
+public abstract class RingBufferBase<T> extends AbstractList<T> implements RingBuffer<T> {
 
     // Points to first element
     protected int first = 0;
@@ -21,7 +21,7 @@ public abstract class RingBufferBase<T> implements Iterable<T> {
      * @return the element with the specific index from the buffer.
      * @throws java.lang.ArrayIndexOutOfBoundsException if the index if out of the buffer bounds.
      */
-    public abstract T getElement(int index);
+    @Override public abstract T get(int index);
 
     /**
      * Empties the buffer, and removes references to all stored elements.
@@ -41,19 +41,19 @@ public abstract class RingBufferBase<T> implements Iterable<T> {
     /**
      * @return number of elements in the ringbuffer.
      */
-    public final int getSize() {
+    public final int size() {
         return size;
     }
 
     /**
-     * @return the maximum capacity of the ringbuffer.
+     * @return number of elements in the ringbuffer.
+     * @deprecated replaced with size()
      */
-    public abstract int getCapacity();
+    public final int getSize() {
+        return size();
+    }
 
-    /**
-     * @return true if the ringbuffer has reached capacity, and any new elements added will drop out an element at the other end.
-     */
-    public final boolean isFull() {
+    @Override public final boolean isFull() {
         return size >= getCapacity();
     }
 
@@ -64,29 +64,8 @@ public abstract class RingBufferBase<T> implements Iterable<T> {
         return size <= 0;
     }
 
-    /**
-     * @return true if the ringbuffer is not empty.
-     */
-    public final boolean hasElements() {
+    @Override public final boolean hasElements() {
         return size > 0;
-    }
-
-    @Override public Iterator<T> iterator() {
-        return new Iterator<T>() {
-            private int i = 0;
-
-            @Override public boolean hasNext() {
-                return i < getSize();
-            }
-
-            @Override public T next() {
-                return getElement(i++);
-            }
-
-            @Override public void remove() {
-                throw new UnsupportedOperationException("Remove is not supported for ringbuffers");
-            }
-        };
     }
 
     /**

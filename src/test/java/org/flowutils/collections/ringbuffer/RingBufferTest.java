@@ -1,6 +1,5 @@
 package org.flowutils.collections.ringbuffer;
 
-import org.flowutils.collections.ringbuffer.RingBuffer;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -18,7 +17,7 @@ public class RingBufferTest {
 
     @Test
     public void testBuffer() throws Exception {
-        RingBuffer<String> ringBuffer = new RingBuffer<String>(4);
+        ArrayRingBuffer<String> ringBuffer = new ArrayRingBuffer<String>(4);
         assertGetThrowsException(ringBuffer, 0);
         assertGetThrowsException(ringBuffer, 1);
         assertGetThrowsException(ringBuffer, -1);
@@ -27,7 +26,7 @@ public class RingBufferTest {
         assertGetFromEndThrowsException(ringBuffer, -1);
         assertGetFirstThrowsException(ringBuffer);
         assertGetLastThrowsException(ringBuffer);
-        assertEquals(0, ringBuffer.getSize());
+        assertEquals(0, ringBuffer.size());
         assertEquals(4, ringBuffer.getCapacity());
         assertEquals(true, ringBuffer.isEmpty());
         assertEquals(false, ringBuffer.isFull());
@@ -41,7 +40,7 @@ public class RingBufferTest {
         assertEquals("1", ringBuffer.getFromEnd(0));
         assertEquals("1", ringBuffer.getFirst());
         assertEquals("1", ringBuffer.getLast());
-        assertEquals(1, ringBuffer.getSize());
+        assertEquals(1, ringBuffer.size());
         assertEquals(4, ringBuffer.getCapacity());
         assertEquals(false, ringBuffer.isEmpty());
         assertEquals(false, ringBuffer.isFull());
@@ -54,7 +53,7 @@ public class RingBufferTest {
         assertEquals("2", ringBuffer.getFromEnd(0));
         assertEquals("1", ringBuffer.getFirst());
         assertEquals("2", ringBuffer.getLast());
-        assertEquals(2, ringBuffer.getSize());
+        assertEquals(2, ringBuffer.size());
         assertEquals(4, ringBuffer.getCapacity());
 
         ringBuffer.addFirst("0");
@@ -67,7 +66,7 @@ public class RingBufferTest {
         assertEquals("0", ringBuffer.getFromEnd(2));
         assertEquals("0", ringBuffer.getFirst());
         assertEquals("2", ringBuffer.getLast());
-        assertEquals(3, ringBuffer.getSize());
+        assertEquals(3, ringBuffer.size());
         assertEquals(4, ringBuffer.getCapacity());
 
         ringBuffer.addFirst("-1");
@@ -82,7 +81,7 @@ public class RingBufferTest {
         assertEquals("-1", ringBuffer.getFromEnd(3));
         assertEquals("-1", ringBuffer.getFirst());
         assertEquals("2", ringBuffer.getLast());
-        assertEquals(4, ringBuffer.getSize());
+        assertEquals(4, ringBuffer.size());
         assertEquals(4, ringBuffer.getCapacity());
 
         ringBuffer.addLast("3");
@@ -97,7 +96,7 @@ public class RingBufferTest {
         assertEquals("0", ringBuffer.getFromEnd(3));
         assertEquals("0", ringBuffer.getFirst());
         assertEquals("3", ringBuffer.getLast());
-        assertEquals(4, ringBuffer.getSize());
+        assertEquals(4, ringBuffer.size());
         assertEquals(4, ringBuffer.getCapacity());
 
         ringBuffer.addFirst("-2");
@@ -112,7 +111,7 @@ public class RingBufferTest {
         assertEquals("-2", ringBuffer.getFromEnd(3));
         assertEquals("-2", ringBuffer.getFirst());
         assertEquals("2", ringBuffer.getLast());
-        assertEquals(4, ringBuffer.getSize());
+        assertEquals(4, ringBuffer.size());
         assertEquals(4, ringBuffer.getCapacity());
 
         for (int i = 11; i <= 100; i++) {
@@ -135,7 +134,7 @@ public class RingBufferTest {
         assertEquals("#97", ringBuffer.getFromEnd(3));
         assertEquals("#97", ringBuffer.getFirst());
         assertEquals("#100", ringBuffer.getLast());
-        assertEquals(4, ringBuffer.getSize());
+        assertEquals(4, ringBuffer.size());
         assertEquals(4, ringBuffer.getCapacity());
         assertEquals(false, ringBuffer.isEmpty());
         assertEquals(true, ringBuffer.isFull());
@@ -154,7 +153,7 @@ public class RingBufferTest {
         assertEquals("$100", ringBuffer.getFromEnd(3));
         assertEquals("$100", ringBuffer.getFirst());
         assertEquals("$97", ringBuffer.getLast());
-        assertEquals(4, ringBuffer.getSize());
+        assertEquals(4, ringBuffer.size());
         assertEquals(4, ringBuffer.getCapacity());
 
         // Test setters
@@ -192,7 +191,7 @@ public class RingBufferTest {
         assertGetFromEndThrowsException(ringBuffer, -1);
         assertGetFirstThrowsException(ringBuffer);
         assertGetLastThrowsException(ringBuffer);
-        assertEquals(0, ringBuffer.getSize());
+        assertEquals(0, ringBuffer.size());
         assertEquals(4, ringBuffer.getCapacity());
         assertEquals(true, ringBuffer.isEmpty());
         assertEquals(false, ringBuffer.isFull());
@@ -200,7 +199,7 @@ public class RingBufferTest {
 
     @Test
     public void testRemove() throws Exception {
-        RingBuffer<String> ringBuffer = new RingBuffer<String>(5);
+        ArrayRingBuffer<String> ringBuffer = new ArrayRingBuffer<String>(5);
         assertRemoveFirstThrowsException(ringBuffer);
         assertRemoveLastThrowsException(ringBuffer);
 
@@ -211,21 +210,21 @@ public class RingBufferTest {
         assertEquals("1", ringBuffer.getFirst());
         assertEquals("2", ringBuffer.get(1));
         assertEquals("4", ringBuffer.getLast());
-        assertEquals(4, ringBuffer.getSize());
+        assertEquals(4, ringBuffer.size());
         assertEquals(5, ringBuffer.getCapacity());
 
         assertEquals("1", ringBuffer.removeFirst());
         assertEquals("2", ringBuffer.getFirst());
         assertEquals("3", ringBuffer.get(1));
         assertEquals("4", ringBuffer.getLast());
-        assertEquals(3, ringBuffer.getSize());
+        assertEquals(3, ringBuffer.size());
         assertEquals(5, ringBuffer.getCapacity());
 
         assertEquals("4", ringBuffer.removeLast());
         assertEquals("2", ringBuffer.getFirst());
         assertEquals("3", ringBuffer.get(1));
         assertEquals("3", ringBuffer.getLast());
-        assertEquals(2, ringBuffer.getSize());
+        assertEquals(2, ringBuffer.size());
         assertEquals(5, ringBuffer.getCapacity());
 
         ringBuffer.addLast("5");
@@ -235,14 +234,14 @@ public class RingBufferTest {
         assertEquals("3", ringBuffer.getFirst());
         assertEquals("5", ringBuffer.get(1));
         assertEquals("8", ringBuffer.getLast());
-        assertEquals(5, ringBuffer.getSize());
+        assertEquals(5, ringBuffer.size());
         assertEquals(5, ringBuffer.getCapacity());
 
         assertEquals("8", ringBuffer.removeLast());
         assertEquals("3", ringBuffer.getFirst());
         assertEquals("5", ringBuffer.get(1));
         assertEquals("7", ringBuffer.getLast());
-        assertEquals(4, ringBuffer.getSize());
+        assertEquals(4, ringBuffer.size());
         assertEquals(5, ringBuffer.getCapacity());
 
         assertEquals("3", ringBuffer.removeFirst());
@@ -251,11 +250,11 @@ public class RingBufferTest {
 
         assertEquals("7", ringBuffer.getFirst());
         assertEquals("7", ringBuffer.getLast());
-        assertEquals(1, ringBuffer.getSize());
+        assertEquals(1, ringBuffer.size());
         assertEquals(5, ringBuffer.getCapacity());
 
         assertEquals("7", ringBuffer.removeLast());
-        assertEquals(0, ringBuffer.getSize());
+        assertEquals(0, ringBuffer.size());
         assertEquals(5, ringBuffer.getCapacity());
         assertRemoveFirstThrowsException(ringBuffer);
         assertRemoveLastThrowsException(ringBuffer);
@@ -263,7 +262,7 @@ public class RingBufferTest {
 
     @Test
     public void testIterator() throws Exception {
-        RingBuffer<String> ringBuffer = new RingBuffer<String>(5);
+        ArrayRingBuffer<String> ringBuffer = new ArrayRingBuffer<String>(5);
         ringBuffer.addLast("foo");
         ringBuffer.addLast("bar");
         ringBuffer.addLast("zap");
@@ -275,7 +274,7 @@ public class RingBufferTest {
         assertEquals("foobarzap", sum);
     }
 
-    private void assertGetThrowsException(RingBuffer<String> ringBuffer, final int index) {
+    private void assertGetThrowsException(ArrayRingBuffer<String> ringBuffer, final int index) {
         try {
             ringBuffer.get(index);
 
@@ -285,7 +284,7 @@ public class RingBufferTest {
         }
     }
 
-    private void assertGetFromEndThrowsException(RingBuffer<String> ringBuffer, final int index) {
+    private void assertGetFromEndThrowsException(ArrayRingBuffer<String> ringBuffer, final int index) {
         try {
             ringBuffer.getFromEnd(index);
 
@@ -295,7 +294,7 @@ public class RingBufferTest {
         }
     }
 
-    private void assertGetFirstThrowsException(RingBuffer<String> ringBuffer) {
+    private void assertGetFirstThrowsException(ArrayRingBuffer<String> ringBuffer) {
         try {
             ringBuffer.getFirst();
 
@@ -305,7 +304,7 @@ public class RingBufferTest {
         }
     }
 
-    private void assertGetLastThrowsException(RingBuffer<String> ringBuffer) {
+    private void assertGetLastThrowsException(ArrayRingBuffer<String> ringBuffer) {
         try {
             ringBuffer.getLast();
 
@@ -315,7 +314,7 @@ public class RingBufferTest {
         }
     }
 
-    private void assertRemoveFirstThrowsException(RingBuffer<String> ringBuffer) {
+    private void assertRemoveFirstThrowsException(ArrayRingBuffer<String> ringBuffer) {
         try {
             ringBuffer.removeFirst();
 
@@ -324,7 +323,7 @@ public class RingBufferTest {
             // Expected
         }
     }
-    private void assertRemoveLastThrowsException(RingBuffer<String> ringBuffer) {
+    private void assertRemoveLastThrowsException(ArrayRingBuffer<String> ringBuffer) {
         try {
             ringBuffer.removeLast();
 

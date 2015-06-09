@@ -3,25 +3,22 @@ package org.flowutils.collections.ringbuffer;
 import java.util.Arrays;
 
 /**
- * Fixed size buffer that can be added to at one end, and discards values at the other.
- * Can be accessed at any point.
- *
- * Holds long values.
+ * RingBuffer implementation that uses a backing array.
  *
  * Not thread safe.
  */
-public final class RingBufferLong extends RingBufferBase<Long> {
+public final class ArrayRingBuffer<T> extends RingBufferBase<T> {
 
     // Array to store values in
-    private final long[] buffer;
+    private final T[] buffer;
 
     /**
      * @param capacity capacity of the ringbuffer.
      */
-    public RingBufferLong(int capacity) {
+    public ArrayRingBuffer(int capacity) {
 
         // Allocate space
-        buffer = new long[capacity];
+        buffer = (T[]) new Object[capacity];
 
         // Initialize to empty
         clear();
@@ -31,21 +28,31 @@ public final class RingBufferLong extends RingBufferBase<Long> {
      * @return the i:th element from the start of the ringbuffer, 0 = first element.
      * @throws IndexOutOfBoundsException if i is larger than the current size of the buffer.
      */
-    public long get(int i) {
+    public T get(int i) {
         if (i < 0 || i >= size) throw new IndexOutOfBoundsException("The position " + i + " is outside the bounds of the ringbuffer (it has size " + size + ")");
 
         return buffer[wrappedIndex(first + i)];
     }
 
-    @Override public Long getElement(int index) {
-        return get(index);
+    /**
+     * Sets the value of the i:th element from the start of the ringbuffer (0 = first element), discarding the previous value at that location.
+     * @throws IndexOutOfBoundsException if i is larger than the current size of the buffer.
+     * @return value previously at the location.
+     */
+    public T set(int i, T value) {
+        if (i < 0 || i >= size) throw new IndexOutOfBoundsException("The position " + i + " is outside the bounds of the ringbuffer (it has size " + size + ")");
+
+        final int index = wrappedIndex(first + i);
+        final T prevValue = buffer[index];
+        buffer[index] = value;
+        return prevValue;
     }
 
     /**
      * @return the i:th element from the end of the ringbuffer, 0 = last element, 1 = next to last element, etc.
      * @throws IndexOutOfBoundsException if i is larger than the current size of the buffer.
      */
-    public long getFromEnd(int i) {
+    public T getFromEnd(int i) {
         if (i < 0 || i >= size) throw new IndexOutOfBoundsException("The position " + i + " counting from the end is outside the bounds of the ringbuffer (it has size " + size + ")");
 
         return buffer[wrappedIndex(last - 1 - i)];
@@ -55,7 +62,7 @@ public final class RingBufferLong extends RingBufferBase<Long> {
      * @return first element of the ringbuffer.
      * @throws IndexOutOfBoundsException if there are no elements in the buffer.
      */
-    public long getFirst() {
+    public T getFirst() {
         return get(0);
     }
 
@@ -63,15 +70,29 @@ public final class RingBufferLong extends RingBufferBase<Long> {
      * @return last element of the ringbuffer.
      * @throws IndexOutOfBoundsException if there are no elements in the buffer.
      */
-    public long getLast() {
+    public T getLast() {
         return getFromEnd(0);
+    }
+
+    /**
+     * Sets the value of the first element in the ringbuffer, returning the old value at that location.
+     */
+    public T setFirst(T value) {
+        return set(0, value);
+    }
+
+    /**
+     * Sets the value of the last element in the ringbuffer, returning the old value at that location.
+     */
+    public T setLast(T value) {
+        return set(getSize() - 1, value);
     }
 
     /**
      * Adds a new element to the start of the ringbuffer.
      * If the buffer is at full capacity, the last element will be overwritten.
      */
-    public void addFirst(long element) {
+    public void addFirst(T element) {
         // Move first to point to one before the first
         first = prevIndex(first);
 
@@ -87,7 +108,7 @@ public final class RingBufferLong extends RingBufferBase<Long> {
      * Adds a new element to the end of the ringbuffer.
      * If the buffer is at full capacity, the first element will be overwritten.
      */
-    public void addLast(long element) {
+    public void addLast(T element) {
         // Write to one past the last
         buffer[wrappedIndex(last)] = element;
 
@@ -99,19 +120,24 @@ public final class RingBufferLong extends RingBufferBase<Long> {
         else size++;
     }
 
+    @Override public boolean add(T element) {
+        addLast(element);
+        return true;
+    }
+
     /**
      * Removes the first element from the buffer, and returns it.
      *
      * @throws IndexOutOfBoundsException if there are no elements in the buffer.
      */
-    public long removeFirst() {
+    public T removeFirst() {
         if (size <= 0) throw new IndexOutOfBoundsException("The ringbuffer is empty, can not remove first element.");
 
         // Get first element
-        final long firstElement = buffer[first];
+        final T firstElement = buffer[first];
 
         // Clear removed element reference from the buffer
-        buffer[first] = 0;
+        buffer[first] = null;
 
         // Move first to point to the next element
         first = nextIndex(first);
@@ -127,15 +153,15 @@ public final class RingBufferLong extends RingBufferBase<Long> {
      *
      * @throws IndexOutOfBoundsException if there are no elements in the buffer.
      */
-    public long removeLast() {
+    public T removeLast() {
         if (size <= 0) throw new IndexOutOfBoundsException("The ringbuffer is empty, can not remove last element.");
 
         // Get last element
         final int lastIndex = wrappedIndex(last - 1);
-        final long lastElement = buffer[lastIndex];
+        final T lastElement = buffer[lastIndex];
 
         // Clear removed element reference from the buffer
-        buffer[lastIndex] = 0;
+        buffer[lastIndex] = null;
 
         // Move last to point to the previous element
         last = prevIndex(last);
@@ -154,7 +180,7 @@ public final class RingBufferLong extends RingBufferBase<Long> {
     }
 
     @Override protected void clearBufferContents() {
-        Arrays.fill(buffer, 0);
+        // Clear object references
+        Arrays.fill(buffer, null);
     }
-
 }
