@@ -24,6 +24,6 @@ public class RegressionUtilsTest {
 
     private void assertRegression(float expectedNextValue, final boolean exponential, Float ... data) {
         final RegressionFunction regressionFunction = RegressionUtils.calculateRegression(exponential, data);
-        Assert.assertEquals(expectedNextValue, regressionFunction.extrapolateValue(data.length), 0.0001);
+        Assert.assertEquals(expectedNextValue, regressionFunction.calculateValue(data.length), 0.0001);
     }
 }
