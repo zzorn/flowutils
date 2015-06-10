@@ -89,6 +89,11 @@ public final class RegressionUtils {
         Check.notZero(xStep, "xStep", 0);
         Check.positiveOrZero(startIndex, "startIndex");
 
+        // Ensure we are within bounds
+        if (startIndex < 0 || startIndex + count > data.size()) throw new IllegalArgumentException("The startIndex was " + startIndex + " and the count was " + count + ", but the data only has " + data.size() + " elements, so the requested sample area is out of bounds.");
+
+        // Ensure we have enough indexes in the data
+        if (count < 2) return null;
 
         // Calculate x and y averages
         float sumY = 0;
