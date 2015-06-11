@@ -88,6 +88,7 @@ public final class RegressionUtils {
                                                          List<Float> data) {
         Check.notZero(xStep, "xStep", 0);
         Check.positiveOrZero(startIndex, "startIndex");
+        Check.positiveOrZero(count, "count");
 
         // Ensure we are within bounds
         if (startIndex < 0 || startIndex + count > data.size()) throw new IllegalArgumentException("The startIndex was " + startIndex + " and the count was " + count + ", but the data only has " + data.size() + " elements, so the requested sample area is out of bounds.");
