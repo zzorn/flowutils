@@ -144,4 +144,9 @@ public interface RandomSequence {
      */
     <T> T nextElement(List<T> elements);
 
+    /**
+     * @return random element from the specified array.
+     */
+    <T> T nextElement(T[] elements);
+
 }

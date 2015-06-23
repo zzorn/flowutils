@@ -249,6 +249,11 @@ public abstract class BaseRandomSequence implements RandomSequence {
         return elements.get(nextInt(elements.size()));
     }
 
+    @Override public <T> T nextElement(T[] elements) {
+        notNull(elements, "elements");
+        return elements[nextInt(elements.length)];
+    }
+
     protected final RandomHash getSeedHashingFunction() {
         return seedHashingFunction;
     }
