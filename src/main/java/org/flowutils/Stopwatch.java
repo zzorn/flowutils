@@ -9,6 +9,7 @@ import java.lang.management.ManagementFactory;
 public final class Stopwatch {
 
     private static final double NANOSECONDS_TO_SECONDS = (1.0 / 1000000000.0);
+    private static final double MILLISECONDS_TO_SECONDS = (1.0 / 1000.0);
 
     private String description;
     private final int lapsToDiscard;
@@ -164,7 +165,8 @@ public final class Stopwatch {
     }
 
     private long getCurrentTime_ns() {
-        return ManagementFactory.getThreadMXBean().getCurrentThreadCpuTime();
+        return System.nanoTime();
+        //return ManagementFactory.getThreadMXBean().getCurrentThreadCpuTime();
     }
 
     /**
