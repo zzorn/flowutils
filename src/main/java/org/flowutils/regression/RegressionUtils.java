@@ -212,8 +212,13 @@ public final class RegressionUtils {
     }
 
     private static Float getLogarithmOfY(Float y) {
-        if (y == 0) throw new IllegalStateException("Can not do exponential regression for values close to or exactly zero");
-        return (Float) (float) Math.log(y);
+        if (y != 0) {
+            return (Float) (float) Math.log(y);
+        } else {
+            // Workaround for zero values when trying to do exponential regression.
+            // The results may be crap, but so was the inputs, and at least there won't be random exceptions with bad data.
+            return 0f;
+        }
     }
 
     private static Iterator<Float> getIteratorAtStartIndex(int startIndex, Iterable<Float> data) {
