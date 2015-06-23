@@ -2,6 +2,10 @@ package org.flowutils.random;
 
 import org.flowutils.Check;
 
+import java.util.List;
+
+import static org.flowutils.Check.notNull;
+
 /**
  * Common functionality for Random number generators.
  */
@@ -38,7 +42,7 @@ public abstract class BaseRandomSequence implements RandomSequence {
      *                            for many random number generators.
      */
     protected BaseRandomSequence(long seed, RandomHash seedHashingFunction) {
-        Check.notNull(seedHashingFunction, "seedHashingFunction");
+        notNull(seedHashingFunction, "seedHashingFunction");
 
         this.seedHashingFunction = seedHashingFunction;
 
@@ -238,6 +242,11 @@ public abstract class BaseRandomSequence implements RandomSequence {
 
     @Override public final double nextGaussian(double mean, double standardDeviation) {
         return nextGaussian() * standardDeviation + mean;
+    }
+
+    @Override public <T> T nextElement(List<T> elements) {
+        notNull(elements, "elements");
+        return elements.get(nextInt(elements.size()));
     }
 
     protected final RandomHash getSeedHashingFunction() {

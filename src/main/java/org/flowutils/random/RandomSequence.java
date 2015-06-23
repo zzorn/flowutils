@@ -1,5 +1,7 @@
 package org.flowutils.random;
 
+import java.util.List;
+
 /**
  * Interface for random number generators.
  *
@@ -137,5 +139,9 @@ public interface RandomSequence {
      */
     double nextGaussian(double mean, double standardDeviation);
 
+    /**
+     * @return random element from the specified list.
+     */
+    <T> T nextElement(List<T> elements);
 
 }
