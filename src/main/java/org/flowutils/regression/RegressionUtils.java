@@ -212,11 +212,15 @@ public final class RegressionUtils {
     }
 
     private static Float getLogarithmOfY(Float y) {
-        if (y != 0) {
+        if (y > 0) {
             return (Float) (float) Math.log(y);
+        } else if (y < 0) {
+            // Workaround for negative values when trying to do exponential regression.
+            // The results may be crap, but so was the inputs, and at least there won't be random NaN values or exceptions with bad data.
+            return (Float) (float) Math.log(-y);
         } else {
             // Workaround for zero values when trying to do exponential regression.
-            // The results may be crap, but so was the inputs, and at least there won't be random exceptions with bad data.
+            // The results may be crap, but so was the inputs, and at least there won't be random NaN values or exceptions with bad data.
             return 0f;
         }
     }
