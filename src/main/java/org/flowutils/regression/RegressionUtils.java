@@ -208,7 +208,13 @@ public final class RegressionUtils {
         float b = bUpper / bLower;
         float a = averageY - b * averageX;
 
-        return new RegressionFunction(a, b, exponential);
+        // Last sanity check of the results
+        if (Float.isNaN(a) || Float.isNaN(b) || Float.isInfinite(a) || Float.isInfinite(b)) {
+            return null;
+        }
+        else {
+            return new RegressionFunction(a, b, exponential);
+        }
     }
 
     private static Float getLogarithmOfY(Float y) {
