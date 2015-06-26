@@ -140,7 +140,7 @@ public final class RegressionUtils {
         float b = bUpper / bLower;
         float a = averageY - b * averageX;
 
-        return new RegressionFunction(a, b, exponential);
+        return createRegressionFunction(exponential, a, b);
     }
 
     /**
@@ -208,6 +208,10 @@ public final class RegressionUtils {
         float b = bUpper / bLower;
         float a = averageY - b * averageX;
 
+        return createRegressionFunction(exponential, a, b);
+    }
+
+    private static RegressionFunction createRegressionFunction(boolean exponential, float a, float b) {
         // Last sanity check of the results
         if (Float.isNaN(a) || Float.isNaN(b) || Float.isInfinite(a) || Float.isInfinite(b)) {
             return null;
