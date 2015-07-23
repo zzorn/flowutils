@@ -102,7 +102,7 @@ public final class ByteArrayUtils {
 
     /**
      * Composes a byte array of blocks with size prefixes.
-     * Max block size is 2^16, and big endian is used to represent the block size.
+     * Max block size is 2^16-1, and big endian is used to represent the block size.
      *
      * @param blocks blocks to compose.
      * @return composed array with the blocks, where each block is prefixed by the blocksize in bytes, using two bytes in big endian order to store the size.
@@ -155,7 +155,7 @@ public final class ByteArrayUtils {
 
     /**
      * Decomposes a byte array of blocks with size prefixes.
-     * Max block size is 2^16, and big endian is used to represent the block size.
+     * Max block size is 2^16-1, and big endian is used to represent the block size.
      *
      * @param data data to decompose.
      * @return list with the decomposed blocks, in the order they were stored.
