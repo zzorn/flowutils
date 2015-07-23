@@ -1,8 +1,11 @@
 package org.flowutils;
 
+import static org.flowutils.ByteArrayUtils.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import java.util.List;
 
 public class ByteArrayUtilsTest {
 
@@ -16,7 +19,7 @@ public class ByteArrayUtilsTest {
     }
 
     private void assertConcatenateWorks(final byte[] a, final byte[] b, final byte[] expected) {
-        assertArrayEquals(expected, ByteArrayUtils.concatenate(a, b));
+        assertArrayEquals(expected, concatenate(a, b));
     }
 
     @Test
@@ -29,7 +32,7 @@ public class ByteArrayUtilsTest {
     }
 
     private void assertGetFirstWorks(int numToGet, final byte[] a, final byte[] expected) {
-        assertArrayEquals(expected, ByteArrayUtils.getFirst(a, numToGet));
+        assertArrayEquals(expected, getFirst(a, numToGet));
     }
 
     @Test
@@ -42,7 +45,7 @@ public class ByteArrayUtilsTest {
     }
 
     private void assertGetLastWorks(int numToGet, final byte[] a, final byte[] expected) {
-        assertArrayEquals(expected, ByteArrayUtils.getLast(a, numToGet));
+        assertArrayEquals(expected, getLast(a, numToGet));
     }
 
     @Test
@@ -55,7 +58,7 @@ public class ByteArrayUtilsTest {
     }
 
     private void assertDropFirstWorks(int numToDrop, final byte[] a, final byte[] expected) {
-        assertArrayEquals(expected, ByteArrayUtils.dropFirst(a, numToDrop));
+        assertArrayEquals(expected, dropFirst(a, numToDrop));
     }
 
     @Test
@@ -68,6 +71,47 @@ public class ByteArrayUtilsTest {
     }
 
     private void assertDropLastWorks(int numToDrop, final byte[] a, final byte[] expected) {
-        assertArrayEquals(expected, ByteArrayUtils.dropLast(a, numToDrop));
+        assertArrayEquals(expected, dropLast(a, numToDrop));
+    }
+
+    @Test
+    public void testNumberToBytesAndBack() throws Exception {
+        assertNumberToBytesAndBack(new byte[]{0}, 1, true, 0);
+        assertNumberToBytesAndBack(new byte[]{42}, 1, true, 42);
+        assertNumberToBytesAndBack(new byte[]{42}, 1, false, 42);
+        assertNumberToBytesAndBack(new byte[]{0, 42}, 2, true, 42);
+        assertNumberToBytesAndBack(new byte[]{42, 0}, 2, false, 42);
+        assertNumberToBytesAndBack(new byte[]{(byte) 0xFF, -3}, 2, true, -3);
+        assertNumberToBytesAndBack(new byte[]{-3, (byte) 0xFF}, 2, false, -3);
+        assertNumberToBytesAndBack(new byte[]{0, 0, 4, 0}, 4, true, 1024);
+        assertNumberToBytesAndBack(new byte[]{0, 4, 0, 0}, 4, false, 1024);
+        assertNumberToBytesAndBack(new byte[]{0, 0, 4, 100}, 4, true, 1124);
+        assertNumberToBytesAndBack(new byte[]{100, 4, 0, 0}, 4, false, 1124);
+    }
+
+    private void assertNumberToBytesAndBack(final byte[] byteArrayRepresentation,
+                                            final int sizeBytes,
+                                            final boolean bigEndian, final int number) {
+        assertArrayEquals(byteArrayRepresentation, numberToByteArray(sizeBytes, bigEndian, number));
+        assertEquals(number, byteArrayToNumber(bigEndian, byteArrayRepresentation));
+    }
+
+    @Test
+    public void testComposeDecomposeBlocks() throws Exception {
+        final byte[] a = {1, 2, 3};
+        final byte[] b = {11, 12, 13};
+        final byte[] c = {111};
+        final byte[] d = {};
+        final byte[] e = {21, 22, 23, 24, 25};
+        final byte[] composed = composeWithSizePrefixes(a, b, c, d, e);
+        assertArrayEquals(new byte[]{0, 3, 1, 2, 3, 0, 3, 11, 12, 13, 0, 1, 111, 0, 0, 0, 5, 21, 22, 23, 24, 25}, composed);
+
+        final List<byte[]> decomposed = decomposeWithSizePrefixes(composed);
+        assertEquals(5, decomposed.size());
+        assertArrayEquals(decomposed.get(0), a);
+        assertArrayEquals(decomposed.get(1), b);
+        assertArrayEquals(decomposed.get(2), c);
+        assertArrayEquals(decomposed.get(3), d);
+        assertArrayEquals(decomposed.get(4), e);
     }
 }
