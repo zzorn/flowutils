@@ -685,4 +685,55 @@ public final class MathUtils {
             return result + b;
         }
     }
+
+    /**
+     * A tunable normalized sigmoid function that return values in the -1..1 range for inputs in the -1..1 range.
+     *
+     * See http://www.slideshare.net/dinodini1/simplest-ai-trick-gdc2013-dino-v2-1 for reference.
+     *
+     * @param x input, clamped to the -1 to 1 range.
+     * @param sharpness the sharpness of the curve, in the range -1..1.
+     *                  When 0, the result is equal to the input, when it goes towards 1 the S shape gets sharper.
+     *                  If negative, it will produce an inverse S curve that gets sharper towards -1.
+     * @return a value between -1 and 1, depending on the position of x between -1 and 1.
+     */
+    public static double sigmoid(double x, double sharpness) {
+        final double k;
+
+        // Clamp x
+        if (x < -1.0) x = -1.0;
+        else if (x > 1.0) x = 1.0;
+
+        // Calculate k factor from a more intuitive sharpness parameter, and also handle edge cases where we would get divisions by zero.
+        if (sharpness >= 1) {
+            if (x <= -1) return -1;
+            else if (x >= 1) return 1;
+            else return 0;
+        }
+        else if (sharpness <= -1) {
+            if (x < 0) return -1;
+            else if (x > 0) return 1;
+            else return 0;
+        }
+        else if (sharpness >= 0.5) {
+            k = 2.0 - 2.0 * sharpness;
+        }
+        else if (sharpness > 0) {
+            k = 1.0 / (2.0 * sharpness);
+        }
+        else if (sharpness <= -0.5) {
+            k = -3.0 - 2.0 * sharpness;
+        }
+        else if (sharpness < 0) {
+            k = 1.0 / sharpness;
+        }
+        else return x;  // Sharpness was zero
+
+        // Tunable normalized sigmoid function:
+        final double absX = x < 0 ? -x : x;
+        final double sign = (x >= 0 ? 1 : -1);
+        return sign * absX * k / (1.0 + k - absX);
+
+    }
+
 }
