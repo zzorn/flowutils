@@ -693,8 +693,8 @@ public final class MathUtils {
      *
      * @param x input, clamped to the -1 to 1 range.
      * @param sharpness the sharpness of the curve, in the range -1..1.
-     *                  When 0, the result is equal to the input, when it goes towards 1 the S shape gets sharper.
-     *                  If negative, it will produce an inverse S curve that gets sharper towards -1.
+     *                  When 0, the result is equal to the input, when it goes towards 1 the S shape gets sharper (more output directed towards -1 or +1, less towards 0).
+     *                  If negative, it will produce an inverse S curve that gets shallower towards -1 (more output directed towards 0, less towards -1 or 1).
      * @return a value between -1 and 1, depending on the position of x between -1 and 1.
      */
     public static double sigmoid(double x, double sharpness) {
@@ -705,27 +705,27 @@ public final class MathUtils {
         else if (x > 1.0) x = 1.0;
 
         // Calculate k factor from a more intuitive sharpness parameter, and also handle edge cases where we would get divisions by zero.
-        if (sharpness >= 1) {
+        if (sharpness <= -1) {
             if (x <= -1) return -1;
             else if (x >= 1) return 1;
             else return 0;
         }
-        else if (sharpness <= -1) {
+        else if (sharpness >= 1) {
             if (x < 0) return -1;
             else if (x > 0) return 1;
             else return 0;
         }
-        else if (sharpness >= 0.5) {
-            k = 2.0 - 2.0 * sharpness;
-        }
-        else if (sharpness > 0) {
-            k = 1.0 / (2.0 * sharpness);
-        }
         else if (sharpness <= -0.5) {
-            k = -3.0 - 2.0 * sharpness;
+            k = 2.0 + 2.0 * sharpness;
         }
         else if (sharpness < 0) {
-            k = 1.0 / sharpness;
+            k = -1.0 / (2.0 * sharpness);
+        }
+        else if (sharpness >= 0.5) {
+            k = -3.0 + 2.0 * sharpness;
+        }
+        else if (sharpness > 0) {
+            k = -1.0 / sharpness;
         }
         else return x;  // Sharpness was zero
 
