@@ -13,32 +13,32 @@ public class FileUtils {
     /**
      * @param file file to read.
      * @return contents of the file as text, assumes content is in UTF-8 format.
-     * Throws an illegal argument exception if the file was not found or could not be read.
+     * @throws IOException if the file was not found or could not be read.
      */
-    public static String readFile(File file) {
+    public static String readFile(File file) throws IOException {
         try {
             return readStream(new FileInputStream(file));
         } catch (IOException e) {
-            throw new IllegalArgumentException("Could not read file '" + file + "': " + e.getMessage(), e);
+            throw new IOException("Could not read file '" + file + "': " + e.getMessage(), e);
         }
     }
 
     /**
      * @param resourcePath path to resource to read
      * @return contents of the resource as text, assumes content is in UTF-8 format.
-     * Throws an illegal argument exception if the resource was not found or could not be read.
+     * @throws IOException if the resource was not found or could not be read.
      */
-    public static String readResource(String resourcePath) {
+    public static String readResource(String resourcePath) throws IOException {
         try {
             return readStream(FileUtils.class.getResourceAsStream("/" + resourcePath.replace('\\', '/')));
         } catch (IOException e) {
-            throw new IllegalArgumentException("Could not read resource '" + resourcePath + "': " + e.getMessage(), e);
+            throw new IOException("Could not read resource '" + resourcePath + "': " + e.getMessage(), e);
         }
     }
 
     /**
      * @return contents of the stream as text, assumes content is in UTF-8 format.
-     * @throws java.io.IOException if there was some problem.
+     * @throws IOException if there was some problem.
      */
     public static String readStream(InputStream reader) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(reader, UTF8_CHARSET));
