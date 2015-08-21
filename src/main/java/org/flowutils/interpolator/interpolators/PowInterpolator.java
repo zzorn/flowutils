@@ -18,7 +18,7 @@ public final class PowInterpolator extends InterpolatorBase {
     }
 
     /**
-     * @param exponent exponent to use for the interpolation curve.  Must be 0 or larger.
+     * @param exponent exponent to use for the interpolation curve.
      */
     public PowInterpolator(double exponent) {
         setExponent(exponent);
@@ -29,10 +29,9 @@ public final class PowInterpolator extends InterpolatorBase {
     }
 
     /**
-     * @param exponent exponent to use for the interpolation curve.  Must be 0 or larger.
+     * @param exponent exponent to use for the interpolation curve.
      */
     public void setExponent(double exponent) {
-        Check.greaterOrEqual(exponent, "exponent", 0, "zero");
         this.exponent = exponent;
     }
 
