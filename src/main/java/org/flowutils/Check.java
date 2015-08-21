@@ -261,6 +261,21 @@ public final class Check {
         }
     }
 
+    /**
+     * Checks that the parameter is in the range -1..1 (inclusive).
+     *
+     * @param parameter     the parameter value to check
+     * @param parameterName the name of the parameter (used in error messages)
+     * @throws IllegalArgumentException if the check fails.
+     */
+    public static void inRangeMinusOneToOne(final double parameter, String parameterName) {
+        normalNumber(parameter, parameterName);
+
+        if (parameter < -1 || parameter > 1) {
+            fail(parameter, parameterName, "be in the range -1 to 1 inclusive");
+        }
+    }
+
 
     /**
      * Checks that the parameter is in the specified range

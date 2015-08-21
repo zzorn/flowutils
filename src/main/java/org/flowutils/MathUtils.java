@@ -687,6 +687,21 @@ public final class MathUtils {
     }
 
     /**
+     * A tunable normalized sigmoid function that return values in the 0..1 range for inputs in the 0..1 range.
+     *
+     * See http://www.slideshare.net/dinodini1/simplest-ai-trick-gdc2013-dino-v2-1 for reference.
+     *
+     * @param x input, clamped to the 0 to 1 range.
+     * @param sharpness the sharpness of the curve, in the range -1..1.
+     *                  When 0, the result is equal to the input, when it goes towards 1 the S shape gets sharper (more output directed towards -1 or +1, less towards 0).
+     *                  If negative, it will produce an inverse S curve that gets shallower towards -1 (more output directed towards 0, less towards -1 or 1).
+     * @return a value between 0 and 1, depending on the position of x between 0 and 1.
+     */
+    public static double sigmoidZeroToOne(double x, double sharpness) {
+        return 0.5 * (1.0 + sigmoid(2.0 * x - 1.0, sharpness));
+    }
+
+    /**
      * A tunable normalized sigmoid function that return values in the -1..1 range for inputs in the -1..1 range.
      *
      * See http://www.slideshare.net/dinodini1/simplest-ai-trick-gdc2013-dino-v2-1 for reference.
