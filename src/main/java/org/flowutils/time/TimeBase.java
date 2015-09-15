@@ -10,23 +10,15 @@ import org.flowutils.TimeUtils;
  */
 public abstract class TimeBase implements Time {
 
-    /**
-     * How much smoothing to apply by default, that is, how much of the old smoothed step duration to mix into the new one.
-     */
-    protected static final double DEFAULT_SMOOTHING_FACTOR = 0.5;
-
-    private static final double MILLISECONDS_TO_SECONDS = 1.0 / 1000.0;
+    private static final double SECONDS_TO_MILLISECONDS = 1000.0;
 
     // Main state
-    private long millisecondsSinceStart = 0;
+    private double secondsSinceStart = 0;
     private long stepCount = 0;
 
     // Temporary calculated values
-    private long lastStepTimeStamp;
-    private long lastStepDurationMs;
+    private double lastStepTimeStamp;
     private double lastStepDurationSeconds;
-    private double smoothedStepDurationSeconds = 0;
-    private double smoothingFactor = DEFAULT_SMOOTHING_FACTOR;
 
     /**
      * Creates a new TimeBase that starts at zero with zero steps.
@@ -36,117 +28,78 @@ public abstract class TimeBase implements Time {
     }
 
     /**
-     * @param millisecondsSinceStart what to initialize elapsed time to.
-     * @param stepCount what to initialize elapsed steps to.
+     * @param time used to get the seconds since start and step count to initialize this time to.
      */
-    protected TimeBase(long millisecondsSinceStart, long stepCount) {
-        this(millisecondsSinceStart, stepCount, DEFAULT_SMOOTHING_FACTOR);
+    protected TimeBase(Time time) {
+        this(time.getSecondsSinceStart(), time.getStepCount());
     }
 
     /**
-     * @param millisecondsSinceStart what to initialize elapsed time to.
+     * @param secondsSinceStart what to initialize elapsed time to.
      * @param stepCount what to initialize elapsed steps to.
-     * @param smoothingFactor what to initialize the step smoothing value to.
      */
-    protected TimeBase(long millisecondsSinceStart, long stepCount, double smoothingFactor) {
-        reset(millisecondsSinceStart, stepCount);
-        setSmoothingFactor(smoothingFactor);
+    protected TimeBase(double secondsSinceStart, long stepCount) {
+        reset(secondsSinceStart, stepCount);
     }
 
-    @Override public void reset() {
+    @Override public final void reset() {
         reset(0, 0);
     }
 
-    @Override public void reset(long millisecondsSinceStart, long stepCount) {
-        Check.positiveOrZero(millisecondsSinceStart, "millisecondsSinceStart");
+    @Override public final void reset(double secondsSinceStart, long stepCount) {
+        Check.positiveOrZero(secondsSinceStart, "secondsSinceStart");
         Check.positiveOrZero(stepCount, "stepCount");
 
-        this.millisecondsSinceStart = millisecondsSinceStart;
+        this.secondsSinceStart = secondsSinceStart;
         this.stepCount = stepCount;
 
-        lastStepTimeStamp = getCurrentTimeMs();
-        lastStepDurationMs = 0;
+        lastStepTimeStamp = getCurrentTimeSeconds();
         lastStepDurationSeconds = 0;
-        smoothedStepDurationSeconds = 0;
     }
 
-    @Override public void nextStep() {
-        long time = getCurrentTimeMs();
+    @Override public final void nextStep() {
+        double time = getCurrentTimeSeconds();
         stepCount++;
-        lastStepDurationMs = Math.max(0, time - lastStepTimeStamp);
-        millisecondsSinceStart += lastStepDurationMs;
-        lastStepDurationSeconds = lastStepDurationMs * MILLISECONDS_TO_SECONDS;
+        lastStepDurationSeconds = Math.max(0, time - lastStepTimeStamp);
+        secondsSinceStart += lastStepDurationSeconds;
         lastStepTimeStamp = time;
-
-        smoothedStepDurationSeconds = MathUtils.mix(smoothingFactor,
-                                                    lastStepDurationSeconds,
-                                                    smoothedStepDurationSeconds);
     }
 
-    @Override public long getMillisecondsSinceLastStep() {
-        return getCurrentTimeMs() - lastStepTimeStamp;
+    @Override public final long getMillisecondsSinceLastStep() {
+        return (long) (SECONDS_TO_MILLISECONDS * getSecondsSinceLastStep());
     }
 
-    @Override public double getSecondsSinceLastStep() {
-        return MILLISECONDS_TO_SECONDS * (getCurrentTimeMs() - lastStepTimeStamp);
+    @Override public final double getSecondsSinceLastStep() {
+        return getCurrentTimeSeconds() - lastStepTimeStamp;
     }
 
-    @Override public float getSecondsSinceLastStepAsFloat() {
-        return (float) getSecondsSinceLastStep();
-    }
-
-    @Override public double getLastStepDurationSeconds() {
+    @Override public final double getLastStepDurationSeconds() {
         return lastStepDurationSeconds;
     }
 
-    @Override public long getLastStepDurationMs() {
-        return lastStepDurationMs;
+    @Override public final long getLastStepDurationMilliseconds() {
+        return (long) (SECONDS_TO_MILLISECONDS * lastStepDurationSeconds);
     }
 
-    @Override public double getLastStepsPerSecond() {
-        if (lastStepDurationMs == 0) return 0;
-        else return 1.0 / (lastStepDurationMs * MILLISECONDS_TO_SECONDS);
+    @Override public final double getStepsPerSecond() {
+        if (lastStepDurationSeconds <= 0) return 0;
+        else return 1.0 / lastStepDurationSeconds;
     }
 
-    @Override public double getSmoothedStepsPerSecond() {
-        if (smoothedStepDurationSeconds == 0) return 0;
-        else return 1.0 / (smoothedStepDurationSeconds);
+    @Override public final long getMillisecondsSinceStart() {
+        return (long) (SECONDS_TO_MILLISECONDS * secondsSinceStart);
     }
 
-    @Override public double getSmoothedStepDurationSeconds() {
-        return smoothedStepDurationSeconds;
+    @Override public final double getSecondsSinceStart() {
+        return secondsSinceStart;
     }
 
-    @Override public long getMillisecondsSinceStart() {
-        return millisecondsSinceStart;
-    }
-
-    @Override public double getSecondsSinceStart() {
-        return millisecondsSinceStart * MILLISECONDS_TO_SECONDS;
-    }
-
-    @Override public long getStepCount() {
+    @Override public final long getStepCount() {
         return stepCount;
     }
 
-    @Override public double getSmoothingFactor() {
-        return smoothingFactor;
-    }
-
-    @Override public void setSmoothingFactor(double smoothingFactor) {
-        Check.positiveOrZero(smoothingFactor, "smoothingFactor");
-        Check.less(smoothingFactor, "smoothingFactor", 1, "maximum smoothing");
-
-        this.smoothingFactor = smoothingFactor;
-    }
-
-    @Override public void delayMilliseconds(long milliseconds) {
-        TimeUtils.delay(milliseconds);
-    }
-
-    @Override public void delaySeconds(double seconds) {
-        TimeUtils.delaySeconds(seconds);
-    }
-
-    protected abstract long getCurrentTimeMs();
+    /**
+     * @return current time as seconds since some arbitrary epoch that does not change.
+     */
+    protected abstract double getCurrentTimeSeconds();
 }

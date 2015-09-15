@@ -4,11 +4,11 @@ import org.flowutils.Check;
 
 /**
  * A Time implementation where the current gametime is manually incremented.
- * Useful for testing.
+ * Useful for testing or time classes that should not be bound to wall clock.
  */
 public final class ManualTime extends TimeBase {
 
-    private long currentTimeMs = 0;
+    private double currentTimeSeconds = 0;
 
     /**
      * Creates a new ManualTime starting at time zero and step zero.
@@ -19,35 +19,32 @@ public final class ManualTime extends TimeBase {
     /**
      * Creates a new ManualTime.
      *
-     * @param millisecondsSinceStart what to initialize elapsed time to.
+     * @param secondsSinceStart what to initialize elapsed time to.
      * @param stepCount what to initialize elapsed steps to.
      */
-    public ManualTime(long millisecondsSinceStart, long stepCount) {
-        super(millisecondsSinceStart, stepCount);
+    public ManualTime(double secondsSinceStart, long stepCount) {
+        super(secondsSinceStart, stepCount);
     }
 
     /**
-     * Creates a new ManualTime.
-     *
-     * @param millisecondsSinceStart what to initialize elapsed time to.
-     * @param stepCount what to initialize elapsed steps to.
-     * @param smoothingFactor what to initialize the step smoothing value to.
+     * Advances the time by the specified number of seconds.
      */
-    public ManualTime(long millisecondsSinceStart, long stepCount, double smoothingFactor) {
-        super(millisecondsSinceStart, stepCount, smoothingFactor);
+    public void advanceTime(double secondsToAdd) {
+        Check.positiveOrZero(secondsToAdd, "secondsToAdd");
+
+        currentTimeSeconds += secondsToAdd;
     }
 
     /**
      * Advances the time by the specified number of milliseconds.
-     * @param millisecondsToAdd
      */
-    public void advanceTime(long millisecondsToAdd) {
+    public void advanceTimeWithMilliseconds(long millisecondsToAdd) {
         Check.positiveOrZero(millisecondsToAdd, "millisecondsToAdd");
 
-        currentTimeMs += millisecondsToAdd;
+        currentTimeSeconds += millisecondsToAdd / 1000.0;
     }
 
-    @Override protected long getCurrentTimeMs() {
-        return currentTimeMs;
+    @Override protected double getCurrentTimeSeconds() {
+        return currentTimeSeconds;
     }
 }

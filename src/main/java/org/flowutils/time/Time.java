@@ -11,10 +11,16 @@ public interface Time {
     void nextStep();
 
     /**
-     * @return number of milliseconds seconds since the last step was recorded, in gametime.
-     * Returns milliseconds since reset if this is the first tick.
+     * @return number of seconds that the most recent full step lasted, in gametime.
+     * Returns zero if this is the first tick.
      */
-    long getMillisecondsSinceLastStep();
+    double getLastStepDurationSeconds();
+
+    /**
+     * @return number of milliseconds that the most recent full step lasted, in gametime.
+     * Returns zero if this is the first tick.
+     */
+    long getLastStepDurationMilliseconds();
 
     /**
      * @return number of seconds since the last step was recorded, in gametime.
@@ -23,50 +29,26 @@ public interface Time {
     double getSecondsSinceLastStep();
 
     /**
-     * @return number of seconds since the last step was recorded, in gametime, converted to a float.
-     * Returns seconds since reset if this is the first tick.
+     * @return number of milliseconds seconds since the last step was recorded, in gametime.
+     * Returns milliseconds since reset if this is the first tick.
      */
-    float getSecondsSinceLastStepAsFloat();
-
-    /**
-     * @return number of seconds that the most recent full step lasted, in gametime.
-     * Returns zero if this is the first tick.
-     */
-    double getLastStepDurationSeconds();
-
-    /**
-     * @return exponentially averaged number of seconds that the most recent steps lasted, in gametime.
-     * Returns zero if this is the first tick.
-     */
-    double getSmoothedStepDurationSeconds();
-
-    /**
-     * @return number of milliseconds that the most recent full step lasted, in gametime.
-     * Returns zero if this is the first tick.
-     */
-    long getLastStepDurationMs();
+    long getMillisecondsSinceLastStep();
 
     /**
      * @return number of steps per second, based on the last value recorded, in gametime.
      * Returns zero if this is the first tick.
      */
-    double getLastStepsPerSecond();
-
-    /**
-     * @return exponentially averaged number of steps per second, in gametime.
-     * Returns zero if this is the first tick.
-     */
-    double getSmoothedStepsPerSecond();
-
-    /**
-     * @return number of milliseconds since the Time was created, or since the last call to reset, in gametime.
-     */
-    long getMillisecondsSinceStart();
+    double getStepsPerSecond();
 
     /**
      * @return number of seconds since the Time was created, or since the last call to reset, in gametime.
      */
     double getSecondsSinceStart();
+
+    /**
+     * @return number of milliseconds since the Time was created, or since the last call to reset, in gametime.
+     */
+    long getMillisecondsSinceStart();
 
     /**
      * @return number of steps since Time was created, or since the last call to reset.
@@ -80,32 +62,8 @@ public interface Time {
 
     /**
      * Reset to a specific state.
-     * @param millisecondsSinceStart number of milliseconds since start in gametime.
+     * @param secondsSinceStart number of seconds since start in gametime.
      * @param stepCount number of steps since start.
      */
-    void reset(long millisecondsSinceStart, long stepCount);
-
-    /**
-     * @return weight of previous step durations when calculating the smoothed tick duration.
-     * 0 = do not smoothe, 0.5 = average this step duration and the earlier average.
-     * Must be zero or larger and less than one.
-     */
-    double getSmoothingFactor();
-
-    /**
-     * @param smoothingFactor weight of previous step durations when calculating the smoothed tick duration.
-     * 0 = do not smoothe, 0.5 = average this step duration and the earlier average.
-     * Must be zero or larger and less than one.
-     */
-    void setSmoothingFactor(double smoothingFactor);
-
-    /**
-     * Sleeps the current thread for approximately the specified number of milliseconds.
-     */
-    void delayMilliseconds(long milliseconds);
-
-    /**
-     * Sleeps the current thread for approximately the specified number of seconds.
-     */
-    void delaySeconds(double seconds);
+    void reset(double secondsSinceStart, long stepCount);
 }

@@ -7,7 +7,7 @@ import org.flowutils.Check;
  */
 public final class RealTime extends TimeBase {
 
-    private final double speedupFactor;
+    private double speedupFactor;
     private final long startTime;
 
     /**
@@ -24,46 +24,33 @@ public final class RealTime extends TimeBase {
      *                      1 -> 1:1, 2 -> gametime twice as fast as real time, 0.5 -> gametime half as fast as real time.
      */
     public RealTime(double speedupFactor) {
-        this(0, 0, DEFAULT_SMOOTHING_FACTOR, speedupFactor);
+        this(0, 0, speedupFactor);
     }
 
     /**
      * Creates a new RealTime.
      *
-     * @param millisecondsSinceStart what to initialize elapsed time to.
+     * @param secondsSinceStart what to initialize elapsed time to.
      * @param stepCount what to initialize elapsed steps to.
      */
-    public RealTime(long millisecondsSinceStart, long stepCount) {
-        this(millisecondsSinceStart, stepCount, DEFAULT_SMOOTHING_FACTOR);
+    public RealTime(double secondsSinceStart, long stepCount) {
+        this(secondsSinceStart, stepCount, 1.0);
     }
 
     /**
      * Creates a new RealTime.
      *
-     * @param millisecondsSinceStart what to initialize elapsed time to.
+     * @param secondsSinceStart what to initialize elapsed time to.
      * @param stepCount what to initialize elapsed steps to.
-     * @param smoothingFactor what to initialize the step smoothing value to.
-     */
-    public RealTime(long millisecondsSinceStart, long stepCount, double smoothingFactor) {
-        this(millisecondsSinceStart, stepCount, smoothingFactor, 1.0);
-    }
-
-    /**
-     * Creates a new RealTime.
-     *
-     * @param millisecondsSinceStart what to initialize elapsed time to.
-     * @param stepCount what to initialize elapsed steps to.
-     * @param smoothingFactor what to initialize the step smoothing value to.
      * @param speedupFactor factor for converting real time to gametime.
      *                      1 -> 1:1, 2 -> gametime twice as fast as real time, 0.5 -> gametime half as fast as real time.
      */
-    public RealTime(long millisecondsSinceStart, long stepCount, double smoothingFactor, double speedupFactor) {
-        super(millisecondsSinceStart, stepCount, smoothingFactor);
+    public RealTime(double secondsSinceStart, long stepCount, double speedupFactor) {
+        super(secondsSinceStart, stepCount);
 
-        Check.positive(speedupFactor, "speedupFactor");
-
-        this.speedupFactor = speedupFactor;
         this.startTime = System.currentTimeMillis();
+
+        setSpeedupFactor(speedupFactor);
     }
 
     /**
@@ -77,12 +64,23 @@ public final class RealTime extends TimeBase {
         return speedupFactor;
     }
 
-    protected long getCurrentTimeMs() {
-        // Count time from constructor invocation,
-        // so that the speedup factor doesn't accidentally end up increasing time past maxlong if it is large.
-        final long elapsedTime = System.currentTimeMillis() - startTime;
+    /**
+     * @param speedupFactor speedupFactor applied to time.
+     *  1: 1 real second == 1 game second,
+     *  2: 1 real second == 2 game seconds,
+     *  0.5: 1 real second = 0.5 game seconds,
+     *  etc.
+     */
+    public void setSpeedupFactor(double speedupFactor) {
+        Check.positive(speedupFactor, "speedupFactor");
+        this.speedupFactor = speedupFactor;
+    }
 
-        return (long) (elapsedTime * speedupFactor);
+    protected double getCurrentTimeSeconds() {
+        // Count time from constructor invocation
+        final long elapsedTimeMs = System.currentTimeMillis() - startTime;
+
+        return elapsedTimeMs * speedupFactor / 1000.0;
     }
 
 }
