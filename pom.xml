@@ -3,7 +3,7 @@
 
     <groupId>org.flowutils</groupId>
     <artifactId>flowutils</artifactId>
-    <version>0.1.92-SNAPSHOT</version>
+    <version>0.2.0</version>
     <packaging>jar</packaging>
 
     <name>flowutils</name>
