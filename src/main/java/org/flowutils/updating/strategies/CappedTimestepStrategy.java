@@ -53,7 +53,7 @@ public final class CappedTimestepStrategy extends UpdateStrategyWithLocalTimeBas
         final double elapsedTime = Math.min(maximumStepDurationSeconds, externalTime.getLastStepDurationSeconds());
 
         // Update local time
-        localTime.advanceTime(elapsedTime);
+        localTime.advanceTimeSeconds(elapsedTime);
         localTime.nextStep();
 
         // Update simulation

@@ -61,7 +61,7 @@ public final class SmoothedTimestepStrategy extends UpdateStrategyWithLocalTimeB
         firstStep = false;
 
         // Update local time
-        localTime.advanceTime(smoothedElapsedTime);
+        localTime.advanceTimeSeconds(smoothedElapsedTime);
         localTime.nextStep();
 
         // Update simulation

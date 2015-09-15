@@ -29,7 +29,7 @@ public final class ManualTime extends TimeBase {
     /**
      * Advances the time by the specified number of seconds.
      */
-    public void advanceTime(double secondsToAdd) {
+    public void advanceTimeSeconds(double secondsToAdd) {
         Check.positiveOrZero(secondsToAdd, "secondsToAdd");
 
         currentTimeSeconds += secondsToAdd;
@@ -38,7 +38,7 @@ public final class ManualTime extends TimeBase {
     /**
      * Advances the time by the specified number of milliseconds.
      */
-    public void advanceTimeWithMilliseconds(long millisecondsToAdd) {
+    public void advanceTimeMilliseconds(long millisecondsToAdd) {
         Check.positiveOrZero(millisecondsToAdd, "millisecondsToAdd");
 
         currentTimeSeconds += millisecondsToAdd / 1000.0;

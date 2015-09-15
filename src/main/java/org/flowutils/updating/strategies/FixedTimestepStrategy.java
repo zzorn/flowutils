@@ -61,7 +61,7 @@ public final class FixedTimestepStrategy extends UpdateStrategyWithLocalTimeBase
             timeSinceLastUpdateCall_seconds -= timestepSeconds;
 
             // Update local time
-            localTime.advanceTime(timestepSeconds);
+            localTime.advanceTimeSeconds(timestepSeconds);
             localTime.nextStep();
 
             // Update simulation

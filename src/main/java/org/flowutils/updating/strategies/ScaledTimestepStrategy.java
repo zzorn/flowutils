@@ -56,7 +56,7 @@ public final class ScaledTimestepStrategy extends UpdateStrategyWithLocalTimeBas
         final double elapsedTime = externalTime.getLastStepDurationSeconds() * timeScale;
 
         // Update local time
-        localTime.advanceTime(elapsedTime);
+        localTime.advanceTimeSeconds(elapsedTime);
         localTime.nextStep();
 
         // Update simulation
