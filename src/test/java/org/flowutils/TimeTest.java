@@ -16,8 +16,6 @@ public class TimeTest {
     public void testTime() throws Exception {
         ManualTime time = new ManualTime();
 
-        assertEquals("Assuming smoothing factor is 0.5 by default", 0.5, time.getSmoothingFactor(), EPSILON);
-
         assertEquals(0, time.getLastStepDurationMilliseconds());
         assertEquals(0, time.getLastStepDurationSeconds(), EPSILON);
         assertEquals(0, time.getStepCount());
@@ -25,10 +23,8 @@ public class TimeTest {
         assertEquals(0, time.getMillisecondsSinceStart());
         assertEquals(0, time.getSecondsSinceStart(), EPSILON);
         assertEquals(0, time.getSecondsSinceLastStep(), EPSILON);
-        assertEquals(0, time.getSmoothedStepDurationSeconds(), EPSILON);
-        assertEquals(0, time.getSmoothedStepsPerSecond(), EPSILON);
 
-        time.advanceTime(100);
+        time.advanceTime(0.1);
 
         assertEquals(0,   time.getLastStepDurationMilliseconds());
         assertEquals(0,   time.getLastStepDurationSeconds(), EPSILON);
@@ -36,8 +32,6 @@ public class TimeTest {
         assertEquals(0,   time.getStepsPerSecond(), EPSILON);
         assertEquals(0,   time.getMillisecondsSinceStart());
         assertEquals(0.1, time.getSecondsSinceLastStep(), EPSILON);
-        assertEquals(0,   time.getSmoothedStepDurationSeconds(), EPSILON);
-        assertEquals(0,   time.getSmoothedStepsPerSecond(), EPSILON);
 
         time.nextStep();
 
@@ -47,11 +41,9 @@ public class TimeTest {
         assertEquals(10,  time.getStepsPerSecond(), EPSILON);
         assertEquals(100, time.getMillisecondsSinceStart());
         assertEquals(0.0, time.getSecondsSinceLastStep(), EPSILON);
-        assertEquals(0.05,time.getSmoothedStepDurationSeconds(), EPSILON);
-        assertEquals(20,  time.getSmoothedStepsPerSecond(), EPSILON);
 
 
-        time.advanceTime(0);
+        time.advanceTime(0.0);
         time.nextStep();
 
         assertEquals(0,   time.getLastStepDurationMilliseconds());
@@ -61,12 +53,10 @@ public class TimeTest {
         assertEquals(100, time.getMillisecondsSinceStart());
         assertEquals(0.1, time.getSecondsSinceStart(), EPSILON);
         assertEquals(0.0, time.getSecondsSinceLastStep(), EPSILON);
-        assertEquals(0.025,time.getSmoothedStepDurationSeconds(), EPSILON);
-        assertEquals(40,   time.getSmoothedStepsPerSecond(), EPSILON);
 
-        time.advanceTime(1000);
+        time.advanceTime(1.0);
         time.nextStep();
-        time.advanceTime(300);
+        time.advanceTime(0.3);
 
         assertEquals(1000,time.getLastStepDurationMilliseconds());
         assertEquals(1,   time.getLastStepDurationSeconds(), EPSILON);
@@ -75,7 +65,6 @@ public class TimeTest {
         assertEquals(1100, time.getMillisecondsSinceStart());
         assertEquals(1.1, time.getSecondsSinceStart(), EPSILON);
         assertEquals(0.3, time.getSecondsSinceLastStep(), EPSILON);
-        assertEquals((1+0.025)/2,time.getSmoothedStepDurationSeconds(), EPSILON);
 
         time.reset();
 
@@ -86,10 +75,8 @@ public class TimeTest {
         assertEquals(0, time.getMillisecondsSinceStart());
         assertEquals(0, time.getSecondsSinceStart(), EPSILON);
         assertEquals(0, time.getSecondsSinceLastStep(), EPSILON);
-        assertEquals(0, time.getSmoothedStepDurationSeconds(), EPSILON);
-        assertEquals(0, time.getSmoothedStepsPerSecond(), EPSILON);
 
-        time.reset(500, 11);
+        time.reset(0.5, 11);
 
         assertEquals(0, time.getLastStepDurationMilliseconds());
         assertEquals(0, time.getLastStepDurationSeconds(), EPSILON);
@@ -98,8 +85,5 @@ public class TimeTest {
         assertEquals(500, time.getMillisecondsSinceStart());
         assertEquals(0.5, time.getSecondsSinceStart(), EPSILON);
         assertEquals(0, time.getSecondsSinceLastStep(), EPSILON);
-        assertEquals(0, time.getSmoothedStepDurationSeconds(), EPSILON);
-        assertEquals(0, time.getSmoothedStepsPerSecond(), EPSILON);
-
     }
 }

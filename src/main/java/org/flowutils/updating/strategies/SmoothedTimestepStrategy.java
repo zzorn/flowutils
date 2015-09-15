@@ -15,18 +15,39 @@ public final class SmoothedTimestepStrategy extends UpdateStrategyWithLocalTimeB
     private double smoothingFactor;
     private boolean firstStep = true;
 
+    /**
+     * Creates a SmoothedTimestepStrategy with a smoothing factor of 0.5.
+     */
     public SmoothedTimestepStrategy() {
         this(0.5);
     }
 
+    /**
+     * @param smoothingFactor how much to smooth the timeSteps.
+     *                        0 = no smoothing, use external time steps directly,
+     *                        0.5 = average external time step and previous smoothed time step,
+     *                        approaching 1 = use almost completely previous smoothed time step.
+     */
     public SmoothedTimestepStrategy(double smoothingFactor) {
         setSmoothingFactor(smoothingFactor);
     }
 
+    /**
+     * @return how much to smooth the timeSteps.
+     *                        0 = no smoothing, use external time steps directly,
+     *                        0.5 = average external time step and previous smoothed time step,
+     *                        approaching 1 = use almost completely previous smoothed time step.
+     */
     public double getSmoothingFactor() {
         return smoothingFactor;
     }
 
+    /**
+     * @param smoothingFactor how much to smooth the timeSteps.
+     *                        0 = no smoothing, use external time steps directly,
+     *                        0.5 = average external time step and previous smoothed time step,
+     *                        approaching 1 = use almost completely previous smoothed time step.
+     */
     public void setSmoothingFactor(double smoothingFactor) {
         Check.inRange(smoothingFactor, "smoothingFactor", 0, 1);
         this.smoothingFactor = smoothingFactor;
@@ -35,12 +56,12 @@ public final class SmoothedTimestepStrategy extends UpdateStrategyWithLocalTimeB
     @Override protected void doUpdate(Updating simulation, ManualTime localTime, Time externalTime) {
         // Smooth
         final double externalElapsedTime = externalTime.getLastStepDurationSeconds();
-        final double elapsedTime = firstStep ? externalElapsedTime : MathUtils.mix(smoothingFactor, externalElapsedTime, previousSmoothedDuration);
-        previousSmoothedDuration = elapsedTime;
+        final double smoothedElapsedTime = firstStep ? externalElapsedTime : MathUtils.mix(smoothingFactor, externalElapsedTime, previousSmoothedDuration);
+        previousSmoothedDuration = smoothedElapsedTime;
         firstStep = false;
 
         // Update local time
-        localTime.advanceTime(elapsedTime);
+        localTime.advanceTime(smoothedElapsedTime);
         localTime.nextStep();
 
         // Update simulation

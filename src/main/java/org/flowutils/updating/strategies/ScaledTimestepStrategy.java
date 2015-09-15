@@ -12,18 +12,39 @@ public final class ScaledTimestepStrategy extends UpdateStrategyWithLocalTimeBas
 
     private double timeScale;
 
+    /**
+     * New ScaledTimestepStrategy with a time scale of 1 (Same local time speed as external time speed).
+     */
     public ScaledTimestepStrategy() {
         this(1.0);
     }
 
+    /**
+     * @param timeScale scale for passing time.
+     *                  2 = double the amount of local time will pass for a given amount of external time,
+     *                  0.5 = half the amount of local time will pass for a given amount of external time,
+     *                  etc.
+     */
     public ScaledTimestepStrategy(double timeScale) {
         setTimeScale(timeScale);
     }
 
+    /**
+     * @return scale for passing time.
+     *                  2 = double the amount of local time will pass for a given amount of external time,
+     *                  0.5 = half the amount of local time will pass for a given amount of external time,
+     *                  etc.
+     */
     public double getTimeScale() {
         return timeScale;
     }
 
+    /**
+     * @param timeScale scale for passing time.
+     *                  2 = double the amount of local time will pass for a given amount of external time,
+     *                  0.5 = half the amount of local time will pass for a given amount of external time,
+     *                  etc.
+     */
     public void setTimeScale(double timeScale) {
         Check.positive(timeScale, "timeScale");
         this.timeScale = timeScale;
