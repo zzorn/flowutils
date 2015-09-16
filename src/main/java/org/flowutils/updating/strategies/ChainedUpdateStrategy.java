@@ -2,7 +2,7 @@ package org.flowutils.updating.strategies;
 
 import org.flowutils.time.Time;
 import org.flowutils.updating.Updating;
-import org.flowutils.updating.UpdatingWithStrategy;
+import org.flowutils.updating.UpdatingAndStrategy;
 
 import java.util.Collection;
 
@@ -13,11 +13,11 @@ import static org.flowutils.Check.notNull;
  */
 public final class ChainedUpdateStrategy extends UpdateStrategyBase {
 
-    private UpdatingWithStrategy lastUpdating;
+    private UpdatingAndStrategy lastUpdating;
 
-    private final ThreadLocal<UpdatingWithStrategy> terminalUpdating = new ThreadLocal<UpdatingWithStrategy>() {
-        @Override protected UpdatingWithStrategy initialValue() {
-            return new UpdatingWithStrategy(null);
+    private final ThreadLocal<UpdatingAndStrategy> terminalUpdating = new ThreadLocal<UpdatingAndStrategy>() {
+        @Override protected UpdatingAndStrategy initialValue() {
+            return new UpdatingAndStrategy(null);
         }
     };
 
@@ -55,7 +55,7 @@ public final class ChainedUpdateStrategy extends UpdateStrategyBase {
     public void addStrategy(UpdateStrategy updateStrategy) {
         notNull(updateStrategy, "updateStrategy");
 
-        lastUpdating = new UpdatingWithStrategy(lastUpdating, updateStrategy);
+        lastUpdating = new UpdatingAndStrategy(lastUpdating, updateStrategy);
     }
 
     /**
