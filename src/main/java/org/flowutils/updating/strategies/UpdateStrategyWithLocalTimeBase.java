@@ -33,6 +33,6 @@ public abstract class UpdateStrategyWithLocalTimeBase extends UpdateStrategyBase
      * @return a new ManualTime instance, initialized based on the specified external time.
      */
     protected ManualTime createLocalTime(Time externalTime) {
-        return new ManualTime(externalTime.getMillisecondsSinceStart(), externalTime.getStepCount());
+        return new ManualTime(externalTime);
     }
 }

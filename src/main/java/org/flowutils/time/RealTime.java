@@ -40,6 +40,26 @@ public final class RealTime extends TimeBase {
     /**
      * Creates a new RealTime.
      *
+     * @param time time to initialize secondsSinceStart and stepCount from
+     */
+    public RealTime(Time time) {
+        this(time, 1.0);
+    }
+
+    /**
+     * Creates a new RealTime.
+     *
+     * @param time time to initialize secondsSinceStart and stepCount from
+     * @param speedupFactor factor for converting real time to gametime.
+     *                      1 -> 1:1, 2 -> gametime twice as fast as real time, 0.5 -> gametime half as fast as real time.
+     */
+    public RealTime(Time time, double speedupFactor) {
+        this(time.getSecondsSinceStart(), time.getStepCount(), speedupFactor);
+    }
+
+    /**
+     * Creates a new RealTime.
+     *
      * @param secondsSinceStart what to initialize elapsed time to.
      * @param stepCount what to initialize elapsed steps to.
      * @param speedupFactor factor for converting real time to gametime.

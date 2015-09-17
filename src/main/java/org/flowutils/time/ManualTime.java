@@ -27,6 +27,15 @@ public final class ManualTime extends TimeBase {
     }
 
     /**
+     * Creates a new ManualTime.
+     *
+     * @param time time to initialize secondsSinceStart and stepCount from
+     */
+    public ManualTime(Time time) {
+        super(time.getSecondsSinceStart(), time.getStepCount());
+    }
+
+    /**
      * Advances the time by the specified number of seconds.
      */
     public void advanceTimeSeconds(double secondsToAdd) {
