@@ -51,6 +51,27 @@ public class MathUtilsTest {
 
     }
 
+    @Test
+    public void testRound() throws Exception {
+        assertEquals(5, MathUtils.round(5, 1));
+        assertEquals(10, MathUtils.round(11, 1));
+        assertEquals(20, MathUtils.round(15, 1));
+        assertEquals(20, MathUtils.round(19, 1));
+        assertEquals(20, MathUtils.round(21, 1));
+        assertEquals(15, MathUtils.round(15, 2));
+        assertEquals(80, MathUtils.round(78, 1));
+        assertEquals(123000, MathUtils.round(123456, 3));
+        assertEquals(-123000, MathUtils.round(-123456, 3));
+        assertEquals(988000, MathUtils.round(987654, 3));
+        assertEquals(-988000, MathUtils.round(-987654, 3));
+        assertEquals(1000000, MathUtils.round(999999, 3));
+        assertEquals(-1000000, MathUtils.round(-999999, 3));
+        assertEquals(-20, MathUtils.round(-15, 1));
+        assertEquals(-20, MathUtils.round(-19, 1));
+        assertEquals(-10, MathUtils.round(-11, 1));
+
+    }
+
     private void shouldEqual(final double result, final double actual) {
         assertEquals(result, actual, 0.0001);
     }

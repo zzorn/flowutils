@@ -635,6 +635,32 @@ public final class MathUtils {
     }
 
     /**
+     * Rounds the value to include at most the specified number of significant digits (non zero digits).
+     * Not optimized for speed.
+     * @param value value to round.
+     * @param significantDigits max number of digits that should be non zero.
+     */
+    public static int round(int value, int significantDigits) {
+        Check.positive(significantDigits, "significantDigits");
+
+        boolean wasNegative = value < 0;
+        value = Math.abs(value);
+
+        int digits = 1;
+        int max = 10;
+        while (value >= max) {
+            max *= 10;
+            digits++;
+        }
+
+        int divisor = (int) Math.pow(10, digits - significantDigits);
+        value = round(1.0 * value / divisor);
+        value *= divisor;
+        return value * (wasNegative ? -1 : 1);
+    }
+
+
+    /**
      * @return a modulus b, with always a positive result (if the result would be negative, b is added to it).
      */
     public static int modPositive(int a, int b) {
@@ -750,5 +776,16 @@ public final class MathUtils {
         return sign * absX * k / (1.0 + k - absX);
 
     }
+
+    /**
+     * @param value value to take logarithm of.  Should be larger than zero, or NaN will be returned.
+     * @param base base of the logarithm. Should be larger than zero, or NaN will be returned.
+     * @return logarithm of the specified value using a log with the specified base.
+     */
+    public static double log(double value, double base) {
+        return Math.log(value) / Math.log(base);
+    }
+
+
 
 }
