@@ -11,15 +11,13 @@ public interface WritableProps {
 
     /**
      * Sets the specified property to the specified value.
-     * @return the previous value associated with the id (null if null or none).
      */
-    Object set(Symbol id, Object value);
+    void set(Symbol id, Object value);
 
     /**
      * Sets the specified property to the specified value.
-     * @return the previous value associated with the id (null if null or none).
      */
-    Object set(String id, Object value);
+    void set(String id, Object value);
 
     /**
      * Sets all of the properties provided in the input map.
@@ -32,19 +30,19 @@ public interface WritableProps {
     void setAll(ReadableProps parameters);
 
     /**
-     * Removes the specified property.
+     * Removes the specified property, if possible.
      * @return the previous value associated with the specified id, or null if none (or null value).
      */
     <T> T remove(Symbol id);
 
     /**
-     * Removes the specified property.
+     * Removes the specified property, if possible.
      * @return the previous value associated with the specified id, or null if none (or null value).
      */
     <T> T remove(String id);
 
     /**
-     * Removes all properties from this set.
+     * Removes all properties from this set, if possible.
      */
     void removeAll();
 

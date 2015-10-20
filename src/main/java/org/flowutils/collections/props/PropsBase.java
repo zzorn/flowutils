@@ -42,8 +42,8 @@ public abstract class PropsBase implements Props {
         return has(Symbol.get(id));
     }
 
-    @Override public final Object set(String id, Object value) {
-        return set(Symbol.get(id), value);
+    @Override public final void set(String id, Object value) {
+        set(Symbol.get(id), value);
     }
 
     @Override public final <T> T remove(String id) {

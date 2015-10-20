@@ -12,7 +12,7 @@ import static org.flowutils.Check.notNull;
  * Map backed implementation.
  * Thread safe.
  */
-public final class PropsMap extends PropsBase implements InheritableProps {
+public class PropsMap extends PropsBase implements InheritableProps {
 
     private final ConcurrentHashMap<Symbol, Object> values = new ConcurrentHashMap<>();
     private List<ReadableProps> defaults;
@@ -161,10 +161,10 @@ public final class PropsMap extends PropsBase implements InheritableProps {
         return containedIdsReadOnly;
     }
 
-    @Override public Object set(Symbol id, Object value) {
+    @Override public void set(Symbol id, Object value) {
         notNull(id, "id");
 
-        return values.put(id, value);
+        values.put(id, value);
     }
 
     @Override public void setAll(ReadableProps parameters) {

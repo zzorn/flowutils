@@ -135,5 +135,4 @@ public interface Interpolator {
                        boolean clampSourcePos,
                        InterpolationRemap interpolationRemap);
 
-
 }
