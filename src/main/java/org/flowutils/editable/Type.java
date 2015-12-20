@@ -9,6 +9,7 @@ import javax.xml.stream.XMLEventWriter;
 /**
  *
  */
+// TODO: Make this independent of module system?  So not extending Member?
 public interface Type<T> extends Member {
 
     /**
